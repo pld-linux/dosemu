@@ -1,5 +1,5 @@
 # Conditional build:
-# --with static		- links statically
+# --with static		- linked static 
 # --without dist_kernel	- without distribution kernel
 #
 Summary:	A DOS emulator
@@ -11,7 +11,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-Release:	15
+Release:	16
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
@@ -28,6 +28,7 @@ Patch5:		%{name}-%{name}_conf.patch
 Patch6:		%{name}-alt224.patch
 Patch7:		pmstack.diff
 Patch8:		%{name}-rawkeyboard-console.patch
+Patch9:		%{name}-comcom.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bin86
@@ -139,6 +140,7 @@ mkfatimage16.
 %patch6 -p1
 %patch7 -p0
 %patch8 -p0
+%patch9 -p1
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
