@@ -11,7 +11,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 %define		ver 1.1.5
-%define 	subver 6
+%define		subver 6
 Version:	%{ver}.%{subver}
 # Please don't bump to 1 until dosemu-1.2
 Release:	0.1
@@ -103,7 +103,7 @@ Xdosemu is a version of the dosemu DOS emulator that runs with the X
 Window System. Xdosemu provides VGA graphics and mouse support.
 
 %description -n xdosemu -l de
-Dies ist eine Version des DOS-Emulators für X-Windows-Sitzungen. Er
+Dies ist eine Version des DOS-Emulators für X-Window-Sitzungen. Er
 unterstützt VGA-Grafiken und Maus.
 
 %description -n xdosemu -l es
@@ -151,7 +151,6 @@ sh tmp/do_patch
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
-
 
 ./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
 plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
