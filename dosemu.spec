@@ -9,19 +9,19 @@ Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.freedos.org/files/distributions/base1.zip
 Source2:	http://www.freedos.org/files/distributions/util1.zip
 Source3:	http://www.freedos.org/files/distributions/edit1.zip
-Source4: 	ftp://ftp.gcfl.net/freedos/kernel/ker2019x.zip
+Source4:	ftp://ftp.gcfl.net/freedos/kernel/ker2019x.zip
 Source5:	ftp://ftp.home.vim.org/pub/vim/pc/vim56d16.zip
 Source6:	ftp://ftp.home.vim.org/pub/vim/pc/vim56rt.zip
 Source7:	autoexec.bat
 Source8:	config.sys
-Patch0:		dosemu-0.66.7-config.patch
-Patch1:		dosemu-0.66.7-glibc.patch
-Patch2:		dosemu-0.66.7-pushal.patch
-Patch3:		dosemu-0.98.1-security.patch
-Patch4:		dosemu-0.98.1-justroot.patch
-Patch5:		dosemu-make-new.patch
-Patch6:		dosemum-1.0.0-glibc22.patch
-Patch7:		dosemu-1.0.1-broken.patch
+Patch0:		%{name}-0.66.7-config.patch
+Patch1:		%{name}-0.66.7-glibc.patch
+Patch2:		%{name}-0.66.7-pushal.patch
+Patch3:		%{name}-0.98.1-security.patch
+Patch4:		%{name}-0.98.1-justroot.patch
+Patch5:		%{name}-make-new.patch
+Patch6:		%{name}m-1.0.0-glibc22.patch
+Patch7:		%{name}-1.0.1-broken.patch
 BuildRequires:	mtools
 Requires:	kernel >= 2.0.28, mtools >= 3.6
 Url:		http://www.dosemu.org
@@ -146,7 +146,7 @@ cat <<EOF >$RPM_BUILD_ROOT%{_bindir}/rundos
 BINDIR=/bin
 export BINDIR 
 # ignore errors if user does not have module installed
-%{_bindir}/dos
+%attr(755,root,root) %{_bindir}/dos
 EOF
 
 # Strip things
