@@ -289,7 +289,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun	-n kernel-smp-net-dosnet
 /sbin/depmod -a
- 
+
 %files
 %defattr(644,root,root,755)
 %doc *.gz doc/*
