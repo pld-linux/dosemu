@@ -1,6 +1,7 @@
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
 Summary(fr):	Emulateur DOS
+Summary(pl):	Emulator DOSa
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.1
@@ -46,6 +47,14 @@ You need to install dosemu if you use DOS programs and you want to be
 able to run them on your GNU/Linux system. You may also need to
 install the dosemu-freedos package.
 
+%description -l pl
+Dosemu to Emulator systemu DOS. Po zainstalowaniu mo¿esz go uruchomiæ
+komend± "dos".
+
+Powiniene¶ zainstalowaæ dosemu, je¶li korzystasz z dosowych programów
+i chcia³by¶ je uruchamiaæ na twoim Linuksowym systemie. Mo¿esz te¿
+potrzebowaæ pakiet dosemu-freedos.
+
 %package -n xdosemu
 Summary:	A DOS emulator for the X Window System
 Summary(de):	DOS-Emulator für X
@@ -71,6 +80,10 @@ unterstützt VGA-Grafiken und Maus.
 %description -l fr -n xdosemu
 Version de l'émulateur DOS conçue pour tourner dans une session X.
 Offre une gestion des graphismes VGA et de la souris.
+
+%description -l pl -n xdosemu
+Xdosemu jest wersj± emulatora dosemu dzia³aj±c± w X Window System.
+Xdosemu ma wsparcie dla grafiki VGA i obs³ugi myszki.
 
 %description -l tr -n xdosemu
 Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
@@ -98,6 +111,19 @@ the list of disk 'drives' used by dosemu.
 Install dosemu-freedos if you are installing the dosemu package and
 you don't have a version of DOS available on your system, and your
 system's partitions were not formatted and installed with DOS.
+
+%description -l pl freedos
+Ogólnie rzecz bior±c dosemu wymaga posiadania b±d¼ jakiej¶ wersji
+systemu DOS w systemie, b±d¼ partycji z zainstalowanym DOSem. Je¶li
+¿aden z tych warunków nie jest spe³niony, to mo¿esz w zastêpstwie u¿yæ
+pakietu dosemu-freedos. Zawiera on obraz obraz dysku (który bêdzie
+zainstalowany w katalogu /var/lib/dosemu) z zainstalowanym FreeDOSem.
+
+Musisz wyedytowaæ plik /etc/dosemu.conf aby dodaæ ten plik do listy
+'drives' uzywanych przez dosemu.
+
+Zainstaluj dosemu-freedos, je¶li zainstalowa³e¶ pakiet dosemu, a nie
+masz dostêpnej ¿adnej innej wersji DOSa.
 
 %prep
 %setup -q
