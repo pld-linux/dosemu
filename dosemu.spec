@@ -1,6 +1,6 @@
 #
 # Conditional build:
-# _with_static		- linked static
+%bcond_with	static		# linked statically
 #
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -13,7 +13,7 @@ Name:		dosemu
 %define		ver 1.1.5
 %define		subver 7
 Version:	1.2.0
-Release:	0.1
+Release:	1
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
@@ -32,19 +32,19 @@ Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
-%{?_with_static:BuildRequires:	XFree86-static}
+%{?with_static:BuildRequires:	XFree86-static}
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bin86
 BuildRequires:	bison
 BuildRequires:	docbook-dtd30-sgml
 BuildRequires:	flex
-%{?_with_static:BuildRequires:	glibc-static}
+%{?with_static:BuildRequires:	glibc-static}
 BuildRequires:	lynx
 BuildRequires:	openjade
 BuildRequires:	perl
 BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
-%{?_with_static:BuildRequires:	slang-static}
+%{?with_static:BuildRequires:	slang-static}
 BuildRequires:	util-linux
 BuildRequires:	unzip
 ExclusiveArch:	%{ix86}
@@ -53,7 +53,6 @@ Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
 Obsoletes:	xdosemu
 
-%define		_xbindir	/usr/X11R6/bin
 %define		_dosemudir	/var/lib/dosemu
 %define		specflags	-fomit-frame-pointer
 
@@ -139,9 +138,9 @@ mkfatimage16.
 %prep
 %setup -q -a6
 #sh tmp/do_patch
-#%patch0 -p1
+%patch0 -p1
 %patch1 -p1
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 
@@ -156,7 +155,7 @@ plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
 
 # non-X version
 %configure2_13 \
-%{?_with_static:--enable-linkstatic} \
+%{?with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi \
 	--without-x
@@ -166,19 +165,21 @@ mv -f bin/dosemu.bin bin/dos-nox
 
 # X version
 %configure2_13 \
-%{?_with_static:--enable-linkstatic} \
+%{?with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi
 %{__make} WAIT=no
 %{__make} -C man
 
-mv -f bin/dosemu.bin bin/dos-x
-mv -f bin/dos-nox bin/dosemu.bin
+mv -f man/dosemu.bin.1 man/dosemu.1
+echo '.so dosemu.1' > man/dos.1
+mv -f man/ru/dosemu.bin.1 man/ru/dosemu.1
+echo '.so dosemu.1' > man/ru/dos.1
 
-mv -f man/dosemu.bin.1 man/dos.1
-mv -f man/xdosemu.1 man/xdos.1
-mv -f man/ru/dosemu.bin.1 man/ru/dos.1
-mv -f man/ru/xdosemu.1 man/ru/xdos.1
+mv -f pl/man1/dos.1 pl/man1/dosemu.1
+echo '.so dosemu.1' > pl/man1/dos.1
+echo '.so dosemu.1' > pl/man1/xdosemu.1
+echo '.so dosemu.1' > pl/man1/dosdebug.1
 
 # documentation
 %{__make} -C src/doc/DANG html
@@ -189,19 +190,18 @@ find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}} \
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_sysconfdir},%{_pixmapsdir},%{_desktopdir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/{pl,ru}/man1} \
-	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel} \
-	$RPM_BUILD_ROOT%{_applnkdir}/System
+	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
 
 #%%{__make} install \
 #	DESTDIR=$RPM_BUILD_ROOT
 
-install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
-install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/dos
+install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dosemu
+install bin/dos-nox $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/midid $RPM_BUILD_ROOT%{_bindir}/midid
-ln -sf dos $RPM_BUILD_ROOT%{_xbindir}/xdos
-ln -sf dos $RPM_BUILD_ROOT%{_xbindir}/dosexec
+ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosemu
+ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosexec
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 ln -sf dos $RPM_BUILD_ROOT%{_bindir}/dosexec
@@ -211,15 +211,15 @@ install etc/dosemu.users.example $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
 install etc/global.conf $RPM_BUILD_ROOT%{_dosemudir}/global.conf
 install etc/dosemu.conf $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.conf
 
-install man/{dos.1,dosdebug.1,xdos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/man1
-install pl/man1/{dos.1,dosdebug.1,xdos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
-install man/ru/{dos.1,dosdebug.1,xdos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/ru/man1
+install man/{dosemu.1,dosdebug.1,xdosemu.1,dos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/man1
+install pl/man1/{dosemu.1,dosdebug.1,xdosemu.1,dos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
+install man/ru/{dosemu.1,dosdebug.1,xdosemu.1,dos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/ru/man1
 
 install commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install commands/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 cp %{SOURCE3} PRZECZYTAJ_TO
 cp %{SOURCE4} README.PLD
-install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/System
+install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
 
 rm -f doc/{configuration,dosemu.lsm}
 
@@ -256,17 +256,19 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not size mtime md5) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/midid
-%attr(755,root,root) %{_xbindir}/*
+%attr(755,root,root) %{_bindir}/dosemu
+%attr(755,root,root) %{_bindir}/xdosemu
+%attr(755,root,root) %{_bindir}/xdosexec
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
 %{_mandir}/man1/d*
-%{_mandir}/man1/xdos.1*
+%{_mandir}/man1/xdosemu.1*
 %lang(pl) %{_mandir}/pl/man1/d*
-%lang(pl) %{_mandir}/pl/man1/xdos.1*
+%lang(pl) %{_mandir}/pl/man1/xdosemu.1*
 %lang(ru) %{_mandir}/ru/man1/d*
-%lang(ru) %{_mandir}/ru/man1/xdos.1*
-%{_applnkdir}/System/*
+%lang(ru) %{_mandir}/ru/man1/xdosemu.1*
+%{_desktopdir}/*
 %{_pixmapsdir}/dosemu.xpm
 
 %files utils
