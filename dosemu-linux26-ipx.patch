@@ -1,0 +1,33 @@
+diff -Nur dosemu-1.3.0.orig/etc/dosemu.conf dosemu-1.3.0.chng/etc/dosemu.conf
+--- dosemu-1.3.0.orig/etc/dosemu.conf	2004-03-25 11:55:29.000000000 +0100
++++ dosemu-1.3.0.chng/etc/dosemu.conf	2004-03-25 12:02:52.026457546 +0100
+@@ -399,7 +399,7 @@
+ 
+ # $_vnet = "tap"
+ 
+-# NOTE: IPX needs root privileges unless you setup /proc/net/ipx_route
++# NOTE: IPX needs root privileges unless you setup /proc/net/ipx/route
+ # in advance. DPMI support for IPX is broken. Default: (off)
+ 
+ # $_ipxsupport = (off)
+diff -Nur dosemu-1.3.0.orig/src/dosext/net/net/ipxglt.c dosemu-1.3.0.chng/src/dosext/net/net/ipxglt.c
+--- dosemu-1.3.0.orig/src/dosext/net/net/ipxglt.c	2004-01-17 22:58:24.000000000 +0100
++++ dosemu-1.3.0.chng/src/dosext/net/net/ipxglt.c	2004-03-25 12:02:46.626731471 +0100
+@@ -81,7 +81,7 @@
+ 	sprintf(buf_node, "%02X%02X%02X%02X%02X%02X", node[0], node[1],
+                      node[2], node[3], node[4], node[5]);
+ 
+-	open_proc_scan("/proc/net/ipx_route");
++	open_proc_scan("/proc/net/ipx/route");
+ 	proc_str = get_proc_string_by_key(buf_targ);
+ 
+ 	if (!proc_str) {
+@@ -93,7 +93,7 @@
+ 	close_proc_scan();
+ 
+ 	if (strcmp(buf_net, proc_net) || strcmp(buf_node, proc_node)) {
+-		open_proc_scan("/proc/net/ipx_interface");
++		open_proc_scan("/proc/net/ipx/interface");
+ 		proc_str = get_proc_string_by_key(buf_net);
+ 		if (!proc_str) {
+ 			close_proc_scan();
