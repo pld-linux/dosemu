@@ -2,16 +2,9 @@
 # --with static		- links statically
 # --without dist_kernel	- without distribution kernel
 #
-%define         _kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null| cut -d'"' -f2)
-%define         _kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
-%define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
-%if %{_kernel24}
 %define		_moddir		/lib/modules/%{_kernel_ver}/misc
 %define		_moddirsmp	/lib/modules/%{_kernel_ver}smp/misc
-%else
-%define		_moddir		/lib/modules/%{_kernel_ver}/net
-%define		_moddirsmp	/lib/modules/%{_kernel_ver}smp/net
-%endif
+%define _rel	11
 
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -22,7 +15,6 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-%define _rel	10
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
