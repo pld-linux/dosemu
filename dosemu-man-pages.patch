@@ -1,0 +1,17 @@
+diff -uNr dosemu-1.0.1.old/man/dosdebug.1 dosemu-1.0.1/man/dosdebug.1
+--- dosemu-1.0.1.old/man/dosdebug.1	Mon Mar 18 11:43:03 1996
++++ dosemu-1.0.1/man/dosdebug.1	Sun Nov  4 19:04:27 2001
+@@ -1 +1 @@
+-.so man1/dos.1
++.so dos.1
+diff -uNr dosemu-1.0.1.old/man/dosexec.1 dosemu-1.0.1/man/dosexec.1
+--- dosemu-1.0.1.old/man/dosexec.1	Thu Jan  1 01:00:00 1970
++++ dosemu-1.0.1/man/dosexec.1	Sun Nov  4 19:04:27 2001
+@@ -0,0 +1 @@
++.so dos.1
+diff -uNr dosemu-1.0.1.old/man/xdos.1 dosemu-1.0.1/man/xdos.1
+--- dosemu-1.0.1.old/man/xdos.1	Mon Mar 18 11:43:03 1996
++++ dosemu-1.0.1/man/xdos.1	Sun Nov  4 19:04:30 2001
+@@ -1 +1 @@
+-.so man1/dos.1
++.so dos.1

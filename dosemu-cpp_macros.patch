@@ -1,0 +1,30 @@
+--- dosemu-1.0.1/src/base/data.c~	Sun Mar  5 13:57:37 2000
++++ dosemu-1.0.1/src/base/data.c	Sun Dec  2 17:17:05 2001
+@@ -5,7 +5,7 @@
+  */
+ 
+ #define EXTERN 
+-#define INIT(x...)		=  ## x
++#define INIT(x...)		= x
+ 
+ #include <termios.h>
+ #include <sys/types.h>
+--- dosemu-1.0.1/base-configure.in~	Sun Jun 18 16:34:22 2000
++++ dosemu-1.0.1/base-configure.in	Sun Dec  2 17:31:51 2001
+@@ -567,14 +567,14 @@
+   GCC_VERSION_CODE="-DGCC_VERSION_CODE=$GCC_VERSION_CODE"
+ 
+   echo -n "checking for glibc..."
+-  major=`echo '#include <features.h>' |${CC-cc} -E -dM -|awk '/#define.+__GLIBC__/{print $3}'`
++  major=`echo '#include <features.h>' |${CC-cc} -E -dM -|awk '/#define +__GLIBC__ /{print $3}'`
+   if test "$major" = ""; then
+     echo "no"
+   else
+     if test "$(( $major > 1 ))" = "1"; then
+       GLIBCFLAGS="-D_XOPEN_SOURCE"
+     fi
+-    minor=`echo '#include <features.h>' |${CC-cc} -E -dM -|awk '/#define.+__GLIBC_MINOR__/{print $3}'`
++    minor=`echo '#include <features.h>' |${CC-cc} -E -dM -|awk '/#define +__GLIBC_MINOR__ /{print $3}'`
+     if test "$minor" = ""; then
+       minor=0;
+     fi
