@@ -1,7 +1,0 @@
-[Desktop Entry]
-Name=dosemu
-Comment=A DOS emulator
-Comment[pl]=Emulator DOSa
-Exec=xdos
-Terminal=false
-Type=Application
