@@ -1,0 +1,1 @@
+- added dirs %%{_dosemudir}/bootdir{,/dosemu,/freedos} to %%files
