@@ -1,33 +1,29 @@
-Summary: A DOS emulator.
-Name: dosemu
-Version: 0.99.10
-Release: 4
-Exclusivearch: i386
-Copyright: distributable
-Group: Applications/Emulators
-Source0: ftp://dtp.dosemu.org/dosemu/dosemu-%{PACKAGE_VERSION}.tgz
-Source1: http://www.freedos.org/files/fdbeta1.zip
-# this kernel is generated from the freedos.144 floppy image coming with the
-# above. Why they ship the kernel on the floppy image only ?!
-Source2: dosemu-freedos-kernel.tar.gz
-Patch0: dosemu-0.66.7-config.patch
-Patch1: dosemu-0.66.7-glibc.patch
-Patch2: dosemu-0.66.7-pushal.patch
-Patch3: dosemu-0.98.1-security.patch
-Patch4: dosemu-0.98.1-justroot.patch
-Requires: kernel >= 2.0.28, mtools >= 3.6
-Url: http://www.dosemu.org
-Buildroot: /var/tmp/dosemu-root
-
-%package -n xdosemu
-Requires: dosemu = %{PACKAGE_VERSION}
-Summary: A DOS emulator for the X Window System.
-Group: Applications/Emulators
-
-%package freedos
-Requires: dosemu = %{PACKAGE_VERSION}
-Summary: A FreeDOS hdimage for dosemu, a DOS emulator, to use.
-Group: Applications/Emulators
+Summary:	A DOS emulator.
+Name:		dosemu
+Version:	0.99.13
+Release:	2
+Copyright:	distributable
+Group:		Applications/Emulators
+Source0:	ftp://dtp.dosemu.org/dosemu/dosemu-%{version}.tgz
+Source1:	http://www.freedos.org/files/distributions/base1.zip
+Source2:	http://www.freedos.org/files/distributions/util1.zip
+Source3:	http://www.freedos.org/files/distributions/edit1.zip
+Source4:	ftp://ftp.gcfl.net/freedos/kernel/latestbin.zip
+Source5:	ftp://ftp.simtel.net/pub/simtelnet/msdos/editor/vim53d16.zip
+Source6:	ftp://ftp.simtel.net/pub/simtelnet/msdos/editor/vim53rt.zip
+Source7:	autoexec.bat
+Source8:	config.sys
+Patch0:		dosemu-0.66.7-config.patch
+Patch1:		dosemu-0.66.7-glibc.patch
+Patch2:		dosemu-0.66.7-pushal.patch
+Patch3:		dosemu-0.98.1-security.patch
+Patch4:		dosemu-0.98.1-justroot.patch
+Patch5:		dosemu-make.patch
+BuildRequires:	mtools
+Requires:	kernel >= 2.0.28, mtools >= 3.6
+Url:		http://www.dosemu.org
+Exclusivearch:	%{ix86}
+Buildroot:	/tmp/%{name}-%{version}-root
 
 %description
 Dosemu is a DOS emulator.  Once you've installed dosemu, start the DOS
@@ -37,6 +33,11 @@ You need to install dosemu if you use DOS programs and you want to be able
 to run them on your Red Hat Linux system.  You may also need to install
 the dosemu-freedos package.
 
+%package -n xdosemu
+Requires:	%{name} = %{version}
+Summary:	A DOS emulator for the X Window System.
+Group:		Applications/Emulators
+
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
 ]Window System.  Xdosemu provides VGA graphics and mouse support.
@@ -44,6 +45,11 @@ Xdosemu is a version of the dosemu DOS emulator that runs with the X
 Install xdosemu if you need to run DOS programs on your system, and you'd
 like to do so with the convenience of graphics support and mouse
 capabilities.
+
+%package freedos
+Requires:	%{name} = %{version}
+Summary	:	A FreeDOS hdimage for dosemu, a DOS emulator, to use.
+Group:		Applications/Emulators
 
 %description freedos
 Generally, the dosemu DOS emulator requires either that your system
@@ -64,63 +70,92 @@ with DOS.
 
 %prep
 %setup -q
-%patch0 -p1 -b .lock
-#%patch2 -p1 -b .pushal
-%patch3 -p1 -b .security
-%patch4 -p1 -b .justroot
-unzip -L $RPM_SOURCE_DIR/fdbeta1.zip
+%patch0 -p1
+#%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+
 rm -rf freedos
 mkdir freedos
-for i in orlando/{base,sys,util}/?/*.zip ; do
-    unzip -d freedos -q $i
+mkdir freedos/kernel
+mkdir freedos/tmp
+mkdir freedos/vim
+
+unzip -L -d freedos/kernel/ -j $RPM_SOURCE_DIR/latestbin.zip
+cp -f contrib/dosC/dist/* freedos/kernel
+for i in $RPM_SOURCE_DIR/{base1.zip,edit1.zip,util1.zip}; do
+	unzip -L -d freedos/tmp $i
 done
-tar xzf $RPM_SOURCE_DIR/dosemu-freedos-kernel.tar.gz -C freedos
+for i in freedos/tmp/*.zip ; do 
+	unzip -L -o -d freedos $i
+done
+unzip -L -o -d freedos $RPM_SOURCE_DIR/vim53rt.zip
+unzip -L -o -d freedos/vim-5.3 $RPM_SOURCE_DIR/vim53d16.zip
+
 
 %build
-PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin
+./default-configure --without-x
+echo | make
+mv bin/dos bin/dos-nox
 ./default-configure
 echo | make
+mv bin/dos bin/dos-x
+mv bin/dos-nox bin/dos
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/etc
+install -d $RPM_BUILD_ROOT{/etc,%{_mandir}/man1,%{_datadir}/icons,/var/state/dosemu}
+
 make install INSTROOT=$RPM_BUILD_ROOT
-install -m 755 setup-hdimage $RPM_BUILD_ROOT/usr/bin
-install -m 755 src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT/usr/bin
-mkdir -p $RPM_BUILD_ROOT/usr/share/icons
-install -m 644 etc/dosemu.xpm $RPM_BUILD_ROOT/usr/share/icons
+
+rm $RPM_BUILD_ROOT%{_bindir}/xdos
+
+install -m 755 bin/dos-x $RPM_BUILD_ROOT%{_bindir}/xdos
+install -m 755 setup-hdimage $RPM_BUILD_ROOT%{_bindir}
+install -m 755 src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
+install -m 644 etc/dosemu.xpm $RPM_BUILD_ROOT%{_datadir}/icons
 install -m 644 etc/dosemu.users.secure $RPM_BUILD_ROOT/etc/dosemu.users
-src/tools/periph/mkfatimage16 -p -k 8192 -l FreeDos \
+src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
 	-b freedos/kernel/boot.bin \
-	-f $RPM_BUILD_ROOT/var/lib/dosemu/hdimage.freedos \
+	-f $RPM_BUILD_ROOT/var/state/dosemu/hdimage.freedos \
 	freedos/kernel/* 
 FREEDOS=`/bin/mktemp /tmp/freedos.XXXXXX`
-echo "drive n: file=\"$RPM_BUILD_ROOT/var/lib/dosemu/hdimage.freedos\" offset=8832" > $FREEDOS
+echo "drive n: file=\"$RPM_BUILD_ROOT/var/state/dosemu/hdimage.freedos\" offset=8832" > $FREEDOS
 MTOOLSRC=$FREEDOS
 export MTOOLSRC
-mcopy -o/ freedos/BIN freedos/DOC freedos/HELP n:
+mcopy -o/ freedos/vim-5.3 freedos/bin freedos/doc freedos/help freedos/emacs n:
 mmd n:/DOSEMU
 mcopy -/ commands/* n:/DOSEMU
-mcopy commands/exitemu* n:/
+mcopy -o $RPM_SOURCE_DIR/autoexec.bat $RPM_SOURCE_DIR/config.sys commands/exitemu* n:/
 mdir -w n:
 rm -f $FREEDOS
 unset MTOOLSRC
 
-install -m 644 etc/hdimage.dist $RPM_BUILD_ROOT/var/lib/dosemu/hdimage
+install -m 644 etc/hdimage.dist $RPM_BUILD_ROOT/var/state/dosemu/hdimage
 # install dexe utils
-install -m 755 dexe/{do_mtools,extract-dos,mkdexe,myxcopy} $RPM_BUILD_ROOT/usr/bin
+install -m 755 dexe/{do_mtools,extract-dos,mkdexe,myxcopy} $RPM_BUILD_ROOT%{_bindir}
 
-cat <<EOF >$RPM_BUILD_ROOT/usr/bin/rundos
+cat <<EOF >$RPM_BUILD_ROOT%{_bindir}/rundos
 #!/bin/sh
 BINDIR=/bin
 export BINDIR 
 # ignore errors if user does not have module installed
-/usr/bin/dos
+%{_bindir}/dos
 EOF
-chmod 0755 $RPM_BUILD_ROOT/usr/bin/rundos
 
 # Strip things
-strip $RPM_BUILD_ROOT/usr/bin/* || :
+strip --strip-unneeded $RPM_BUILD_ROOT%{_bindir}/* || :
+
+# Take out irritating ^H's from the documentation
+for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
+
+gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/* \
+	QuickStart doc/*
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+rm -f dosemu.files
 
 %post -n xdosemu
 if [ -x /usr/X11R6/bin/mkfontdir ]; then
@@ -135,53 +170,49 @@ fi
 killall -USR1 xfs > /dev/null 2>&1 || :
 
 %post freedos
-[ -e /var/lib/dosemu/hdimage.first ] || \
-    ln -s hdimage.freedos /var/lib/dosemu/hdimage.first
+[ -e /var/state/dosemu/hdimage.first ] || \
+    ln -s hdimage.freedos /var/state/dosemu/hdimage.first
 
 %postun freedos
 if [ $1 = 0 ]; then
-  if [ -e /var/lib/dosemu/hdimage.first ]; then
-    rm -f /var/lib/dosemu/hdimage.first
+  if [ -e /var/state/dosemu/hdimage.first ]; then
+    rm -f /var/state/dosemu/hdimage.first
   fi
 fi
     
 %files
-%defattr(-,root,root)
-%doc QuickStart doc/*
-%dir /var/lib/dosemu
+%defattr(644,root,root,755)
+%doc QuickStart.gz doc/*
+%dir /var/state/dosemu
 %config /etc/dosemu.conf
 %config /etc/dosemu.users
-%config /var/lib/dosemu/hdimage
-%config /var/lib/dosemu/global.conf
-/usr/bin/dos
-/usr/bin/dosdebug
-/usr/bin/dosexec
-/usr/bin/dexeconfig
-/usr/bin/hdinfo
-/usr/bin/do_mtools
-/usr/bin/extract-dos
-/usr/bin/mkdexe
-/usr/bin/myxcopy
-/usr/bin/mkhdimage
-/usr/bin/mkfatimage16
-/usr/bin/rundos
-/usr/bin/setup-hdimage
-/usr/man/man1/dos.1
-/usr/man/man1/dosdebug.1
-/usr/man/man1/mkfatimage16.1
-/usr/share/icons/dosemu.xpm
+%config /var/state/dosemu/hdimage
+%config /var/state/dosemu/global.conf
+%attr(4755,root,root) %{_bindir}/dos
+%attr(755,root,root) %{_bindir}/dosdebug
+%attr(755,root,root) %{_bindir}/dosexec
+%attr(755,root,root) %{_bindir}/dexeconfig
+%attr(755,root,root) %{_bindir}/hdinfo
+%attr(755,root,root) %{_bindir}/do_mtools
+%attr(755,root,root) %{_bindir}/extract-dos
+%attr(755,root,root) %{_bindir}/mkdexe
+%attr(755,root,root) %{_bindir}/myxcopy
+%attr(755,root,root) %{_bindir}/mkhdimage
+%attr(755,root,root) %{_bindir}/mkfatimage16
+%attr(755,root,root) %{_bindir}/rundos
+%attr(755,root,root) %{_bindir}/setup-hdimage
+%{_mandir}/man1/dos.1.gz
+%{_mandir}/man1/dosdebug.1.gz
+%{_mandir}/man1/mkfatimage16.1.gz
+%{_datadir}/icons/dosemu.xpm
 
 %files -n xdosemu
-%defattr(-,root,root)
-/usr/bin/xdos
-/usr/bin/xtermdos
-/usr/man/man1/xdos.1
-/usr/man/man1/xtermdos.1
+%defattr(644,root,root,755)
+%attr(4755,root,root) %{_bindir}/xdos
+%attr(755,root,root) %{_bindir}/xtermdos
+%{_mandir}/man1/xdos.1.gz
+%{_mandir}/man1/xtermdos.1.gz
 /usr/X11R6/lib/X11/fonts/misc/vga.pcf
 
 %files freedos
-%config /var/lib/dosemu/hdimage.freedos
-
-%clean
-rm -rf $RPM_BUILD_ROOT
-rm -f dosemu.files
+%config /var/state/dosemu/hdimage.freedos
