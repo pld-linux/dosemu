@@ -62,11 +62,6 @@ You need to install dosemu if you use DOS programs and you want to be
 able to run them on your GNU/Linux system. You may also need to
 install the dosemu-freedos-* packages.
 
-%description -l es
-Esta es una versión del emulador DOS que fue proyectada para
-ejecutarse en secciones X Window. Ofrece soporte a gráficos VGA como
-también soporte a ratón.
-
 %description -l pl
 Dosemu to Emulator systemu DOS. Po zainstalowaniu mo¿esz go uruchomiæ
 komend± "dos".
