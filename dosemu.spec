@@ -1,9 +1,13 @@
-Summary:	A DOS emulator.
+Summary:	A DOS emulator
+Summary(de):	DOS-Emulator
+Summary(fr):	Emulateur DOS
+Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.1
 Release:	1
 Copyright:	distributable
 Group:		Applications/Emulators
+Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.freedos.org/files/distributions/base1.zip
@@ -33,14 +37,18 @@ Dosemu is a DOS emulator. Once you've installed dosemu, start the DOS
 emulator by typing in the "dos" command.
 
 You need to install dosemu if you use DOS programs and you want to be
-able to run them on your GNU/Linux system. You may also need to install
-the dosemu-freedos package.
+able to run them on your GNU/Linux system. You may also need to
+install the dosemu-freedos package.
 
 %package -n xdosemu
-Requires:	%{name} = %{version}
-Summary:	A DOS emulator for the X Window System.
+Summary:	A DOS emulator for the X Window System
+Summary(de):	DOS-Emulator für X
+Summary(fr):	Émulateur DOS conçu pou être lancé sous X
+Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
 Group:		Applications/Emulators
+Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
+Requires:	%{name} = %{version}
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
@@ -50,10 +58,23 @@ Install xdosemu if you need to run DOS programs on your system, and
 you'd like to do so with the convenience of graphics support and mouse
 capabilities.
 
+%description -l de -n xdosemu
+Dies ist eine Version des DOS-Emulators für X-Windows-Sitzungen. Er
+unterstützt VGA-Grafiken und Maus.
+
+%description -l fr -n xdosemu
+Version de l'émulateur DOS conçue pour tourner dans une session X.
+Offre une gestion des graphismes VGA et de la souris.
+
+%description -l tr -n xdosemu
+Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
+grafikleri ve fare desteði vardýr.
+
 %package freedos
 Requires:	%{name} = %{version}
 Summary:	A FreeDOS hdimage for dosemu, a DOS emulator, to use.
 Group:		Applications/Emulators
+Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
 
 %description freedos
@@ -102,11 +123,11 @@ unzip -L -o -d freedos/vim-5.6 $RPM_SOURCE_DIR/vim56d16.zip
 %build
 ./default-configure --without-x
 echo | make
-mv bin/dos bin/dos-nox
+mv -f bin/dos bin/dos-nox
 ./default-configure
 echo | make
-mv bin/dos bin/dos-x
-mv bin/dos-nox bin/dos
+mv -f bin/dos bin/dos-x
+mv -f bin/dos-nox bin/dos
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -114,7 +135,7 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_mandir}/man1,%{_prefix}/X11R6/share
 
 %{__make} install INSTROOT=$RPM_BUILD_ROOT
 
-rm $RPM_BUILD_ROOT%{_bindir}/xdos
+rm -f $RPM_BUILD_ROOT%{_bindir}/xdos
 
 install bin/dos-x $RPM_BUILD_ROOT%{_bindir}/xdos
 install setup-hdimage $RPM_BUILD_ROOT%{_bindir}
@@ -149,14 +170,10 @@ export BINDIR
 %attr(755,root,root) %{_bindir}/dos
 EOF
 
-# Strip things
-strip --strip-unneeded $RPM_BUILD_ROOT%{_bindir}/* || :
-
 # Take out irritating ^H's from the documentation
 for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
 
-gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/* \
-	QuickStart doc/*
+gzip -9nf QuickStart doc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -178,7 +195,7 @@ killall -USR1 xfs > /dev/null 2>&1 ||:
     ln -s hdimage.freedos /var/lib/dosemu/hdimage.first
 
 %postun freedos
-if [ $1 = 0 ]; then
+if [ "$1" =" 0" ]; then
 	if [ -e /var/lib/dosemu/hdimage.first ]; then
 		rm -f /var/lib/dosemu/hdimage.first
 	fi
