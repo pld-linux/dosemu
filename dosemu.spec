@@ -28,6 +28,7 @@ Patch6:		%{name}m-1.0.0-glibc22.patch
 Patch7:		%{name}-1.0.1-broken.patch
 BuildRequires:	bin86
 BuildRequires:	mtools
+BuildRequires:	unzip
 Conflicts:	kernel < 2.0.28
 Requires:	mtools >= 3.6
 Url:		http://www.dosemu.org
@@ -111,16 +112,16 @@ mkdir freedos/kernel
 mkdir freedos/tmp
 mkdir freedos/vim
 
-unzip -o -L -d freedos/kernel/ -j $RPM_SOURCE_DIR/ker2019x.zip
+unzip -o -L -d freedos/kernel/ -j %{SOURCE4}
 cp -f contrib/dosC/dist/* freedos/kernel
-for i in $RPM_SOURCE_DIR/{base1.zip,edit1.zip,util1.zip}; do
+for i in %{SOURCE1} %{SOURCE3} %{SOURCE2} ; do
 	unzip -o -L -d freedos/tmp $i
 done
 for i in freedos/tmp/*.zip ; do 
 	unzip -o -L -o -d freedos $i
 done
-unzip -L -o -d freedos $RPM_SOURCE_DIR/vim56rt.zip
-unzip -L -o -d freedos/vim-5.6 $RPM_SOURCE_DIR/vim56d16.zip
+unzip -L -o -d freedos %{SOURCE6}
+unzip -L -o -d freedos/vim-5.6 %{SOURCE5}
 
 %build
 ./default-configure --without-x
@@ -155,7 +156,7 @@ export MTOOLSRC
 mcopy -o/ freedos/vim-5.6 freedos/bin freedos/doc freedos/help freedos/emacs n:
 mmd n:/DOSEMU
 mcopy -/ commands/* n:/DOSEMU
-mcopy -o $RPM_SOURCE_DIR/autoexec.bat $RPM_SOURCE_DIR/config.sys commands/exitemu* n:/
+mcopy -o %{SOURCE7} %{SOURCE8} commands/exitemu* n:/
 mdir -w n:
 rm -f $FREEDOS
 unset MTOOLSRC
@@ -175,7 +176,8 @@ EOF
 # Take out irritating ^H's from the documentation
 for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
 
-gzip -9nf QuickStart doc/*
+rm -f doc/{configuration,dosemu.lsm}
+gzip -9nf QuickStart COPYING ChangeLog* doc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -205,7 +207,7 @@ fi
     
 %files
 %defattr(644,root,root,755)
-%doc QuickStart.gz doc/*
+%doc *.gz doc/*
 %dir /var/lib/dosemu
 %config %{_sysconfdir}/dosemu.conf
 %config %{_sysconfdir}/dosemu.users
