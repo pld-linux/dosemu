@@ -32,6 +32,7 @@ Patch10:	%{name}-global.conf-xdos.patch
 Patch11:	c_run_irqs.diff
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
+BuildRequires:	autoconf
 BuildRequires:	bin86
 BuildRequires:	bison
 BuildRequires:	flex
