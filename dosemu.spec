@@ -51,6 +51,7 @@ BuildRequires:	flex
 BuildRequires:	glibc-static
 BuildRequires:	XFree86-static
 BuildRequires:	slang-static
+Prereq:		/sbin/depmod
 Conflicts:	mtools < 3.6
 Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
