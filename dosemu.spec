@@ -10,16 +10,12 @@ Summary(pl):	Emulator DOS-a
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
-%define		ver 1.2.1
-%define		subver 1
-Version:	1.2.1
-Release:	1
+Version:	1.3.0
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	http://dl.sourceforge.net/dosemu/%{name}-1.2.0.tgz
-# Source0-md5:	763e6b865dac87114041f5eb4b24bf8e
-Source1:	http://dl.sourceforge.net/dosemu/patchset-%{version}.tgz
-# Source1-md5:	132f3a92a38b6b57bb8a7c09b99df0e0
+Source0:	http://dl.sourceforge.net/dosemu/%{name}-1.3.0.tgz
+# Source0-md5:	d2864cecdfe6a2f7adb97270e892f0d5
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -137,8 +133,8 @@ Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
 
 %prep
-%setup -q -n %{name}-1.2.0 -a1 -a6
-sh tmp/do_patch
+%setup -q -a6
+#sh tmp/do_patch
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -203,6 +199,7 @@ install bin/dos-nox $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/midid $RPM_BUILD_ROOT%{_bindir}/midid
 ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosemu
 ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosexec
+ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdos
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 ln -sf dos $RPM_BUILD_ROOT%{_bindir}/dosexec
@@ -258,8 +255,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/midid
 %attr(755,root,root) %{_bindir}/dosemu
-%attr(755,root,root) %{_bindir}/xdosemu
-%attr(755,root,root) %{_bindir}/xdosexec
+%attr(755,root,root) %{_bindir}/xdos*
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
