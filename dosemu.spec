@@ -5,7 +5,7 @@ Summary(pl):	Emulator DOSa
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.1
-Release:	5
+Release:	6
 License:	distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
@@ -30,6 +30,7 @@ Patch6:		%{name}m-1.0.0-glibc22.patch
 Patch7:		%{name}-1.0.1-broken.patch
 Patch8:		%{name}-time.patch
 Patch9:		%{name}-man-pages.patch
+Patch10:	%{name}-cpp_macros.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	bin86
 BuildRequires:	mtools
@@ -139,6 +140,7 @@ masz dostêpnej ¿adnej innej wersji DOSa.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 rm -rf freedos
 mkdir freedos
@@ -158,6 +160,7 @@ unzip -L -o -d freedos %{SOURCE6}
 unzip -L -o -d freedos/vim-5.6 %{SOURCE5}
 
 %build
+autoconf base-configure.in >base-configure
 ./default-configure --without-x
 echo | %{__make}
 mv -f bin/dos bin/dos-nox
