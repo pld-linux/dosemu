@@ -43,6 +43,7 @@ BuildRequires:	flex
 BuildRequires:	perl
 #BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
+BuildRequires:	util-linux
 BuildRequires:	unzip
 #Requires:	dos
 %{?_with_static:BuildRequires:	glibc-static}
