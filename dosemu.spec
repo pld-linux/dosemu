@@ -2,8 +2,10 @@
 #%define         _kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
+Summary(es):	Emulador DOS
 Summary(fr):	Emulateur DOS
 Summary(pl):	Emulator DOSa
+Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
@@ -29,19 +31,8 @@ Source13:	config2.sys
 Source14:	keybpl.exe
 Source15:	egapl.exe
 Source16:	shsucdx.exe
-Source17:	dosemu-sys.tar.gz
-#Patch0:		%{name}-0.66.7-config.patch
-#Patch1:		%{name}-0.66.7-glibc.patch
-#Patch2:		%{name}-0.66.7-pushal.patch
-#Patch3:		%{name}-0.98.1-security.patch
-#Patch4:		%{name}-0.98.1-justroot.patch
-#Patch5:		%{name}-make-new.patch
-#Patch6:		%{name}m-1.0.0-glibc22.patch
-#Patch7:		%{name}-1.0.1-broken.patch
-#Patch8:		%{name}-time.patch
-#Patch9:		%{name}-man-pages.patch
-#Patch10:	%{name}-cpp_macros.patch
-Patch11:	%{name}-dosemu_conf.patch
+Source17:	%{name}-sys.tar.gz
+Patch0:		%{name}-%{name}_conf.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	bin86
 #BuildRequires:	mtools
@@ -65,6 +56,11 @@ You need to install dosemu if you use DOS programs and you want to be
 able to run them on your GNU/Linux system. You may also need to
 install the dosemu-freedos-* package.
 
+%description -l es
+Esta es una versión del emulador DOS que fue proyectada para
+ejecutarse en secciones X Window. Ofrece soporte a gráficos VGA como
+también soporte a ratón.
+
 %description -l pl
 Dosemu to Emulator systemu DOS. Po zainstalowaniu mo¿esz go uruchomiæ
 komend± "dos".
@@ -72,6 +68,11 @@ komend± "dos".
 Powiniene¶ zainstalowaæ dosemu, je¶li korzystasz z dosowych programów
 i chcia³by¶ je uruchamiaæ na twoim Linuksowym systemie. Mo¿esz te¿
 potrzebowaæ pakietów dosemu-freedos-*.
+
+%description -l pt_BR
+Essa é uma versão do emulador DOS que foi projetada para rodar em
+sessões X Window. Oferece suporte para gráficos VGA bem como suporte
+para mouse.
 
 %package -n xdosemu
 Summary:	A DOS emulator for the X Window System
@@ -95,6 +96,10 @@ capabilities.
 Dies ist eine Version des DOS-Emulators für X-Windows-Sitzungen. Er
 unterstützt VGA-Grafiken und Maus.
 
+%description -l es -n xdosemu
+Esta es la versión del emulador DOS dibujada para ejecutarse en una
+ventana del X Window. Posee soporte para gráficos VGA y ratón.
+
 %description -l fr -n xdosemu
 Version de l'émulateur DOS conçue pour tourner dans une session X.
 Offre une gestion des graphismes VGA et de la souris.
@@ -103,60 +108,78 @@ Offre une gestion des graphismes VGA et de la souris.
 Xdosemu jest wersj± emulatora dosemu dzia³aj±c± w X Window System.
 Xdosemu ma wsparcie dla grafiki VGA i obs³ugi myszki.
 
+%description -l pt_BR -n xdosemu
+Esta é a versão do emulador DOS desenhada para rodar em uma janela do
+X Window. Possui suporte a gráficos VGA e mouse.
+
 %description -l tr -n xdosemu
 Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
 grafikleri ve fare desteði vardýr.
 
-#%package freedos
-#Summary:	A FreeDOS hdimage for dosemu, a DOS emulator, to use
-#Summary(pl):	Obraz FreeDOS-a do u¿ywania z dosemu
-#Group:		Applications/Emulators
-#Group(de):	Applikationen/Emulators
-#Group(pl):	Aplikacje/Emulatory
-#Requires:	%{name} = %{version}
+%package freedos
+Summary:	A FreeDOS hdimage for dosemu, a DOS emulator, to use
+Summary(pl):	Obraz FreeDOS-a do u¿ywania z dosemu
+Group:		Applications/Emulators
+Group(de):	Applikationen/Emulators
+Group(pl):	Aplikacje/Emulatory
+Requires:	%{name} = %{version}
 
-#%description freedos
-#Generally, the dosemu DOS emulator requires either that your system
-#have some version of DOS available or that your system's partitions
-#were formatted and installed with DOS. If your system does not meet
-#either of the previous requirements, you can instead use the dosemu-
-#freedos package, which contains an hdimage file which will be
-#installed in the /var/lib/dosemu directory. The hdimage file is
-#already bootable with FreeDOS.
-#
-#You will need to edit your /etc/dosemu.conf file to add the image to
-#the list of disk 'drives' used by dosemu.
-#
-#Install dosemu-freedos if you are installing the dosemu package and
-#you don't have a version of DOS available on your system, and your
-#system's partitions were not formatted and installed with DOS.
+%description freedos
+Generally, the dosemu DOS emulator requires either that your system
+have some version of DOS available or that your system's partitions
+were formatted and installed with DOS. If your system does not meet
+either of the previous requirements, you can instead use the dosemu-
+freedos package, which contains an hdimage file which will be
+installed in the /var/lib/dosemu directory. The hdimage file is
+already bootable with FreeDOS.
 
-#%description -l pl freedos
-#Ogólnie rzecz bior±c dosemu wymaga posiadania b±d¼ jakiej¶ wersji
-#systemu DOS w systemie, b±d¼ partycji z zainstalowanym DOSem. Je¶li
-#¿aden z tych warunków nie jest spe³niony, to mo¿esz w zastêpstwie u¿yæ
-#pakietu dosemu-freedos. Zawiera on obraz obraz dysku (który bêdzie
-#zainstalowany w katalogu /var/lib/dosemu) z zainstalowanym FreeDOSem.
-#
-#Musisz wyedytowaæ plik /etc/dosemu.conf aby dodaæ ten plik do listy
-#'drives' uzywanych przez dosemu.
-#
-#Zainstaluj dosemu-freedos, je¶li zainstalowa³e¶ pakiet dosemu, a nie
-#masz dostêpnej ¿adnej innej wersji DOSa.
+You will need to edit your /etc/dosemu.conf file to add the image to
+the list of disk 'drives' used by dosemu.
+
+Install dosemu-freedos if you are installing the dosemu package and
+you don't have a version of DOS available on your system, and your
+system's partitions were not formatted and installed with DOS.
+
+%description -l es -n freedos
+Este paquete incluye una imagen de disco duro que será instalada en el
+directorio /var/lib/dosemu, si es necesaria una versión del DOS para
+el uso del dosemu. Generalmente dosemu requiere una versión cualquiera
+del DOS para arrancar su archivo hdimage antes del primer uso, o que
+tengas alguna partición formateada y con el DOS instalado. Si ninguna
+de estas dos opciones está disponible usa esta imagen que ya arranca
+con el FreeDOs. Será necesario editar el archivo /etc/dosemu.conf para
+añadir esta imagen en la lista de "drives" usados por el dosemu.
+
+%description -l pl freedos
+Ogólnie rzecz bior±c dosemu wymaga posiadania b±d¼ jakiej¶ wersji
+systemu DOS w systemie, b±d¼ partycji z zainstalowanym DOSem. Je¶li
+¿aden z tych warunków nie jest spe³niony, to mo¿esz w zastêpstwie u¿yæ
+pakietu dosemu-freedos. Zawiera on obraz obraz dysku (który bêdzie
+zainstalowany w katalogu /var/lib/dosemu) z zainstalowanym FreeDOSem.
+
+Musisz wyedytowaæ plik /etc/dosemu.conf aby dodaæ ten plik do listy
+'drives' uzywanych przez dosemu.
+
+Zainstaluj dosemu-freedos, je¶li zainstalowa³e¶ pakiet dosemu, a nie
+masz dostêpnej ¿adnej innej wersji DOSa.
+
+%description -l pt_BR -n freedos
+Este pacote inclui uma imagem de disco rígido que será instalada no
+diretório /var/lib/dosemu se for necessário uma versão do DOS para o
+uso do dosemu.
+
+Geralmente o dosemu requer uma versão qualquer do DOS para inicializar
+seu arquivo hdimage antes do primeiro uso ou que você tenha alguma
+partição formatada e com o DOS instalado. Se nenhuma destas duas
+opções estiver disponível use esta imagem que já é inicializável com o
+FreeDOS.
+
+Será necessário editar o arquivo /etc/dosemu.conf para adicionar esta
+imagem na lista de "drives" usados pelo dosemu.
 
 %prep
 %setup -q -a9 -a17
-#%patch0 -p1
-#%patch2 -p1
-#%patch3 -p1
-#%patch4 -p1
-#%patch5 -p1
-#%patch6 -p1
-#%patch7 -p1
-#%patch8 -p1
-#%patch9 -p1
-#%patch10 -p1
-%patch11 -p0
+%patch0 -p0
 
 rm -rf freedos
 mkdir freedos
@@ -177,7 +200,7 @@ mv -f bin/dosemu.bin bin/dos-nox
 	--enable-new-intcode \
 	--enable-aspi
 echo | %{__make}
-make -C src/dosext/net/v-net
+%{__make} -C src/dosext/net/v-net
 mv -f bin/dos-nox bin/dos
 
 %define _dosemudir /var/lib/dosemu
