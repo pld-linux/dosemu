@@ -1,0 +1,75 @@
+--- configure.ac.orig	Sat Feb 15 13:07:06 2003
++++ configure.ac	Sat Feb 15 13:10:07 2003
+@@ -241,18 +241,19 @@
+ )
+ 
+ AC_PATH_XTRA
+-LDFLAGS="$LDFLAGS $X_LIBS"
+-CPPFLAGS="$X_CFLAGS"
+ 
+-AC_CHECK_LIB(X11, XOpenDisplay, , 
++if test "$no_x" = "yes" ; then
++    AS_MESSAGE(checking Compiling without X support...)
++else
++	LDFLAGS="$LDFLAGS $X_LIBS"
++	CPPFLAGS="$X_CFLAGS"
++
++	AC_CHECK_LIB(X11, XOpenDisplay, , 
+    # sometimes statically linked binaries need libdl too ...
+    AC_CHECK_LIB(X11, XCloseDisplay, LIBS="$LIBS -lX11 -ldl", 
+      AC_CHECK_LIB(Xwindow, main, , no_x="yes" ),
+   -ldl))
+ 
+-if test "$no_x" = "yes" ; then
+-    AS_MESSAGE(checking Compiling without X support...)
+-else
+     AS_MESSAGE(checking Compiling with X support...)
+     AC_DEFINE(X_SUPPORT) 
+     X_SUPPORT="X_SUPPORT=1"
+@@ -260,34 +261,35 @@
+     AC_DEFINE(X_GRAPHICS)
+     X_GRAPHICS="X_GRAPHICS=1"
+     AC_SUBST(X_GRAPHICS)
+-fi
+-
+ 
+ dnl Check for the MITSHM extention to speed up VGAemu
+ 
+-AC_ARG_ENABLE(mitshm,
++	AC_ARG_ENABLE(mitshm,
+               [  --enable-mitshm         force use of MITSHM X extension],
+               [forced_mitshm="yes"],[forced_mitshm="no"])
+ 
+-AC_ARG_ENABLE(nomitshm,
++	AC_ARG_ENABLE(nomitshm,
+               [  --enable-nomitshm       do NOT use the MITSHM X extension],
+               [forced_nomitshm="yes"],[forced_nomitshm="no"])
+ 
+-if test "$forced_mitshm" = "yes" -a "$forced_nomitshm" = "yes" ; then
+-  AC_MSG_ERROR(Can't use --enable-mitshm and --enable-nomitshm at the same time)
+-fi
++	if test "$forced_mitshm" = "yes" -a "$forced_nomitshm" = "yes" ; then
++  	AC_MSG_ERROR(Can't use --enable-mitshm and --enable-nomitshm at the same time)
++	fi
+ 
+-if test "$forced_nomitshm" != "yes" -a "$no_x" != "yes" ; then
+-  AC_CHECK_HEADER(X11/extensions/XShm.h,
++	if test "$forced_nomitshm" != "yes" -a "$no_x" != "yes" ; then
++  	AC_CHECK_HEADER(X11/extensions/XShm.h,
+          [AC_DEFINE(HAVE_MITSHM,1) LIBS="-lXext $LIBS"],
+          AS_MESSAGE(checking Compiling without the MITSHM X extension),
+          [#include <X11/Xlib.h>])
+-fi
++	fi
+ 
+-AC_CHECK_HEADER(X11/extensions/xf86vmode.h,
++	AC_CHECK_HEADER(X11/extensions/xf86vmode.h,
+          [AC_DEFINE(HAVE_XVIDMODE,1) LIBS="-lXxf86vm $LIBS"],
+          AS_MESSAGE(checking Compiling without the XF86 video mode extension),
+          [#include <X11/Xlib.h>])
++fi
++
++
+ 
+ PACKAGE_VERSION=`cat VERSION`
+ VV=$PACKAGE_VERSION
