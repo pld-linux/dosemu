@@ -72,7 +72,7 @@ Dosemu to Emulator systemu DOS. Po zainstalowaniu mo¿esz go uruchomiæ
 komend± "dos".
 
 Je¶li korzystasz z dosowych programów i chcia³by¶ je uruchamiaæ na
-twoim Linuksowym systemie zainstaluj dosemu. Mo¿esz te¿ potrzebowaæ
+twoim linuksowym systemie zainstaluj dosemu. Mo¿esz te¿ potrzebowaæ
 pakietów dosemu-freedos-*.
 
 %description -l pt_BR
