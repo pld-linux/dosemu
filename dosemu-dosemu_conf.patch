@@ -1,0 +1,60 @@
+--- etc/dosemu.conf	Tue May 29 01:16:49 2001
++++ etc.new/dosemu.conf	Sun Dec 16 01:55:02 2001
+@@ -43,7 +43,7 @@
+ $_xms = (1024)		# in Kbyte
+ $_ems = (2048)		# in Kbyte
+ $_ems_frame = (0xe000)
+-$_dpmi = (off)		# in Kbyte
++$_dpmi = (4096)		# in Kbyte
+ $_dosmem = (640)	# in Kbyte, < 640
+ $_hardware_ram = ""	# list of segment values/ranges such as
+ 			# "0xc8000 range 0xcc000,0xcffff"
+@@ -71,8 +71,8 @@
+ $_term_updfreq = (4)	# time between refreshs (units: 20 == 1 second)
+ $_escchar = (30)	# 30 == Ctrl-^, special-sequence prefix
+ 
+-$_rawkeyboard = (0)	# bypass normal keyboard input, maybe dangerous
+-$_layout = "auto"	# one of: finnish(-latin1), de(-latin1), be, it, us
++$_rawkeyboard = (1)	# bypass normal keyboard input, maybe dangerous
++$_layout = "us"		# one of: finnish(-latin1), de(-latin1), be, it, us
+ 			# uk, dk(-latin1), keyb-no, no-latin1, dvorak, po
+ 			# sg(-latin1), fr(-latin1), sf(-latin1), es(-latin1)
+ 			# sw, hu(-latin2), hu-cwi, keyb-user
+@@ -110,8 +110,8 @@
+ 
+ 
+ $_video = "vga"		# one of: plainvga, vga, ega, mda, mga, cga
+-$_console = (0)		# use 'console' video
+-$_graphics = (0)	# use the cards BIOS to set graphics
++$_console = (1)		# use 'console' video
++$_graphics = (1)	# use the cards BIOS to set graphics
+ $_videoportaccess = (1)	# allow videoportaccess when 'graphics' enabled
+ $_vbios_seg = (0xc000)	# set the address of your VBIOS (e.g. 0xe000)
+ $_vbios_size = (0x10000)# set the size of your BIOS (e.g. 0x8000)
+@@ -130,7 +130,7 @@
+ 			# "threeinch:/dev/fd0"
+ $_floppy_b = ""		# dito for B:
+ 
+-$_hdimage = "freedos"	# list of hdimages under DOSEMU_LIB_DIR
++$_hdimage = "bootdir"	# list of hdimages under DOSEMU_LIB_DIR
+ 			# assigned in this order such as
+ 			# "hdimage_c hdimage_d hdimage_e"
+ 			# If the name begins with '/dev/', then partion
+@@ -157,7 +157,7 @@
+ 
+ $_mouse = ""		# one of: microsoft, mousesystems, logitech, mmseries
+ 			# mouseman, hitachi, busmouse, ps2, imps2
+-$_mouse_dev = ""	# one of: com1, com2, com3, com4 or /dev/mouse
++$_mouse_dev = "/dev/mouse"	# one of: com1, com2, com3, com4 or /dev/mouse
+ $_mouse_flags = ""	# list of none or one or more of:
+ 			# "emulate3buttons cleardtr"
+ $_mouse_baud = (0)	# baudrate, 0 == don't set
+@@ -172,7 +172,7 @@
+ 
+ $_ipxsupport = (off)	# or on
+ $_novell_hack = (off)
+-$_vnet = (off)		# 'on' for packet-multi (used by dosnet)
++$_vnet = (on)		# 'on' for packet-multi (used by dosnet)
+ 
+ $_sound = (off)		# sound support on/off
+ $_sb_base = (0x220)
