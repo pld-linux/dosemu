@@ -4,8 +4,8 @@ Summary(fr):	Emulateur DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.1
-Release:	1
-Copyright:	distributable
+Release:	2
+License:	Distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
@@ -26,16 +26,16 @@ Patch4:		%{name}-0.98.1-justroot.patch
 Patch5:		%{name}-make-new.patch
 Patch6:		%{name}m-1.0.0-glibc22.patch
 Patch7:		%{name}-1.0.1-broken.patch
+URL:		http://www.dosemu.org/
 BuildRequires:	bin86
 BuildRequires:	mtools
 BuildRequires:	unzip
 BuildRequires:	bison
 BuildRequires:	flex
-Conflicts:	kernel < 2.0.28
 Requires:	mtools >= 3.6
-Url:		http://www.dosemu.org
 Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Conflicts:	kernel < 2.0.28
 
 %description
 Dosemu is a DOS emulator. Once you've installed dosemu, start the DOS
