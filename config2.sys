@@ -1,3 +1,0 @@
-DOS=HIGH,UMB
-DEVICEHIGH=dosemu\cdrom.sys
-LASTDRIVE=K
