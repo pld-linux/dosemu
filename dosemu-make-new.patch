@@ -1,28 +1,56 @@
-diff -ur dosemu-1.0.2.orig/base-configure.in dosemu-1.0.2/base-configure.in
---- dosemu-1.0.2.orig/base-configure.in	Sun Jun 18 16:34:26 2000
-+++ dosemu-1.0.2/base-configure.in	Thu Aug 17 09:56:30 2000
-@@ -3855,19 +3855,8 @@
-   OPT="$OPT -fomit-frame-pointer"  # never omit the frame pointer when debugging!
+--- dosemu-1.1.4/base-configure.in.orig	Wed Dec 18 02:36:44 2002
++++ dosemu-1.1.4/base-configure.in	Sat Jan 25 23:00:39 2003
+@@ -532,14 +532,13 @@
+ AC_SUBST(INCDIR)
+ 
+ if test "$dodebug" = "yes"; then
+-  COPTFLAGS=" -g -Wall -D_DEBUG"
+-  OPT="-O"
++  COPTFLAGS=" -Wall -D_DEBUG"
++  OPT="$OPTFLAGS"
+ else
+   COPTFLAGS=" -Wall"
+-  OPT="-O2"   # BIG NOTE: do _not_ use -O3,
++  OPT="$OPTFLAGS"   # BIG NOTE: do _not_ use -O3,
+               # because in forces _inline_ at places where we don't want it !
+               # If we want _inline_, well then we 'code' it.
+-  OPT="$OPT -fomit-frame-pointer"  # never omit the frame pointer when debugging!
  fi
  
--# -m486 is usually in the specs for the compiler
--case "$host_cpu" in
--  i[[456]]86)
--    OPT="$OPT -m486 -malign-loops=2 -malign-jumps=2 -malign-functions=2"
--    ;;
--  i386)
--    OPT="$OPT -m386"
--    ;;
--  *)
--    ;;
--esac
+ dnl CPU emulator
+@@ -625,32 +624,6 @@
+   fi
  
--OPT="$OPT -MD" # this should give painless dependencies
-+OPT="$OPTFLAGS -MD" # this should give painless dependencies
  
- # OPT=-fno-inline
- if test "$CONFIG_HOST" = "linux"; then
-diff -ur dosemu-1.0.1.orig/man/Makefile dosemu-1.0.1/man/Makefile
+-  # -m486 is usually in the specs for the compiler
+-  # but gcc-3.0 wants -mcpu=i486 instead
+-  # let the compiler options be dependent of the _target_
+-  # where dosemu is compiled for, not the host
+-  if test "$target_cpu" = "athlon" -a $GCC_VERSION_CODE -le 2095 ;  then
+-    target_cpu="i686"
+-  fi
+-  if test "$GCC_VERSION_CODE" -ge 2095 ; then
+-     OPT="$OPT -mcpu=$target_cpu"
+-  else
+-     case "$target_cpu" in
+-       i486)
+-         OPT="$OPT -m486"
+-         ;;
+-       i386)
+-         OPT="$OPT -m386"
+-         ;;
+-       *)
+-         ;;
+-     esac
+-  fi
+-  if test "$target_cpu" = "athlon"; then
+-     OPT="$OPT -malign-functions=4 -fexpensive-optimizations"
+-  elif test "$target_cpu" = "i486"; then
+-     OPT="$OPT -malign-loops=2 -malign-jumps=2 -malign-functions=2"
+-  fi
+   GCC_VERSION_CODE="-DGCC_VERSION_CODE=$GCC_VERSION_CODE"
+ 
+   echo -n "checking for glibc..."
 --- dosemu-1.0.1.orig/man/Makefile	Sun Mar  5 13:57:36 2000
 +++ dosemu-1.0.1/man/Makefile	Thu Aug 17 09:57:21 2000
 @@ -7,6 +7,6 @@
@@ -33,18 +61,189 @@ diff -ur dosemu-1.0.1.orig/man/Makefile dosemu-1.0.1/man/Makefile
 +	install *dos*.1 mkfatimage*.1 $(INSTROOT)/usr/share/man/man1
  
  clean realclean:
-diff -ur dosemu-1.0.2.orig/src/arch/linux/Makefile.main dosemu-1.0.2/src/arch/linux/Makefile.main
---- dosemu-1.0.2.orig/src/arch/linux/Makefile.main	Tue Mar 28 01:22:01 2000
-+++ dosemu-1.0.2/src/arch/linux/Makefile.main	Thu Aug 17 10:02:53 2000
-@@ -324,9 +324,9 @@
- 	  install -m 0744 ../etc/keymap/* $(INSTROOT)/var/lib/dosemu/keymap; \
+--- dosemu-1.1.4/src/arch/linux/Makefile.main.orig	Wed Dec 18 02:36:44 2002
++++ dosemu-1.1.4/src/arch/linux/Makefile.main	Sat Jan 25 23:12:44 2003
+@@ -8,7 +8,7 @@
+ # You should do a "make" to compile and a "make install" as root to
+ # install DOSEMU.
+ 
+-INSTALL = install -c -o root
++INSTALL = install -c
+ TMP = ../tmp
+ COM = ../src/plugin/commands
+ SYS = ../commands
+@@ -273,11 +273,11 @@
+ install:
+ 	rm -rf $(TMP)
+ 	mkdir -p -m 0755 $(TMP)/dosemu/freedos/dosemu
+-	if [ ! -d $(dosemudir) ]; then \
+-	  $(INSTALL) -d $(dosemudir); \
++	if [ ! -d $(DESTDIR)$(dosemudir) ]; then \
++	  $(INSTALL) -d $(DESTDIR)$(dosemudir); \
  	fi
- 	@if [ -f $(INSTROOT)/lib/libemu ]; then rm -f $(INSTROOT)/lib/libemu ; fi
--	@install -c -o root -m 0755 $(BINPATH)/bin/$(DOSBIN) $(INSTROOT)/usr/bin
-+	@install -c $(BINPATH)/bin/$(DOSBIN) $(INSTROOT)/usr/bin
- ifdef  USE_MHPDBG
--	@install -c -o root -m 0755 $(BINPATH)/bin/dosdebug $(INSTROOT)/usr/bin
-+	@install -c $(BINPATH)/bin/dosdebug $(INSTROOT)/usr/bin
+-	if [ ! -d $(syshdimagedir) ]; then \
+-	  $(INSTALL) -d $(syshdimagedir); \
++	if [ ! -d $(DESTDIR)$(syshdimagedir) ]; then \
++	  $(INSTALL) -d $(DESTDIR)$(syshdimagedir); \
+ 	fi
+ 	for i in aspi.sys cdrom.sys dumpconf.sys ems.sys emufs.sys fossil.com isemu.com mgarrot.com; do \
+ 	  $(INSTALL) -m 0644 $(SYS)/$$i $(TMP)/dosemu/freedos/dosemu; \
+@@ -286,93 +286,93 @@
+ 	for i in `(cd $(COM); for i in *.com; do if [ -L $$i ]; then echo -n " $$i";fi;done)`; do \
+ 	  ln -sf generic.com $(TMP)/dosemu/freedos/dosemu/$$i; \
+ 	done
+-	cp -a $(TMP)/dosemu/freedos $(dosemudir)
++	cp -a $(TMP)/dosemu/freedos $(DESTDIR)$(dosemudir)
+ 	cd $(TMP)/dosemu; \
+ 	for i in `find freedos -type f` ; do \
+-	  ln -snf $(dosemudir)/$$i $$i; \
++	  ln -snf $(DESTDIR)$(dosemudir)/$$i $$i; \
+ 	done
+ 	tar -cf- -C $(TMP) dosemu/freedos | gzip -9 > $(TMP)/dosemu/dosemu-bin.tgz
+-	$(INSTALL) -m 0644 $(TMP)/dosemu/dosemu-bin.tgz $(dosemudir)
++	$(INSTALL) -m 0644 $(TMP)/dosemu/dosemu-bin.tgz $(DESTDIR)$(dosemudir)
+ 	rm -rf $(TMP)
+ 	mkdir -p -m 0755 $(TMP)/dosemu/freedos/dosemu
+ 	if [ -f ../$(fdtarball) ]; then \
+ 	  tar -C $(dosemudir)/.. -xpzf ../dosemu-freedos-bin.tgz; \
+ 	  tar -C $(TMP) -xpzf ../dosemu-freedos-bin.tgz; \
+ 	  cd $(TMP)/dosemu; \
+-	  rm -f FDchange.log $(dosemudir)/FDchange.log; \
+-	  rm -f README.bindist $(dosemudir)/README.bindist; \
++	  rm -f FDchange.log $(DESTDIR)$(dosemudir)/FDchange.log; \
++	  rm -f README.bindist $(DESTDIR)$(dosemudir)/README.bindist; \
+ 	  for i in `find freedos -type f | grep -v autoexec.bat | grep -v config.sys` ; do \
+-	    ln -snf $(dosemudir)/$$i $$i; \
++	    ln -snf $(DESTDIR)$(dosemudir)/$$i $$i; \
+ 	  done; \
+-	  $(INSTALL) $(dosemudir)/freedos/config.sys freedos; \
+-	  $(INSTALL) $(dosemudir)/freedos/autoexec.bat freedos; \
+-	  cd .. ; tar -cf- dosemu |gzip -9 >$(dosemudir)/dosemu-freedos-bin.tgz; \
++	  $(INSTALL) $(DESTDIR)$(dosemudir)/freedos/config.sys freedos; \
++	  $(INSTALL) $(DESTDIR)$(dosemudir)/freedos/autoexec.bat freedos; \
++	  cd .. ; tar -cf- dosemu |gzip -9 >$(DESTDIR)$(dosemudir)/dosemu-freedos-bin.tgz; \
+ 	fi
+ 	sed -e "s|SYSTEM_INSTALL_PATH=NOT_SYSTEM_WIDE|SYSTEM_INSTALL_PATH=$(dosemudir)|" \
+ 	     -e "s|SYSTEM_CONF_PATH=NOT_SYSTEM_WIDE|SYSTEM_CONF_PATH=$(sysconfdir)|" \
+ 	     -e "s|SYSTEM_XFONTS_PATH=NOT_SYSTEM_WIDE|SYSTEM_XFONTS_PATH=$(x11fontdir)|" \
+ 	              ../dist/dosemu > $(TMP)/dosemu/dosemu
+-	if [ ! -d $(sysconfdir) ]; then \
+-	  $(INSTALL) -d $(sysconfdir); \
++	if [ ! -d $(DESTDIR)$(sysconfdir) ]; then \
++	  $(INSTALL) -d $(DESTDIR)$(sysconfdir); \
+ 	fi
+-	if [ ! -f $(sysconfdir)/dosemu.conf ]; then \
+-	  $(INSTALL) -m 0644 ../etc/dosemu.conf ../etc/dosemu.users.easy ../etc/dosemu.users.secure $(sysconfdir); \
+-	  $(INSTALL) -m 0644 ../etc/global.conf $(sysconfdir)/global.conf.example; \
++	if [ ! -f $(DESTDIR)$(sysconfdir)/dosemu.conf ]; then \
++	  $(INSTALL) -m 0644 ../etc/dosemu.conf ../etc/dosemu.users.easy ../etc/dosemu.users.secure $(DESTDIR)$(sysconfdir); \
++	  $(INSTALL) -m 0644 ../etc/global.conf $(DESTDIR)$(sysconfdir)/global.conf.example; \
+ 	fi
+-	if [ ! -d $(dosemudir)/keymap ]; then \
+-	  $(INSTALL) -d $(dosemudir)/keymap; \
+-	  $(INSTALL) -m 0644 ../etc/keymap/* $(dosemudir)/keymap; \
++	if [ ! -d $(DESTDIR)$(dosemudir)/keymap ]; then \
++	  $(INSTALL) -d $(DESTDIR)$(dosemudir)/keymap; \
++	  $(INSTALL) -m 0644 ../etc/keymap/* $(DESTDIR)$(dosemudir)/keymap; \
+ 	fi
+-	$(INSTALL) -m 0755 ../bin/$(DOSBIN) $(bindir)
+-	$(INSTALL) -m 0755 $(TMP)/dosemu/dosemu $(bindir)
+-	$(INSTALL) -m 0644 ../bin/dosemu.map $(dosemudir)/dosemu-$(THISVERSION).map
+-	$(INSTALL) -m 0755 ../bin/mkfatimage $(bindir)
+-	$(INSTALL) -m 0755 ../bin/mkfatimage16 $(bindir)
++	$(INSTALL) -m 0755 ../bin/$(DOSBIN) $(DESTDIR)$(bindir)
++	$(INSTALL) -m 0755 $(TMP)/dosemu/dosemu $(DESTDIR)$(bindir)
++	$(INSTALL) -m 0644 ../bin/dosemu.map $(DESTDIR)$(dosemudir)/dosemu-$(THISVERSION).map
++	$(INSTALL) -m 0755 ../bin/mkfatimage $(DESTDIR)$(bindir)
++	$(INSTALL) -m 0755 ../bin/mkfatimage16 $(DESTDIR)$(bindir)
+ ifdef USE_SBEMU
+-	$(INSTALL) -m 0755 ../bin/midid $(bindir)
++	$(INSTALL) -m 0755 ../bin/midid $(DESTDIR)$(bindir)
  endif
- ifndef ELF
- 	@install -m 0644 $(LIBDOSEMU) $(INSTROOT)/usr/lib/libdosemu-$(THISVERSION)
+ ifdef  USE_MHPDBG
+-	$(INSTALL) -m 0755 ../bin/dosdebug $(bindir)
++	$(INSTALL) -m 0755 ../bin/dosdebug $(DESTDIR)$(bindir)
+ endif
+-	if [ -f $(bindir)/xdosemu ]; then \
+-		$(INSTALL) -m 0700 $(bindir)/xdosemu /tmp; \
+-		rm -f $(bindir)/xdosemu; \
++	if [ -f $(DESTDIR)$(bindir)/xdosemu ]; then \
++		$(INSTALL) -m 0700 $(DESTDIR)$(bindir)/xdosemu /tmp; \
++		rm -f $(DESTDIR)$(bindir)/xdosemu; \
+ 	fi
+-	if [ ! -d $(docdir) ]; then \
+-	  $(INSTALL) -d $(docdir); \
++	if [ ! -d $(DESTDIR)$(docdir) ]; then \
++	  $(INSTALL) -d $(DESTDIR)$(docdir); \
+ 	fi
+-	$(INSTALL) -m 0644 ../README.bindist $(docdir)
++	$(INSTALL) -m 0644 ../README.bindist $(DESTDIR)$(docdir)
+ 	$(INSTALL) -m 0644 ../doc/{README,README-tech,dosemu-HOWTO,sound-usage}.txt \
+-	   ../doc/announce $(docdir)
+-	if [ ! -d $(mandir)/man1 ]; then \
+-	  $(INSTALL) -d $(mandir)/man1; \
++	   ../doc/announce $(DESTDIR)$(docdir)
++	if [ ! -d $(DESTDIR)$(mandir)/man1 ]; then \
++	  $(INSTALL) -d $(DESTDIR)$(mandir)/man1; \
+ 	fi
+ 	$(INSTALL) -m 0644 ../man/{mkfatimage16,dosemu,dosemu.bin,dosdebug}.1 \
+-	   $(mandir)/man1
+-	ln -sf dosemu.1 $(mandir)/man1/xdosemu.1
++	   $(DESTDIR)$(mandir)/man1
++	ln -sf dosemu.1 $(DESTDIR)$(mandir)/man1/xdosemu.1
+ ifdef X_SUPPORT
+-	if [ ! -e $(prefix)/xdosemu ]; then ln -s dosemu $(bindir)/xdosemu; fi
+-	if [ ! -d $(x11fontdir) ]; then \
+-	  $(INSTALL) -d $(x11fontdir); \
++	if [ ! -e $(DESTDIR)$(prefix)/xdosemu ]; then ln -s dosemu $(DESTDIR)$(bindir)/xdosemu; fi
++	if [ ! -d $(DESTDIR)$(x11fontdir) ]; then \
++	  $(INSTALL) -d $(DESTDIR)$(x11fontdir); \
+ 	fi
+-	if [ -w $(x11fontdir) ] && \
+-	    [ -d $(X11fontdir) ] && \
+-	    [ ! -e $(x11fontdir)/vga.pcf ] && \
+-	    [ ! -e $(x11fontdir)/vga.pcf.Z ] && \
+-	    [ ! -e $(x11fontdir)/vga.pcf.gz ]; then \
++	if [ -w $(DESTDIR)$(x11fontdir) ] && \
++	    [ -d $(DESTDIR)$(X11fontdir) ] && \
++	    [ ! -e $(DESTDIR)$(x11fontdir)/vga.pcf ] && \
++	    [ ! -e $(DESTDIR)$(x11fontdir)/vga.pcf.Z ] && \
++	    [ ! -e $(DESTDIR)$(x11fontdir)/vga.pcf.gz ]; then \
+ 		echo "-> Main DOSEMU files installation done. Installing the X PC fonts..."; \
+-		$(INSTALL) -m 0644 ../etc/vga.pcf $(x11fontdir); \
+-		gzip -9 $(x11fontdir)/vga.pcf; \
+-		bdftopcf ../etc/vga11x19.bdf | gzip -c -9 > $(x11fontdir)/vga11x19.pcf.gz; \
+-		bdftopcf ../etc/vga-cp866.bdf | gzip -c -9 > $(x11fontdir)/vga-cp866.pcf.gz; \
+-		bdftopcf ../etc/vga10x20-cp866.bdf | gzip -c -9 > $(x11fontdir)/vga10x20-cp866.pcf.gz; \
+-		chmod 0644 $(x11fontdir)/vga11x19.pcf.gz $(x11fontdir)/vga-cp866.pcf.gz $(x11fontdir)/vga10x20-cp866.pcf.gz; \
+-		if [ ! -f $(x11fontdir)/fonts.alias ]; then \
+-		  $(INSTALL) -m 0644 ../etc/dosemu.alias $(x11fontdir)/fonts.alias; \
+-		elif [ grep ^vga $(x11fontdir)/fonts.alias ]; then \
+-	          cat ../etc/dosemu.alias >> $(x11fontdir)/fonts.alias; \
++		$(INSTALL) -m 0644 ../etc/vga.pcf $(DESTDIR)$(x11fontdir); \
++		gzip -9 $(DESTDIR)$(x11fontdir)/vga.pcf; \
++		bdftopcf ../etc/vga11x19.bdf | gzip -c -9 > $(DESTDIR)$(x11fontdir)/vga11x19.pcf.gz; \
++		bdftopcf ../etc/vga-cp866.bdf | gzip -c -9 > $(DESTDIR)$(x11fontdir)/vga-cp866.pcf.gz; \
++		bdftopcf ../etc/vga10x20-cp866.bdf | gzip -c -9 > $(DESTDIR)$(x11fontdir)/vga10x20-cp866.pcf.gz; \
++		chmod 0644 $(DESTDIR)$(x11fontdir)/vga11x19.pcf.gz $(DESTDIR)$(x11fontdir)/vga-cp866.pcf.gz $(DESTDIR)$(x11fontdir)/vga10x20-cp866.pcf.gz; \
++		if [ ! -f $(DESTDIR)$(x11fontdir)/fonts.alias ]; then \
++		  $(INSTALL) -m 0644 ../etc/dosemu.alias $(DESTDIR)$(x11fontdir)/fonts.alias; \
++		elif [ grep ^vga $(DESTDIR)$(x11fontdir)/fonts.alias ]; then \
++	          cat ../etc/dosemu.alias >> $(DESTDIR)$(x11fontdir)/fonts.alias; \
+ 		fi; \
+-		cd $(x11fontdir); \
++		cd $(DESTDIR)$(x11fontdir); \
+ 		mkfontdir; \
+ 	fi;
+ endif
+--- dosemu-1.1.4/src/arch/linux/dosext/sound/midid/Makefile.orig	Wed Dec 18 02:36:44 2002
++++ dosemu-1.1.4/src/arch/linux/dosext/sound/midid/Makefile	Sun Jan 26 00:14:10 2003
+@@ -15,7 +15,7 @@
+ # No servicable parts below
+ 
+ CC=gcc
+-CFLAGS=-Wall -pipe -O -g
++CFLAGS=-Wall -pipe $(OPTFLAGS)
+ LDFLAGS += -Wall
+ OBJECTS=midid.o events.o io.o stats.o emulation.o device.o \
+ oss.o midout.o timid.o null.o
