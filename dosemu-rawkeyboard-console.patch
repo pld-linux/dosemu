@@ -1,20 +1,33 @@
---- src/base/keyboard/keyb_clients.c.old	Sun Mar 11 14:27:25 2001
-+++ src/base/keyboard/keyb_clients.c	Sun Apr  7 18:09:53 2002
-@@ -188,13 +188,13 @@
+--- src/base/keyboard/keyb_clients.c.old	Thu Apr  4 02:00:53 2002
++++ src/base/keyboard/keyb_clients.c	Thu Apr  4 02:01:10 2002
+@@ -188,7 +188,7 @@
     }
     else 
  #endif
 -   if (config.usesX || (config.console_keyb && can_do_root_stuff))  {
--      if (config.usesX || config.console)
 +   if (config.usesX || config.console_keyb)  {
-+/*      if (config.usesX || config.console) */
+       if (config.usesX || config.console)
           Keyboard = &Keyboard_raw;
--      else {
-+/*      else {
- 	 Keyboard = &Keyboard_slang;
-          config.console_keyb=0;
--      }
-+      } */
-    }
-    else {
-       Keyboard = &Keyboard_slang;
+       else {
+--- src/env/video/vc.c.old	Thu Apr  4 01:49:50 2002
++++ src/env/video/vc.c	Thu Apr  4 01:50:13 2002
+@@ -136,7 +136,7 @@
+     c_printf("major = %d minor = %d\n",
+ 	    major, minor);
+     /* console major num is 4, minor 64 is the first serial line */
+-    if (can_do_root_stuff && (major == 4) && (minor < 64)) {
++    if ((major == 4) && (minor < 64)) {
+        scr_state.console_no = minor;
+        config.console=1;
+     }
+--- src/base/init/config.c.old	Sun Apr  7 18:42:14 2002
++++ src/base/init/config.c	Sun Apr  7 18:43:05 2002
+@@ -741,7 +741,7 @@
+ 	config.emuretrace = 0;	/* already emulated */
+     }
+     else {
+-	if (!can_do_root_stuff && config.console) {
++	if (!can_do_root_stuff && config.console_video) {
+ 	    /* force use of Slang-terminal on console too */
+ 	    config.console = config.console_video = config.vga = config.graphics = 0;
+ 	    config.cardtype = 0;
