@@ -1,0 +1,20 @@
+--- src/base/keyboard/keyb_clients.c.old	Sun Mar 11 14:27:25 2001
++++ src/base/keyboard/keyb_clients.c	Sun Apr  7 18:09:53 2002
+@@ -188,13 +188,13 @@
+    }
+    else 
+ #endif
+-   if (config.usesX || (config.console_keyb && can_do_root_stuff))  {
+-      if (config.usesX || config.console)
++   if (config.usesX || config.console_keyb)  {
++/*      if (config.usesX || config.console) */
+          Keyboard = &Keyboard_raw;
+-      else {
++/*      else {
+ 	 Keyboard = &Keyboard_slang;
+          config.console_keyb=0;
+-      }
++      } */
+    }
+    else {
+       Keyboard = &Keyboard_slang;
