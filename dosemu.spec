@@ -33,7 +33,7 @@ Source5:	config2.sys
 Source6:	keybpl.exe
 Source7:	egapl.exe
 Source8:	shsucdx.exe
-Patch0:		ftp://ftp.dosemu.org/dosemu/patch-1.0.2.1.gz
+Patch0:		ftp://ftp.dosemu.org/dosemu/fixes/patch-1.0.2.1.gz
 Patch1:		%{name}-1.0.2-man-pages.patch
 Patch2:		%{name}-0.98.1-justroot.patch
 Patch3:		%{name}-0.98.1-security.patch
