@@ -9,37 +9,40 @@ Summary(pl):	Emulator DOSa
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.0.2
-Release:	17
+Version:	1.1.3
+Release:	1
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
+Source0:	http://prdownloads.sourceforge.net/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
-Patch0:		ftp://ftp.dosemu.org/dosemu/fixes/patch-1.0.2.1.gz
-Patch1:		%{name}-1.0.2-man-pages.patch
-Patch2:		%{name}-0.98.1-security.patch
-Patch3:		%{name}-make-new.patch
-Patch4:		%{name}-Polish_keyboard.patch
-Patch5:		%{name}-%{name}_conf.patch
-Patch6:		%{name}-alt224.patch
-Patch7:		pmstack.diff
-Patch8:		%{name}-rawkeyboard-console.patch
-Patch9:		%{name}-comcom.patch
-Patch10:	%{name}-global.conf-xdos.patch
-Patch11:	c_run_irqs.diff
+Source5:	%{name}.desktop
+Patch0:		http://dosemu.sourceforge.net/testing/patch-1.1.3.1.gz
+Patch1:		http://dosemu.sourceforge.net/testing/patch-1.1.3.2.gz
+Patch11:	%{name}-1.0.2-man-pages.patch
+Patch12:	%{name}-1.1-global.conf.patch
+Patch20:	%{name}-mfs.patch
+Patch21:	%{name}-escape.patch
+Patch22:	%{name}-Oacute.patch
+Patch30:	%{name}-doSgmlTools.patch
+Patch31:	%{name}-dont_build_dvi.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
 BuildRequires:	bin86
 BuildRequires:	bison
+BuildRequires:	docbook-dtd-sgml
 BuildRequires:	flex
+BuildRequires:	lynx
+BuildRequires:	openjade
 BuildRequires:	perl
+BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
 BuildRequires:	unzip
-Requires:	dos
+
+#Requires:	dos
 %{?_with_static:BuildRequires:	glibc-static}
 %{?_with_static:BuildRequires:	XFree86-static}
 %{?_with_static:BuildRequires:	slang-static}
@@ -88,7 +91,7 @@ Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
 Group:		Applications/Emulators
 Provides:	dosemu
 Obsoletes:	dosemu
-Requires:	dos
+#Requires:	dos
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
@@ -135,19 +138,19 @@ mkfatimage16.
 %setup -q -a1 -a2
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p0
-%patch6 -p1
-%patch7 -p0
-%patch8 -p0
-%patch9 -p1
-%patch10 -p1
-%patch11 -p0
+%patch11 -p1
+%patch12 -p1
+%patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch30 -p1
+%patch31 -p1
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
+
+./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
+plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off 
 
 cp -f base-configure.in configure.in
 %{__autoconf}
@@ -172,6 +175,10 @@ mv -f bin/dosemu.bin bin/dos-x
 mv -f bin/dos-nox bin/dosemu.bin
 
 mv -f man/dosemu.bin.1 man/dos.1
+
+# documentation
+%{__make} docs
+find src/doc -name "*.html" -exec cp -f '{}' doc/ ';' 
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -199,11 +206,12 @@ install src/plugin/commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install dosemu/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 cp %{SOURCE3} PRZECZYTAJ_TO
 cp %{SOURCE4} README.PLD
+install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/System/
 
 #ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
 
 # Take out irritating ^H's from the documentation
-for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.\010//g' > doc/$i ; done
+#for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.\010//g' > doc/$i ; done
 
 rm -f doc/{configuration,dosemu.lsm}
 
@@ -212,7 +220,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc QuickStart COPYING ChangeLog* doc/* PRZECZYTAJ_TO README.PLD
+%doc QuickStart COPYING ChangeLog* doc/*.html PRZECZYTAJ_TO README.PLD
 %dir %{_dosemudir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
@@ -230,7 +238,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n xdosemu
 %defattr(644,root,root,755)
-%doc QuickStart COPYING ChangeLog* doc/* PRZECZYTAJ_TO README.PLD
+%doc QuickStart COPYING ChangeLog* doc/*.html PRZECZYTAJ_TO README.PLD
 %dir %{_dosemudir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
@@ -245,6 +253,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/xdos.1*
 %lang(pl) %{_mandir}/pl/man1/d*
 %lang(pl) %{_mandir}/pl/man1/xdos.1*
+%{_applnkdir}/System/*
 %{_pixmapsdir}/dosemu.xpm
 
 %files utils
