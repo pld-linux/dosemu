@@ -1,6 +1,7 @@
 # Conditional build:
-# --with static	- links statically
-
+# --with static		- links statically
+# --without dist_kernel	- without distribution kernel
+#
 %define         _kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null| cut -d'"' -f2)
 %define         _kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
@@ -21,7 +22,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-%define _rel	9
+%define _rel	10
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
@@ -131,9 +132,10 @@ Summary:	kernel module dosnet.o
 Summary(pl):	Modu³ dosnet.o do kernela
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
+Prereq:		/sbin/depmod
+%{!?_without_dist_kernel:%requires_releq_kernel_up}
 Requires:	%{name} = %{version}
 Obsoletes:	dosnet
-Prereq:		/sbin/depmod
 
 %description -n kernel-net-dosnet
 Kernel module for dosnet (vnet). Dosnet lets you establish TCP/IP
@@ -151,9 +153,10 @@ Summary:	kernel-smp module dosnet.o
 Summary(pl):	Modu³ dosnet.o do kernela SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
+Prereq:		/sbin/depmod
+%{!?_without_dist_kernel:%requires_releq_kernel_smp}
 Requires:	%{name} = %{version}
 Obsoletes:	dosnet
-Prereq:		/sbin/depmod
 
 %description -n kernel-smp-net-dosnet
 Kernel module for dosnet (vnet). Dosnet lets you establish TCP/IP
