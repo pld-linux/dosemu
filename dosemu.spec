@@ -1,7 +1,7 @@
 Summary:	A DOS emulator.
 Name:		dosemu
-Version:	0.99.13
-Release:	3
+Version:	1.0.1
+Release:	1
 Copyright:	distributable
 Group:		Applications/Emulators
 Group(pl):	Aplikacje/Emulatory
@@ -9,9 +9,9 @@ Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.freedos.org/files/distributions/base1.zip
 Source2:	http://www.freedos.org/files/distributions/util1.zip
 Source3:	http://www.freedos.org/files/distributions/edit1.zip
-Source4:	ftp://ftp.gcfl.net/freedos/kernel/latestbin.zip
-Source5:	ftp://ftp.simtel.net/pub/simtelnet/msdos/editor/vim53d16.zip
-Source6:	ftp://ftp.simtel.net/pub/simtelnet/msdos/editor/vim53rt.zip
+Source4: 	ftp://ftp.gcfl.net/freedos/kernel/ker2019x.zip
+Source5:	ftp://ftp.home.vim.org/pub/vim/pc/vim56d16.zip
+Source6:	ftp://ftp.home.vim.org/pub/vim/pc/vim56rt.zip
 Source7:	autoexec.bat
 Source8:	config.sys
 Patch0:		dosemu-0.66.7-config.patch
@@ -19,7 +19,9 @@ Patch1:		dosemu-0.66.7-glibc.patch
 Patch2:		dosemu-0.66.7-pushal.patch
 Patch3:		dosemu-0.98.1-security.patch
 Patch4:		dosemu-0.98.1-justroot.patch
-Patch5:		dosemu-make.patch
+Patch5:		dosemu-make-new.patch
+Patch6:		dosemum-1.0.0-glibc22.patch
+Patch7:		dosemu-1.0.1-broken.patch
 BuildRequires:	mtools
 Requires:	kernel >= 2.0.28, mtools >= 3.6
 Url:		http://www.dosemu.org
@@ -77,6 +79,8 @@ system's partitions were not formatted and installed with DOS.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
+%patch7 -p1
 
 rm -rf freedos
 mkdir freedos
@@ -84,16 +88,16 @@ mkdir freedos/kernel
 mkdir freedos/tmp
 mkdir freedos/vim
 
-unzip -L -d freedos/kernel/ -j $RPM_SOURCE_DIR/latestbin.zip
+unzip -o -L -d freedos/kernel/ -j $RPM_SOURCE_DIR/ker2019x.zip
 cp -f contrib/dosC/dist/* freedos/kernel
 for i in $RPM_SOURCE_DIR/{base1.zip,edit1.zip,util1.zip}; do
-	unzip -L -d freedos/tmp $i
+	unzip -o -L -d freedos/tmp $i
 done
 for i in freedos/tmp/*.zip ; do 
-	unzip -L -o -d freedos $i
+	unzip -o -L -o -d freedos $i
 done
-unzip -L -o -d freedos $RPM_SOURCE_DIR/vim53rt.zip
-unzip -L -o -d freedos/vim-5.3 $RPM_SOURCE_DIR/vim53d16.zip
+unzip -L -o -d freedos $RPM_SOURCE_DIR/vim56rt.zip
+unzip -L -o -d freedos/vim-5.6 $RPM_SOURCE_DIR/vim56d16.zip
 
 %build
 ./default-configure --without-x
@@ -106,7 +110,7 @@ mv bin/dos-nox bin/dos
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_mandir}/man1,%{_datadir}/icons,/var/lib/dosemu}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_mandir}/man1,%{_prefix}/X11R6/share/pixmaps,/var/lib/dosemu}
 
 %{__make} install INSTROOT=$RPM_BUILD_ROOT
 
@@ -115,7 +119,7 @@ rm $RPM_BUILD_ROOT%{_bindir}/xdos
 install bin/dos-x $RPM_BUILD_ROOT%{_bindir}/xdos
 install setup-hdimage $RPM_BUILD_ROOT%{_bindir}
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
-install etc/dosemu.xpm $RPM_BUILD_ROOT%{_datadir}/icons
+install etc/dosemu.xpm $RPM_BUILD_ROOT%{_prefix}/X11R6/share/pixmaps
 install etc/dosemu.users.secure $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
 	src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
 	-b freedos/kernel/boot.bin \
@@ -125,7 +129,7 @@ FREEDOS=`/bin/mktemp /tmp/freedos.XXXXXX`
 echo "drive n: file=\"$RPM_BUILD_ROOT/var/lib/dosemu/hdimage.freedos\" offset=8832" > $FREEDOS
 MTOOLSRC=$FREEDOS
 export MTOOLSRC
-mcopy -o/ freedos/vim-5.3 freedos/bin freedos/doc freedos/help freedos/emacs n:
+mcopy -o/ freedos/vim-5.6 freedos/bin freedos/doc freedos/help freedos/emacs n:
 mmd n:/DOSEMU
 mcopy -/ commands/* n:/DOSEMU
 mcopy -o $RPM_SOURCE_DIR/autoexec.bat $RPM_SOURCE_DIR/config.sys commands/exitemu* n:/
@@ -204,14 +208,14 @@ fi
 %{_mandir}/man1/dos.1*
 %{_mandir}/man1/dosdebug.1*
 %{_mandir}/man1/mkfatimage16.1*
-%{_datadir}/icons/dosemu.xpm
+%{_prefix}/X11R6/share/pixmaps/dosemu.xpm
 
 %files -n xdosemu
 %defattr(644,root,root,755)
 %attr(4755,root,root) %{_bindir}/xdos
-%attr(755,root,root) %{_bindir}/xtermdos
+# %attr(755,root,root) %{_bindir}/xtermdos
 %{_mandir}/man1/xdos.1*
-%{_mandir}/man1/xtermdos.1*
+# %{_mandir}/man1/xtermdos.1*
 %{_prefix}/X11R6/lib/X11/fonts/misc/vga.pcf
 
 %files freedos
