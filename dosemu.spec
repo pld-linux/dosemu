@@ -30,11 +30,11 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Dosemu is a DOS emulator. Once you've installed dosemu, start the DOS
-emulator by typing in the dos command.
+emulator by typing in the "dos" command.
 
 You need to install dosemu if you use DOS programs and you want to be
-able to run them on your Red Hat Linux system. You may also need to
-install the dosemu-freedos package.
+able to run them on your GNU/Linux system. You may also need to install
+the dosemu-freedos package.
 
 %package -n xdosemu
 Requires:	%{name} = %{version}
@@ -44,7 +44,7 @@ Group(pl):	Aplikacje/Emulatory
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
-]Window System. Xdosemu provides VGA graphics and mouse support.
+Window System. Xdosemu provides VGA graphics and mouse support.
 
 Install xdosemu if you need to run DOS programs on your system, and
 you'd like to do so with the convenience of graphics support and mouse
@@ -62,7 +62,7 @@ have some version of DOS available or that your system's partitions
 were formatted and installed with DOS. If your system does not meet
 either of the previous requirements, you can instead use the dosemu-
 freedos package, which contains an hdimage file which will be
-installed in teh /var/lib/dosemu directory. The hdimage file is
+installed in the /var/lib/dosemu directory. The hdimage file is
 already bootable with FreeDOS.
 
 You will need to edit your /etc/dosemu.conf file to add the image to
