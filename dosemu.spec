@@ -1,6 +1,5 @@
 # Conditional build:
 # --with static		- linked static 
-# --without dist_kernel	- without distribution kernel
 #
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -207,14 +206,12 @@ for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.\01
 
 rm -f doc/{configuration,dosemu.lsm}
 
-gzip -9nf QuickStart COPYING ChangeLog* doc/* PRZECZYTAJ_TO README.PLD
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc *.gz doc/*
+%doc QuickStart COPYING ChangeLog* doc/* PRZECZYTAJ_TO README.PLD
 %dir %{_dosemudir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
@@ -232,7 +229,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n xdosemu
 %defattr(644,root,root,755)
-%doc *.gz doc/*
+%doc QuickStart COPYING ChangeLog* doc/* PRZECZYTAJ_TO README.PLD
 %dir %{_dosemudir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
