@@ -29,6 +29,8 @@ Patch7:		%{name}-1.0.1-broken.patch
 BuildRequires:	bin86
 BuildRequires:	mtools
 BuildRequires:	unzip
+BuildRequires:	bison
+BuildRequires:	flex
 Conflicts:	kernel < 2.0.28
 Requires:	mtools >= 3.6
 Url:		http://www.dosemu.org
