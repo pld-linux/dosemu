@@ -92,11 +92,12 @@ Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
 grafikleri ve fare desteði vardýr.
 
 %package freedos
-Requires:	%{name} = %{version}
-Summary:	A FreeDOS hdimage for dosemu, a DOS emulator, to use.
+Summary:	A FreeDOS hdimage for dosemu, a DOS emulator, to use
+Summary(pl):	Obraz FreeDOS-a do u¿ywania z dosemu
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
+Requires:	%{name} = %{version}
 
 %description freedos
 Generally, the dosemu DOS emulator requires either that your system
@@ -158,10 +159,10 @@ unzip -L -o -d freedos/vim-5.6 %{SOURCE5}
 
 %build
 ./default-configure --without-x
-echo | make
+echo | %{__make}
 mv -f bin/dos bin/dos-nox
 ./default-configure
-echo | make
+echo | %{__make}
 mv -f bin/dos bin/dos-x
 mv -f bin/dos-nox bin/dos
 
@@ -178,7 +179,8 @@ install setup-hdimage $RPM_BUILD_ROOT%{_bindir}
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 install etc/dosemu.xpm $RPM_BUILD_ROOT%{_prefix}/X11R6/share/pixmaps
 install etc/dosemu.users.secure $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
-	src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
+
+src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
 	-b freedos/kernel/boot.bin \
 	-f $RPM_BUILD_ROOT/var/lib/dosemu/hdimage.freedos \
 	freedos/kernel/* 
@@ -211,13 +213,13 @@ for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//
 
 rm -f doc/{configuration,dosemu.lsm}
 
-mv $RPM_BUILD_ROOT/usr/X11R6/lib/X11/fonts/misc \
-	$RPM_BUILD_ROOT%{_datadir}/fonts
+mv -f $RPM_BUILD_ROOT/usr/X11R6/lib/X11/fonts/misc \
+	$RPM_BUILD_ROOT%{_fontsdir}
 
 bzip2 -dc %{SOURCE9} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 
 gzip -9nf QuickStart COPYING ChangeLog* doc/* \
-	$RPM_BUILD_ROOT%{_datadir}/fonts/misc/*
+	$RPM_BUILD_ROOT%{_fontsdir}/misc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -236,10 +238,10 @@ killall -USR1 xfs > /dev/null 2>&1 ||:
 
 %post freedos
 [ -e /var/lib/dosemu/hdimage.first ] || \
-    ln -s hdimage.freedos /var/lib/dosemu/hdimage.first
+	ln -sf hdimage.freedos /var/lib/dosemu/hdimage.first
 
 %postun freedos
-if [ "$1" =" 0" ]; then
+if [ "$1" = "0" ]; then
 	if [ -e /var/lib/dosemu/hdimage.first ]; then
 		rm -f /var/lib/dosemu/hdimage.first
 	fi
