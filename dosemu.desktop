@@ -6,5 +6,5 @@ Comment[pl]=Emulator DOS-a
 Exec=xdosemu
 Terminal=false
 Type=Application
-Categories=Emulator;
+Categories=Utility;Emulator;
 # vi: encoding=utf-8
