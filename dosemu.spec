@@ -1,5 +1,5 @@
 # Conditional build:
-# --with static		- linked static 
+# --with static		- linked static
 #
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -24,7 +24,7 @@ Patch1:		%{name}-1.0.2-man-pages.patch
 Patch2:		%{name}-0.98.1-security.patch
 Patch3:		%{name}-make-new.patch
 Patch4:		%{name}-Polish_keyboard.patch
-Patch5:		%{name}-dosemu_conf.patch
+Patch5:		%{name}-%{name}_conf.patch
 Patch6:		%{name}-alt224.patch
 Patch7:		pmstack.diff
 Patch8:		%{name}-rawkeyboard-console.patch
@@ -88,6 +88,7 @@ Summary:	A DOS emulator for the X Window System
 Summary(de):	DOS-Emulator für X
 Summary(es):	Emulador DOS que se ejecuta en X
 Summary(fr):	Émulateur DOS conçu pou être lancé sous X
+Summary(pl):	Emulator DOSa dla Systemu X Window
 Summary(pt_BR):	Emulador DOS que roda no X
 Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
 Group:		Applications/Emulators
@@ -194,7 +195,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}}
 	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/pl/man1} \
 	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel} \
 	$RPM_BUILD_ROOT%{_applnkdir}/System
-	
+
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/dos
 install bin/midid $RPM_BUILD_ROOT%{_bindir}/midid
