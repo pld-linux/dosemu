@@ -1,7 +1,7 @@
 Summary:	A DOS emulator.
 Name:		dosemu
 Version:	0.99.13
-Release:	2
+Release:	3
 Copyright:	distributable
 Group:		Applications/Emulators
 Source0:	ftp://ftp.dosemu.org/dosemu/dosemu-%{version}.tgz
@@ -104,7 +104,7 @@ mv bin/dos-nox bin/dos
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc,%{_mandir}/man1,%{_datadir}/icons,/var/state/dosemu}
+install -d $RPM_BUILD_ROOT{/etc,%{_mandir}/man1,%{_datadir}/icons,/var/lib/dosemu}
 
 make install INSTROOT=$RPM_BUILD_ROOT
 
@@ -117,10 +117,10 @@ install etc/dosemu.xpm $RPM_BUILD_ROOT%{_datadir}/icons
 install etc/dosemu.users.secure $RPM_BUILD_ROOT/etc/dosemu.users
 src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
 	-b freedos/kernel/boot.bin \
-	-f $RPM_BUILD_ROOT/var/state/dosemu/hdimage.freedos \
+	-f $RPM_BUILD_ROOT/var/lib/dosemu/hdimage.freedos \
 	freedos/kernel/* 
 FREEDOS=`/bin/mktemp /tmp/freedos.XXXXXX`
-echo "drive n: file=\"$RPM_BUILD_ROOT/var/state/dosemu/hdimage.freedos\" offset=8832" > $FREEDOS
+echo "drive n: file=\"$RPM_BUILD_ROOT/var/lib/dosemu/hdimage.freedos\" offset=8832" > $FREEDOS
 MTOOLSRC=$FREEDOS
 export MTOOLSRC
 mcopy -o/ freedos/vim-5.3 freedos/bin freedos/doc freedos/help freedos/emacs n:
@@ -131,7 +131,7 @@ mdir -w n:
 rm -f $FREEDOS
 unset MTOOLSRC
 
-install -m 644 etc/hdimage.dist $RPM_BUILD_ROOT/var/state/dosemu/hdimage
+install -m 644 etc/hdimage.dist $RPM_BUILD_ROOT/var/lib/dosemu/hdimage
 # install dexe utils
 install -m 755 dexe/{do_mtools,extract-dos,mkdexe,myxcopy} $RPM_BUILD_ROOT%{_bindir}
 
@@ -169,24 +169,24 @@ fi
 killall -USR1 xfs > /dev/null 2>&1 || :
 
 %post freedos
-[ -e /var/state/dosemu/hdimage.first ] || \
-    ln -s hdimage.freedos /var/state/dosemu/hdimage.first
+[ -e /var/lib/dosemu/hdimage.first ] || \
+    ln -s hdimage.freedos /var/lib/dosemu/hdimage.first
 
 %postun freedos
 if [ $1 = 0 ]; then
-	if [ -e /var/state/dosemu/hdimage.first ]; then
-		rm -f /var/state/dosemu/hdimage.first
+	if [ -e /var/lib/dosemu/hdimage.first ]; then
+		rm -f /var/lib/dosemu/hdimage.first
 	fi
 fi
     
 %files
 %defattr(644,root,root,755)
 %doc QuickStart.gz doc/*
-%dir /var/state/dosemu
+%dir /var/lib/dosemu
 %config /etc/dosemu.conf
 %config /etc/dosemu.users
-%config /var/state/dosemu/hdimage
-%config /var/state/dosemu/global.conf
+%config /var/lib/dosemu/hdimage
+%config /var/lib/dosemu/global.conf
 %attr(4755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/dosexec
@@ -214,4 +214,4 @@ fi
 /usr/X11R6/lib/X11/fonts/misc/vga.pcf
 
 %files freedos
-%config /var/state/dosemu/hdimage.freedos
+%config /var/lib/dosemu/hdimage.freedos
