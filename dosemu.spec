@@ -17,7 +17,7 @@ Summary(pl):	Emulator DOSa
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-Release:	2
+Release:	3
 License:	distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
