@@ -12,7 +12,7 @@ Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
 Release:	15
-License:	GPLv2
+License:	GPL v2
 Group:		Applications/Emulators
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
