@@ -108,7 +108,7 @@ mv bin/dos-nox bin/dos
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_mandir}/man1,%{_datadir}/icons,/var/lib/dosemu}
 
-make install INSTROOT=$RPM_BUILD_ROOT
+%{__make} install INSTROOT=$RPM_BUILD_ROOT
 
 rm $RPM_BUILD_ROOT%{_bindir}/xdos
 
