@@ -5,7 +5,7 @@ Summary(pl):	Emulator DOSa
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.1
-Release:	3
+Release:	4
 License:	Distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
@@ -19,6 +19,7 @@ Source5:	ftp://ftp.home.vim.org/pub/vim/pc/vim56d16.zip
 Source6:	ftp://ftp.home.vim.org/pub/vim/pc/vim56rt.zip
 Source7:	autoexec.bat
 Source8:	config.sys
+Source9:	%{name}-pl-man-pages.tar.bz2
 Patch0:		%{name}-0.66.7-config.patch
 Patch1:		%{name}-0.66.7-glibc.patch
 Patch2:		%{name}-0.66.7-pushal.patch
@@ -28,6 +29,7 @@ Patch5:		%{name}-make-new.patch
 Patch6:		%{name}m-1.0.0-glibc22.patch
 Patch7:		%{name}-1.0.1-broken.patch
 Patch8:		%{name}-time.patch
+Patch9:		%{name}-man-pages.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	bin86
 BuildRequires:	mtools
@@ -135,6 +137,7 @@ masz dostêpnej ¿adnej innej wersji DOSa.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 rm -rf freedos
 mkdir freedos
@@ -211,6 +214,8 @@ rm -f doc/{configuration,dosemu.lsm}
 mv $RPM_BUILD_ROOT/usr/X11R6/lib/X11/fonts/misc \
 	$RPM_BUILD_ROOT%{_datadir}/fonts
 
+bzip2 -dc %{SOURCE9} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
+
 gzip -9nf QuickStart COPYING ChangeLog* doc/* \
 	$RPM_BUILD_ROOT%{_datadir}/fonts/misc/*
 
@@ -261,9 +266,9 @@ fi
 %attr(755,root,root) %{_bindir}/mkfatimage16
 %attr(755,root,root) %{_bindir}/rundos
 %attr(755,root,root) %{_bindir}/setup-hdimage
-%{_mandir}/man1/dos.1*
-%{_mandir}/man1/dosdebug.1*
+%{_mandir}/man1/dos*
 %{_mandir}/man1/mkfatimage16.1*
+%lang(pl) %{_mandir}/pl/man1/dos*
 %{_pixmapsdir}/dosemu.xpm
 
 %files -n xdosemu
@@ -271,6 +276,7 @@ fi
 %attr(4755,root,root) %{_bindir}/xdos
 # %attr(755,root,root) %{_bindir}/xtermdos
 %{_mandir}/man1/xdos.1*
+%lang(pl) %{_mandir}/pl/man1/xdos.1*
 # %{_mandir}/man1/xtermdos.1*
 %{_datadir}/fonts/misc/*
 
