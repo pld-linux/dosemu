@@ -17,6 +17,8 @@ Group:		Applications/Emulators
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
+Source3:	%{name}-PRZECZYTAJ_TO
+Source4:	%{name}-README.PLD
 Patch0:		ftp://ftp.dosemu.org/dosemu/fixes/patch-1.0.2.1.gz
 Patch1:		%{name}-1.0.2-man-pages.patch
 Patch2:		%{name}-0.98.1-security.patch
@@ -189,6 +191,9 @@ install pl/man1/{dos.1,dosdebug.1,xdos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
 
 install src/plugin/commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install dosemu/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
+cp %{SOURCE3} PRZECZYTAJ_TO
+cp %{SOURCE4} README.PLD
+
 #ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
 
 # Take out irritating ^H's from the documentation
@@ -196,7 +201,7 @@ for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.\01
 
 rm -f doc/{configuration,dosemu.lsm}
 
-gzip -9nf QuickStart COPYING ChangeLog* doc/*
+gzip -9nf QuickStart COPYING ChangeLog* doc/* PRZECZYTAJ_TO README.PLD
 
 %clean
 rm -rf $RPM_BUILD_ROOT
