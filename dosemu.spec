@@ -10,16 +10,16 @@ Summary(pl):	Emulator DOS-a
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
-%define		ver 1.2.0
+%define		ver 1.2.1
 %define		subver 1
-Version:	%{ver}.%{subver}
+Version:	1.2.1
 Release:	1
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
+Source0:	http://dl.sourceforge.net/dosemu/%{name}-1.2.0.tgz
 # Source0-md5:	763e6b865dac87114041f5eb4b24bf8e
-Source1:	http://dosemu.sourceforge.net/prereleases/patchset-%{version}.tgz
-# Source1-md5:	21bc6ec6b03868fa6de36198dbc247ef
+Source1:	http://dl.sourceforge.net/dosemu/patchset-%{version}.tgz
+# Source1-md5:	132f3a92a38b6b57bb8a7c09b99df0e0
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -137,7 +137,7 @@ Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
 
 %prep
-%setup -q -n %{name}-%{ver} -a1 -a6
+%setup -q -n %{name}-1.2.0 -a1 -a6
 sh tmp/do_patch
 %patch0 -p1
 %patch1 -p1
