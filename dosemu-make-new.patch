@@ -1,25 +1,19 @@
---- dosemu-1.1.5/configure.ac.orig	Fri Mar 28 10:32:29 2003
-+++ dosemu-1.1.5/configure.ac	Fri Mar 28 10:35:43 2003
-@@ -421,15 +421,15 @@
- AC_SUBST(INCDIR)
- 
- CFLAGS="-Wall -Wstrict-prototypes -Wmissing-declarations -Wnested-externs"
-+OPT="$OPTFLAGS"
- if test "$dodebug" = "yes" -o "$debug" = "yes"; then
+diff -urN dosemu-1.1.5.org/configure.ac dosemu-1.1.5/configure.ac
+--- dosemu-1.1.5.org/configure.ac	2003-09-01 23:10:03.000000000 +0200
++++ dosemu-1.1.5/configure.ac	2003-09-01 23:10:53.000000000 +0200
+@@ -428,9 +428,9 @@
+ if test "$enable_debug" = "yes"; then
    CFLAGS="$CFLAGS -gstabs+"
    AC_DEFINE(_DEBUG)
 -  OPT="-O"
++  OPT="$OPTFLAGS"
  else
 -  OPT="-O2"   # BIG NOTE: do _not_ use -O3,
-+# OPT="-O2"   # BIG NOTE: do _not_ use -O3,
++  OPT="$OPTFLAGS"   # BIG NOTE: do _not_ use -O3,
                # because in forces _inline_ at places where we don't want it !
                # If we want _inline_, well then we 'code' it.
--  OPT="$OPT -fomit-frame-pointer"  # never omit the frame pointer when debugging!
-+:#OPT="$OPT -fomit-frame-pointer"  # never omit the frame pointer when debugging!
- fi
- 
- dnl CPU emulator
-@@ -515,33 +515,6 @@
+   OPT="$OPT -fomit-frame-pointer"  # never omit the frame pointer when debugging!
+@@ -517,33 +517,6 @@
    fi
  
  
@@ -51,11 +45,12 @@
 -  fi
 -
    AC_MSG_CHECKING(for glibc...)
-   set `echo -e '#include <features.h>\nXXAaZZ __GLIBC__ XXBbZZ __GLIBC_MINOR__'|gcc -E -|awk '/XXAaZZ/ {print $2 " " $4}'`
+   set `printf '%b\n' '#include <features.h>\nXXAaZZ __GLIBC__ XXBbZZ __GLIBC_MINOR__'|gcc -E -|awk '/XXAaZZ/ {print $2 " " $4}'`
    major=$1; minor=$2
---- dosemu-1.1.4/src/arch/linux/dosext/sound/midid/Makefile.orig	Wed Dec 18 02:36:44 2002
-+++ dosemu-1.1.4/src/arch/linux/dosext/sound/midid/Makefile	Sun Jan 26 00:14:10 2003
-@@ -15,7 +15,7 @@
+diff -urN dosemu-1.1.5.org/src/arch/linux/dosext/sound/midid/Makefile dosemu-1.1.5/src/arch/linux/dosext/sound/midid/Makefile
+--- dosemu-1.1.5.org/src/arch/linux/dosext/sound/midid/Makefile	2003-09-01 23:10:03.000000000 +0200
++++ dosemu-1.1.5/src/arch/linux/dosext/sound/midid/Makefile	2003-09-01 23:10:19.000000000 +0200
+@@ -19,7 +19,7 @@
  # No servicable parts below
  
  CC=gcc
