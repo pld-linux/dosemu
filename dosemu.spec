@@ -28,7 +28,8 @@ Patch6:		%{name}m-1.0.0-glibc22.patch
 Patch7:		%{name}-1.0.1-broken.patch
 BuildRequires:	bin86
 BuildRequires:	mtools
-Requires:	kernel >= 2.0.28, mtools >= 3.6
+Conflicts:	kernel < 2.0.28
+Requires:	mtools >= 3.6
 Url:		http://www.dosemu.org
 Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
