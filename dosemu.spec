@@ -4,7 +4,7 @@ Summary(fr):	Emulateur DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.1
-Release:	2
+Release:	3
 License:	Distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
@@ -26,6 +26,7 @@ Patch4:		%{name}-0.98.1-justroot.patch
 Patch5:		%{name}-make-new.patch
 Patch6:		%{name}m-1.0.0-glibc22.patch
 Patch7:		%{name}-1.0.1-broken.patch
+Patch8:		%{name}-time.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	bin86
 BuildRequires:	mtools
@@ -107,6 +108,7 @@ system's partitions were not formatted and installed with DOS.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 rm -rf freedos
 mkdir freedos
