@@ -52,6 +52,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
 
+%define		_xbindir	/usr/X11R6/bin
+%define		_dosemudir	/var/lib/dosemu
+
 %description
 Dosemu is a DOS emulator. Once you've installed dosemu, start the DOS
 emulator by typing in the "dos" command.
@@ -77,6 +80,36 @@ potrzebowaæ pakietów dosemu-freedos-*.
 Essa é uma versão do emulador DOS que foi projetada para rodar em
 sessões X Window. Oferece suporte para gráficos VGA bem como suporte
 para mouse.
+
+%package -n xdosemu
+Summary:	A DOS emulator for the X Window System
+Summary(de):	DOS-Emulator für X
+Summary(fr):	Émulateur DOS conçu pou être lancé sous X
+Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
+Group:		Applications/Emulators
+Group(de):	Applikationen/Emulators
+Group(pl):	Aplikacje/Emulatory
+Requires:	%{name} = %{version}
+
+%description -n xdosemu
+Xdosemu is a version of the dosemu DOS emulator that runs with the X
+Window System. Xdosemu provides VGA graphics and mouse support.
+
+%description -n xdosemu -l de
+Dies ist eine Version des DOS-Emulators für X-Windows-Sitzungen. Er
+unterstützt VGA-Grafiken und Maus.
+
+%description -n xdosemu -l fr
+Version de l'émulateur DOS conçue pour tourner dans une session X.
+Offre une gestion des graphismes VGA et de la souris.
+
+%description -n xdosemu -l pl
+Xdosemu jest wersj± emulatora dosemu dzia³aj±c± w X Window System.
+Xdosemu ma wsparcie dla grafiki VGA i obs³ugi myszki.
+
+%description -n xdosemu -l tr
+Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
+grafikleri ve fare desteði vardýr.
 
 %package -n kernel-net-dosnet
 Summary:	kernel module dosnet.o
@@ -116,27 +149,40 @@ unzip -q -L -o %{SOURCE3} -d freedos
 cp -f base-configure.in configure.in
 autoconf
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
+
+# non-X version
+%configure \
+%{?_with_static:--enable-linkstatic} \
+	--enable-new-intcode \
+	--enable-aspi \
+	--without-x
+echo | %{__make}
+mv -f bin/dosemu.bin bin/dos-nox
+
+# X version
 %configure \
 %{?_with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi
 echo | %{__make}
+mv -f bin/dosemu.bin bin/dos-x
+mv -f bin/dos-nox bin/dosemu.bin
 
-make -C src/dosext/net/v-net
+%{__make} -C src/dosext/net/v-net
 
 mv -f man/dosemu.bin.1 man/dos.1
 
-%define _dosemudir /var/lib/dosemu
-
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_sysconfdir},%{_mandir}/man1,%{_mandir}/pl/man1,%{_pixmapsdir}}
-install -d $RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
+install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}} \
+	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/pl/man1} \
+	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
 
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
+install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/xdos
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
-ln -sf dos $RPM_BUILD_ROOT%{_bindir}/xdos
+ln -sf dos $RPM_BUILD_ROOT%{_bindir}/dosexec
 
 install etc/dosemu.xpm $RPM_BUILD_ROOT%{_prefix}/X11R6/share/pixmaps
 install etc/dosemu.users.secure $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
@@ -182,21 +228,14 @@ depmod -a
 %dir %{_dosemudir}
 %config(noreplace) %{_sysconfdir}/dosemu.conf
 %config(noreplace) %{_sysconfdir}/dosemu.users
-#%config(noreplace) %{_dosemudir}/hdimage
 %config(noreplace) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
-#%attr(755,root,root) %{_bindir}/dosexec
-#%attr(755,root,root) %{_bindir}/dexeconfig
+%attr(755,root,root) %{_bindir}/dosexec
+%attr(755,root,root) %{_bindir}/dexeconfig
 %attr(755,root,root) %{_bindir}/hdinfo
-#%attr(755,root,root) %{_bindir}/do_mtools
-#%attr(755,root,root) %{_bindir}/extract-dos
-#%attr(755,root,root) %{_bindir}/mkdexe
-#%attr(755,root,root) %{_bindir}/myxcopy
 %attr(755,root,root) %{_bindir}/mkhdimage
 %attr(755,root,root) %{_bindir}/mkfatimage16
-#%attr(755,root,root) %{_bindir}/rundos
-%{_bindir}/xdos
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %dir %{_dosemudir}/bootdir/freedos
@@ -207,9 +246,15 @@ depmod -a
 %{_dosemudir}/bootdir/command.com
 %{_dosemudir}/bootdir/*.exe
 %{_dosemudir}/bootdir/freedos/*
-%{_mandir}/man1/*
-%lang(pl) %{_mandir}/pl/man1/*
+%{_mandir}/man1/[dm]*
+%lang(pl) %{_mandir}/pl/man1/d*
 %{_pixmapsdir}/dosemu.xpm
+
+%files -n xdosemu
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_xbindir}/xdos
+%{_mandir}/man1/xdos.1*
+%lang(pl) %{_mandir}/pl/man1/xdos.1*
 
 %files -n kernel-net-dosnet
 %defattr(644,root,root,755)
