@@ -1,0 +1,36 @@
+--- dosemu-1.0.2/src/base/bios/bios.S      Tue Feb 12 21:34:49 2002
++++ dosemu-1.0.2.new/src/base/bios/bios.S   Wed Feb 13 00:39:13 2002
+@@ -519,6 +519,14 @@
+	cmp	bx, [KEYBUF_WRITE_PTR]	/* set flag if buffer empty	*/
+	je	get_key_ret		/* buffer empty			*/
+	mov	ax, [bx]		/* put char into ax		*/
++
++                                        /* HACK!!! by Alexey Lukin <al@cn.ua> */
++                                        /*      little 'Cyrillic_er'    */
++	cmp     ax,#0x00e0
++	jne     true_e0_key
++	mov     dl, #1
++true_e0_key:                            /* end of HACK */
++
+	call	do_extended		/* differences for extended calls */
+	jne	get_key_ret
+	inc	bx
+--- dosemu-1.0.2/src/base/keyboard/serv_backend.c  Sun Mar 11 16:27:25 2001
++++ dosemu-1.0.2.new/src/base/keyboard/serv_backend.c       Wed Feb 13 00:39:13 2002
+@@ -43,6 +43,7 @@
+ #define KEYBUF_HACK 1
+ 
+ t_shiftstate shiftstate;
++int lockaltmap;
+ 
+ Bit16u bios_buffer;
+ t_shiftstate shiftstate_buffer;
+@@ -112,6 +113,9 @@
+      raw &= 0xff;
+    }
+ #endif
++   if (bios_key == 0x23e0) { /* Cyrillic_er */
++          bios_key &= 0x00FF;
++   }
+    k_printf("KBD: writing to queue: bios_key=%04x shift=%04x scan=%08x\n",
+             bios_key,shift,(unsigned int)raw);
