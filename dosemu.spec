@@ -12,14 +12,13 @@ Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 %define		ver 1.1.5
 %define		subver 7
-Version:	%{ver}.%{subver}
-# Please don't bump to 1 until dosemu-1.2
+Version:	1.2.0
 Release:	0.1
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
-# Source0-md5:	15b37a5e45bbeaa31bb19269327707ff
-Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
+Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
+# Source0-md5:	763e6b865dac87114041f5eb4b24bf8e
+#Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
 # Source1-md5:	d1967c4999b23f5c35188648c45fafef
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
@@ -32,7 +31,6 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-Patch5:		%{name}-kernel-2.6.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 %{?_with_static:BuildRequires:	XFree86-static}
@@ -140,14 +138,13 @@ Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
 
 %prep
-%setup -q -n %{name}-%{ver} -a1 -a6
-sh tmp/do_patch
-%patch0 -p1
+%setup -q -a6
+#sh tmp/do_patch
+#%patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 %build
 OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
@@ -174,6 +171,8 @@ mv -f bin/dosemu.bin bin/dos-nox
 	--enable-new-intcode \
 	--enable-aspi
 %{__make} WAIT=no
+%{__make} -C man
+
 mv -f bin/dosemu.bin bin/dos-x
 mv -f bin/dos-nox bin/dosemu.bin
 
