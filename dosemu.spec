@@ -11,7 +11,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 %define		ver 1.1.5
-%define 	subver 5
+%define 	subver 6
 Version:	%{ver}.%{subver}
 # Please don't bump to 1 until dosemu-1.2
 Release:	0.1
@@ -20,7 +20,7 @@ Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
 # Source0-md5:	15b37a5e45bbeaa31bb19269327707ff
 Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
-# Source1-md5:	ea5b334e65bddf8a2e88d8cbaf3ad569
+# Source1-md5:	226c1c846fedd0bb45f96dcc5a959905
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -32,7 +32,7 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-Patch5:		%{name}-fix.patch
+#Patch5:		%{name}-fix.patch
 #Patch5:		%{name}-gcc33.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
@@ -147,7 +147,7 @@ sh tmp/do_patch
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+#%patch5 -p1
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
