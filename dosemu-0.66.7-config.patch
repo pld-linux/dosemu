@@ -1,0 +1,36 @@
+--- dosemu-0.66.7/etc/config.dist.lock	Sun May 18 23:39:43 1997
++++ dosemu-0.66.7/etc/config.dist	Mon Nov  3 18:28:37 1997
+@@ -95,7 +95,7 @@
+ 	#mouse { ps2  device /dev/mouse internaldriver emulate3buttons }
+ 	#mouse { mousesystems device /dev/mouse internaldriver cleardtr }
+ 	#ttylocks { directory /var/lock }
+-	#ttylocks { directory /var/lock namestub LCK.. }
++	ttylocks { directory /var/lock namestub LCK.. }
+ 	#ttylocks { directory /var/lock namestub LCK.. binary }
+ 
+   video { vga }          ## Use this line, if you are using VGA
+@@ -127,7 +127,9 @@
+   dexe { secure }
+   ifndef guest
+     ifndef c_dexerun
+-      disk { image "/var/lib/dosemu/hdimage.first" }
++      # If you are following the QuickStart guide, use this line:
++      # disk { image "/var/lib/dosemu/hdimage.first" }
++      disk { image "/var/lib/dosemu/hdimage" }
+     endif
+   endif
+   dpmi off
+@@ -139,9 +141,11 @@
+   secure off
+   dexe { allowdisk }
+   ifndef vbootfloppy
+-    bootC               ## Startup drive valid values:  bootA  bootC
++    bootA               ## Startup drive valid values:  bootA  bootC
+     ifndef c_dexerun
+-      disk { image "/var/lib/dosemu/hdimage.first" }   ## use diskimage file.
++      # If you are following the QuickStart guide, use this line:
++      # disk { image "/var/lib/dosemu/hdimage.first" }
++      disk { image "/var/lib/dosemu/hdimage" }   ## use diskimage file.
+     endif
+   endif
+ 	#disk { partition "/dev/hda1" readonly }       ## 1st partition on 1st IDE.

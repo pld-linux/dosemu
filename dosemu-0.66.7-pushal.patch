@@ -1,0 +1,20 @@
+--- dosemu-0.66.7/src/dosext/dpmi/dpmi.c~	Sat Jun 14 22:57:27 1997
++++ dosemu-0.66.7/src/dosext/dpmi/dpmi.c	Fri Apr 10 16:08:51 1998
+@@ -540,7 +540,7 @@
+       xorl   %0,%0   "/* preset return code with 0 */"
+       push   %%eax   "/* dummy, err */"
+       push   %%eax   "/* dummy, trapno */"
+-      pushal
++      pusha
+       addl   $10*4,12(%%esp)   "/* adjust esp */"
+       push   %%ds
+       push   %%es
+@@ -568,7 +568,7 @@
+       pop    %%fs
+       pop    %%es
+       pop    %%ds
+-      popal
++      popa
+       popfl
+       lss    (%%esp),%%esp  "/* this is: pop ss; pop esp */"
+       jmp    __dpmi_switch_jmp   
