@@ -150,7 +150,7 @@ mkfatimage16.
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
 
 cp -f base-configure.in configure.in
-autoconf
+%{__autoconf}
 
 # non-X version
 %configure \
