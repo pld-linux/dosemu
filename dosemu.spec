@@ -21,7 +21,8 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-Release:	3
+%define _rel	3
+Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
@@ -41,7 +42,6 @@ Patch2:		%{name}-0.98.1-security.patch
 Patch3:		%{name}-make-new.patch
 Patch4:		%{name}-Polish_keyboard.patch
 Patch5:		%{name}-%{name}_conf.patch
-
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bin86
@@ -104,7 +104,7 @@ Requires:	%{name} = %{version}
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
 Window System. Xdosemu provides VGA graphics and mouse support.
 
-%description -l de -n xdosemu
+%description -n xdosemu -l de
 Dies ist eine Version des DOS-Emulators für X-Windows-Sitzungen. Er
 unterstützt VGA-Grafiken und Maus.
 
@@ -116,22 +116,22 @@ ventana del X Window. Posee soporte para gráficos VGA y ratón.
 Version de l'émulateur DOS conçue pour tourner dans une session X.
 Offre une gestion des graphismes VGA et de la souris.
 
-%description -l pl -n xdosemu
+%description -n xdosemu -l pl
 Xdosemu jest wersj± emulatora dosemu dzia³aj±c± w X Window System.
 Xdosemu ma wsparcie dla grafiki VGA i obs³ugi myszki.
 
-%description -l pt_BR -n xdosemu
+%description -n xdosemu -l pt_BR
 Esta é a versão do emulador DOS desenhada para rodar em uma janela do
 X Window. Possui suporte a gráficos VGA e mouse.
 
-%description -l tr -n xdosemu
+%description -n xdosemu -l tr
 Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
 grafikleri ve fare desteði vardýr.
 
 %package -n kernel-net-dosnet
 Summary:	kernel module dosnet.o
 Summary(pl):	Modu³ dosnet.o do kernela
-Release:	%{release}@%{_kernel_ver_str}
+Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
@@ -147,13 +147,13 @@ dosemu for more information.
 %description -n kernel-net-dosnet -l pl
 Modu³ dosnet.o dla kernela. Modu³ ten pozwala ³±czyæ siê programom
 DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
-przy pisaniu programów sieciowych dla DOSa. Rzeteln± informacjê na
+przy pisaniu programów sieciowych dla DOS-a. Rzeteln± informacjê na
 temat dosnet mo¿esz znale¼æ w README do dosemu.
 
 %package -n kernel-smp-net-dosnet
-Summary:	kernel module dosnet.o
-Summary(pl):	Modu³ dosnet.o do kernela
-Release:	%{release}@%{_kernel_ver_str}
+Summary:	kernel-smp module dosnet.o
+Summary(pl):	Modu³ dosnet.o do kernela SMP
+Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
@@ -169,7 +169,7 @@ dosemu for more information.
 %description -n kernel-smp-net-dosnet -l pl
 Modu³ dosnet.o dla kernela. Modu³ ten pozwala ³±czyæ siê programom
 DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
-przy pisaniu programów sieciowych dla DOSa. Rzeteln± informacjê na
+przy pisaniu programów sieciowych dla DOS-a. Rzeteln± informacjê na
 temat dosnet mo¿esz znale¼æ w README do dosemu.
 
 %prep
