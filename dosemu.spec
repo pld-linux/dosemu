@@ -264,7 +264,7 @@ install src/dosext/net/v-net/dosnet.o $RPM_BUILD_ROOT%{_moddir}
 install src/dosext/net/v-net/smp/dosnet.o $RPM_BUILD_ROOT%{_moddirsmp}
 
 # Take out irritating ^H's from the documentation
-for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
+for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.'`echo -n -e '\010'`'//g' > doc/$i ; done
 
 rm -f doc/{configuration,dosemu.lsm}
 
