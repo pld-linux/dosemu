@@ -1,24 +1,14 @@
---- dosemu-1.1.4/etc/dosemu.conf.orig	Wed Dec 18 02:36:44 2002
-+++ dosemu-1.1.4/etc/dosemu.conf	Sat Jan 25 23:35:28 2003
-@@ -27,7 +27,7 @@
- # Please edit only between the brackets and quotes and keep the rest intact.
+--- dosemu-1.1.4/etc/dosemu.conf.orig	Fri Mar 28 10:41:25 2003
++++ dosemu-1.1.4/etc/dosemu.conf	Fri Mar 28 10:43:53 2003
+@@ -28,6 +28,7 @@
  #        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^     ^^^^^^^^^^^^^^^^^^^^
  #
--#$_hdimage = "freedos"  
-+$_hdimage = "bootdir"  
+ #$_hdimage = "drives/*"  
++$_hdimage = "bootdir"
  #			# List of hdimages or boot directories under
  #                       # syshdimagedir (/var/lib/dosemu by default) 
  #			# assigned in this order such as
-@@ -103,7 +103,7 @@
- #
- #$_rawkeyboard = (0)	# bypass normal keyboard input on the Linux console, 
- #			# maybe dangerous
--#$_layout = "auto"	# one of: finnish(-latin1), de(-latin1), be, it, us
-+$_layout = "us"		# one of: finnish(-latin1), de(-latin1), be, it, us
- #			# uk, dk(-latin1), keyb-no, no-latin1, dvorak, po
- #			# sg(-latin1), fr(-latin1), sf(-latin1), es(-latin1)
- #			# sw, hu(-latin2), hu-cwi, keyb-user
-@@ -159,7 +159,7 @@
+@@ -158,7 +159,7 @@
  #
  #$_mouse = ""		# one of: microsoft, mousesystems, logitech, mmseries
  #			# mouseman, hitachi, busmouse, ps2, imps2
@@ -27,3 +17,14 @@
  #$_mouse_flags = ""	# empty list or one or more of:
  #			# "emulate3buttons cleardtr"
  #$_mouse_baud = (0)	# baudrate, 0 == don't set
+--- dosemu-1.1.4/etc/dosemu.users.example.orig	Fri Mar 28 10:57:08 2003
++++ dosemu-1.1.4/etc/dosemu.users.example	Fri Mar 28 11:31:43 2003
+@@ -14,7 +14,7 @@
+ #
+ # For more details look at ./doc/README.txt
+ 
+-default_lib_dir= /usr/local/share/dosemu
++default_lib_dir= /var/lib/dosemu
+ #config_script= builtin # (or e.g. /etc/dosemu/global.conf)
+ log_level= 0
+ #carol is allowed to do do all weird things

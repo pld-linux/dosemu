@@ -7,8 +7,8 @@
 +++ dosemu-1.1.4/man/dosemu.bin.1	Wed Dec 19 11:22:05 2001
 @@ -1,9 +1,9 @@
  .\" -*- nroff -*-  (This is for Emacs)
--.TH DOSEMU.BIN 1 "Dec, 2002" "Version 1.1.4" "DOS Emulation"
-+.TH DOS 1 "Dec, 2002" "Version 1.1.4" "DOS Emulation"
+-.TH DOSEMU.BIN 1 "Jan, 2003" "Version 1.1.4.1" "DOS Emulation"
++.TH DOS 1 "Jan, 2003" "Version 1.1.4.1" "DOS Emulation"
  .SH NAME
 -dosemu.bin, dosdebug \- run DOS and DOS programs under Linux
 +dos, xdos, dosdebug \- run DOS and DOS programs under Linux

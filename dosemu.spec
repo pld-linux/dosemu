@@ -20,7 +20,7 @@ Version:	%{ver}.%{subver}
 Release:	0.2
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/%{name}-%{ver}.tgz
+Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
 Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
@@ -28,15 +28,14 @@ Source4:	%{name}-README.PLD
 Source5:	%{name}.desktop
 Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Patch0:		%{name}-man-pages.patch
-Patch1:		%{name}-parser-buf.patch
-Patch2:		%{name}-make-new.patch
-Patch3:		%{name}-%{name}_conf.patch
-Patch4:		%{name}-doSgmlTools.patch
-Patch5:		%{name}-makehtml.patch
-Patch6:		%{name}-nox.patch
+Patch1:		%{name}-make-new.patch
+Patch2:		%{name}-%{name}_conf.patch
+Patch3:		%{name}-doSgmlTools.patch
+Patch4:		%{name}-makehtml.patch
+Patch5:		%{name}-nox.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.57
 BuildRequires:	bin86
 BuildRequires:	bison
 BuildRequires:	docbook-dtd30-sgml
@@ -143,13 +142,12 @@ mkfatimage16.
 %setup -q -n %{name}-%{ver} -a1 -a6
 sh tmp/do_patch
 
-#%patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
-#%patch3 -p1
-%patch4	-p1
-%patch5 -p1
-%patch6 -p0
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p0
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
@@ -158,8 +156,8 @@ OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
 ./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
 plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
 
-#cp -f base-configure.in configure.in
 %{__autoconf}
+# configure2_13 must be used though because of ./default-configure
 
 # non-X version
 %configure2_13 \
