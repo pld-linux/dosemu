@@ -53,7 +53,6 @@ BuildRequires:	unzip
 %{?_with_static:BuildRequires:	glibc-static}
 %{?_with_static:BuildRequires:	XFree86-static}
 %{?_with_static:BuildRequires:	slang-static}
-Obsoletes:	xdosemu
 Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
