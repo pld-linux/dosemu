@@ -21,7 +21,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-%define _rel	6
+%define _rel	7
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
@@ -174,6 +174,20 @@ DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
 przy pisaniu programów sieciowych dla DOS-a. Rzeteln± informacjê na
 temat dosnet mo¿esz znale¼æ w README do dosemu.
 
+%package utils
+Summary:	Utilities for dosemu
+Summary(pl):	Programy pomocnicze do dosemu
+Group:		Application/Emulators
+Group(de):	Applicationen/Emulators
+Group(pl):	Aplikacje/Emulatory
+Requires:	dosemu
+
+%description utils
+Utilities for dosemu: dexeconfig, hdinfo, mkhdimage, mkfatimage16.
+
+%description utils -l pl
+Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage, mkfatimage16.
+
 %prep
 %setup -q -a1 -a2
 %patch0 -p1
@@ -295,10 +309,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/dosexec
-%attr(755,root,root) %{_bindir}/dexeconfig
-%attr(755,root,root) %{_bindir}/hdinfo
-%attr(755,root,root) %{_bindir}/mkhdimage
-%attr(755,root,root) %{_bindir}/mkfatimage16
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %dir %{_dosemudir}/bootdir/freedos
@@ -321,10 +331,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %{_sysconfdir}/dosemu.users
 %config(noreplace) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dosdebug
-%attr(755,root,root) %{_bindir}/dexeconfig
-%attr(755,root,root) %{_bindir}/hdinfo
-%attr(755,root,root) %{_bindir}/mkhdimage
-%attr(755,root,root) %{_bindir}/mkfatimage16
 %attr(755,root,root) %{_xbindir}/*
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
@@ -349,3 +355,10 @@ rm -rf $RPM_BUILD_ROOT
 %files -n kernel-smp-net-dosnet
 %defattr(644,root,root,755)
 %{_moddirsmp}/dosnet.o
+
+%files utils
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/dexeconfig
+%attr(755,root,root) %{_bindir}/hdinfo
+%attr(755,root,root) %{_bindir}/mkhdimage
+%attr(755,root,root) %{_bindir}/mkfatimage16
