@@ -25,17 +25,6 @@ Version:	1.0.2
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
-Group(da):	Programmer/Emulatorer
-Group(de):	Applikationen/Emulatoren
-Group(es):	Aplicaciones/Emuladores
-Group(fr):	Applications/Émulateurs
-Group(it):	Applicazioni/Emulatori
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥¨¥ß¥å¥ì¡¼¥¿
-Group(no):	Applikasjoner/Emulatorer
-Group(pl):	Aplikacje/Emulatory
-Group(pt):	Aplicações/Emuladores
-Group(ru):	ğÒÉÌÏÖÅÎÉÑ/òÅÄÁËÔÏÒÙ
-Group(sv):	Tillämpningar/Emulatorer
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
@@ -105,17 +94,6 @@ Summary(fr):	Émulateur DOS conçu pou être lancé sous X
 Summary(pt_BR):	Emulador DOS que roda no X
 Summary(tr):	X altında çalışan DOS öykünümcüsü
 Group:		Applications/Emulators
-Group(da):	Programmer/Emulatorer
-Group(de):	Applikationen/Emulatoren
-Group(es):	Aplicaciones/Emuladores
-Group(fr):	Applications/Émulateurs
-Group(it):	Applicazioni/Emulatori
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥¨¥ß¥å¥ì¡¼¥¿
-Group(no):	Applikasjoner/Emulatorer
-Group(pl):	Aplikacje/Emulatory
-Group(pt):	Aplicações/Emuladores
-Group(ru):	ğÒÉÌÏÖÅÎÉÑ/òÅÄÁËÔÏÒÙ
-Group(sv):	Tillämpningar/Emulatorer
 Requires:	%{name} = %{version}
 Provides:	dosemu
 Obsoletes:	dosemu
@@ -153,17 +131,6 @@ Summary:	kernel module dosnet.o
 Summary(pl):	Modu³ dosnet.o do kernela
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
-Group(da):	Programmer/Emulatorer
-Group(de):	Applikationen/Emulatoren
-Group(es):	Aplicaciones/Emuladores
-Group(fr):	Applications/Émulateurs
-Group(it):	Applicazioni/Emulatori
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥¨¥ß¥å¥ì¡¼¥¿
-Group(no):	Applikasjoner/Emulatorer
-Group(pl):	Aplikacje/Emulatory
-Group(pt):	Aplicações/Emuladores
-Group(ru):	ğÒÉÌÏÖÅÎÉÑ/òÅÄÁËÔÏÒÙ
-Group(sv):	Tillämpningar/Emulatorer
 Requires:	%{name} = %{version}
 Obsoletes:	dosnet
 Prereq:		/sbin/depmod
@@ -184,17 +151,6 @@ Summary:	kernel-smp module dosnet.o
 Summary(pl):	Modu³ dosnet.o do kernela SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
-Group(da):	Programmer/Emulatorer
-Group(de):	Applikationen/Emulatoren
-Group(es):	Aplicaciones/Emuladores
-Group(fr):	Applications/Émulateurs
-Group(it):	Applicazioni/Emulatori
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥¨¥ß¥å¥ì¡¼¥¿
-Group(no):	Applikasjoner/Emulatorer
-Group(pl):	Aplikacje/Emulatory
-Group(pt):	Aplicações/Emuladores
-Group(ru):	ğÒÉÌÏÖÅÎÉÑ/òÅÄÁËÔÏÒÙ
-Group(sv):	Tillämpningar/Emulatorer
 Requires:	%{name} = %{version}
 Obsoletes:	dosnet
 Prereq:		/sbin/depmod
@@ -214,17 +170,6 @@ temat dosnet mo¿esz znale¼æ w README do dosemu.
 Summary:	Utilities for dosemu
 Summary(pl):	Programy pomocnicze do dosemu
 Group:		Applications/Emulators
-Group(da):	Programmer/Emulatorer
-Group(de):	Applikationen/Emulatoren
-Group(es):	Aplicaciones/Emuladores
-Group(fr):	Applications/Émulateurs
-Group(it):	Applicazioni/Emulatori
-Group(ja):	¥¢¥×¥ê¥±¡¼¥·¥ç¥ó/¥¨¥ß¥å¥ì¡¼¥¿
-Group(no):	Applikasjoner/Emulatorer
-Group(pl):	Aplikacje/Emulatory
-Group(pt):	Aplicações/Emuladores
-Group(ru):	ğÒÉÌÏÖÅÎÉÑ/òÅÄÁËÔÏÒÙ
-Group(sv):	Tillämpningar/Emulatorer
 Requires:	dosemu
 
 %description utils
