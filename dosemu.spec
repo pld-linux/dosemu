@@ -302,13 +302,14 @@ depmod -a
 %attr(755,root,root) %{_bindir}/mkhdimage
 %attr(755,root,root) %{_bindir}/mkfatimage16
 #%attr(755,root,root) %{_bindir}/rundos
-%{_dosemudir}/bootdir/dosemu/*
+%dir %{_dosemudir}/bootdir
+%{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/kernel.sys
 %config(noreplace) %{_dosemudir}/bootdir/autoexec.bat
 %config(noreplace) %{_dosemudir}/bootdir/config.sys
 %{_dosemudir}/bootdir/command.com
 %{_dosemudir}/bootdir/*.exe
-%{_dosemudir}/bootdir/freedos/*
+%{_dosemudir}/bootdir/freedos
 /lib/modules/%{_kernel_ver}/net/dosnet.o
 #%{_mandir}/man1/dos*
 #%{_mandir}/man1/mkfatimage16.1*
