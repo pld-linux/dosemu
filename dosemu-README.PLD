@@ -1,6 +1,6 @@
 dosemu related files:
-dosemu                  version without X support
-xdosemu                 version with X support
+dosemu                  version without X support ("dos" binary)
+xdosemu                 version with X support ("dosemu" and "xdosemu" binaries)
 dosemu-freedos-minimal  minimal DOS (most useful files)
 dosemu-freedos-base
 dosemu-freedos-edit
@@ -15,11 +15,11 @@ and dosemu-freedos-minimal.
 
 How to get suid version? 
 As root do:
-# cd /usr/bin (or /usr/X11R6/bin for xdosemu)
-# cp dos dos-suid
-# chmod +s dos-suid
+# cd /usr/bin
+# cp dosemu dosemu-suid
+# chmod +s dosemu-suid
 
-And then add privilliged users (who will able to run dos-suid)
+And then add privilliged users (who will able to run dosemu-suid)
 to /etc/dosemu.users
 
 By default:
