@@ -28,7 +28,7 @@ Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
-Source1:	%{name}-pl-man-pages.tar.bz2
+Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
 Source3:	http://prdownloads.sourceforge.net/freedos/ke2025c16.zip
 Source4:	autoexec2.bat
