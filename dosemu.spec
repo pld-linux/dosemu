@@ -10,7 +10,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-Release:	18
+Release:	19
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/%{name}-%{version}.tgz
@@ -185,6 +185,9 @@ mv -f man/dosemu.bin.1 man/dos.1
 #%{__make} docs
 #find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 
+# midid daemon
+%{__make} midid
+
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}} \
@@ -194,6 +197,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}}
 	
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/dos
+install bin/midid $RPM_BUILD_ROOT%{_bindir}/midid
 ln -sf dos $RPM_BUILD_ROOT%{_xbindir}/xdos
 ln -sf dos $RPM_BUILD_ROOT%{_xbindir}/dosexec
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
@@ -234,6 +238,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/dosexec
+%attr(755,root,root) %{_bindir}/midid
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
@@ -250,6 +255,7 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
 %config(noreplace) %verify(not size mtime md5) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dosdebug
+%attr(755,root,root) %{_bindir}/midid
 %attr(755,root,root) %{_xbindir}/*
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
