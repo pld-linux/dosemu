@@ -1,0 +1,111 @@
+--- src/base/dev/pic/pic.c	Tue Mar 19 19:45:50 2002
++++ src/base/dev/pic/pic.c	Tue Mar 19 19:54:14 2002
+@@ -806,7 +806,7 @@
+ #endif
+      if(pic_ilevel < 16) pic_push(pic_ilevel);
+      if (in_dpmi) {
+-      run_pm_int(intr);
++      run_pm_int(intr, 1);
+      } else {
+ #ifndef USE_NEW_INT
+       pic_cli();
+--- src/dosext/dpmi/dpmi.h	Tue Mar 19 19:45:49 2002
++++ src/dosext/dpmi/dpmi.h	Tue Mar 19 19:56:56 2002
+@@ -37,6 +37,7 @@
+ EXTERN int in_win31 INIT(0);       /* Set to 1 when running Windows 3.1 */
+ EXTERN int dpmi_eflags INIT(0);    /* used for virtual interruptflag and pending interrupts */
+ EXTERN int in_dpmi_dos_int INIT(0);
++EXTERN int in_dpmi_hw_int INIT(0);
+ EXTERN int in_dpmi_timer_int INIT(0);
+ EXTERN int dpmi_mhp_TF INIT(0);
+ EXTERN unsigned char dpmi_mhp_intxxtab[256] INIT({0});
+@@ -47,7 +48,7 @@
+ void dpmi_fault(struct sigcontext_struct *);
+ #endif
+ void dpmi_realmode_hlt(unsigned char *);
+-void run_pm_int(int);
++void run_pm_int(int, int);
+ void run_pm_mouse();
+ void fake_pm_int(void);
+ 
+--- src/dosext/dpmi/dpmi.c	Tue Mar 19 19:45:51 2002
++++ src/dosext/dpmi/dpmi.c	Tue Mar 19 21:01:00 2002
+@@ -2016,8 +2016,9 @@
+  * DANG_END_FUNCTION
+  */
+ 
+-void run_pm_int(int i)
++void run_pm_int(int i, int async)
+ {
++  unsigned short CLIENT_PMSTACK_SEL;
+   us *ssp;
+ 
+ #ifndef USE_NEW_INT
+@@ -2044,9 +2045,19 @@
+     return;
+   }
+ 
+-  if (dpmi_stack_frame[current_client].ss == PMSTACK_SEL)
++  if (async && !in_dpmi_hw_int) {
++    D_printf("DPMI: Switching to locked stack\n");
++    CLIENT_PMSTACK_SEL = PMSTACK_SEL;
++  }
++  else {
++    D_printf("DPMI: Not switching to locked stack, in_dpmi_hw_int=%d\n",
++      in_dpmi_hw_int);
++    CLIENT_PMSTACK_SEL = dpmi_stack_frame[current_client].ss;
++  }
++
++  if (dpmi_stack_frame[current_client].ss == PMSTACK_SEL || in_dpmi_hw_int)
+     PMSTACK_ESP = client_esp(0);
+-  ssp = (us *) (GetSegmentBaseAddress(PMSTACK_SEL) +
++  ssp = (us *) (GetSegmentBaseAddress(CLIENT_PMSTACK_SEL) +
+ 		(DPMIclient_is_32 ? PMSTACK_ESP : (PMSTACK_ESP&0xffff)));
+ /* ---------------------------------------------------
+ 	| 000FC925 | <- ssp here, executes pm int
+@@ -2087,10 +2098,12 @@
+   }
+   dpmi_stack_frame[current_client].cs = Interrupt_Table[i].selector;
+   dpmi_stack_frame[current_client].eip = Interrupt_Table[i].offset;
+-  dpmi_stack_frame[current_client].ss = PMSTACK_SEL;
++  dpmi_stack_frame[current_client].ss = CLIENT_PMSTACK_SEL;
+   dpmi_stack_frame[current_client].esp = PMSTACK_ESP;
+   if (i == 0x08 || in_dpmi_timer_int) in_dpmi_timer_int++;
+   in_dpmi_dos_int = 0;
++  if (async || in_dpmi_hw_int)
++    in_dpmi_hw_int++;
+ #ifdef USE_NEW_INT
+   dpmi_cli();
+ #endif /* USE_NEW_INT */
+@@ -2200,7 +2213,7 @@
+ 		  case 0x1c:	/* ROM BIOS timer tick interrupt */
+ 		  case 0x23:	/* DOS Ctrl+C interrupt */
+ 		  case 0x24:	/* DOS critical error interrupt */
+-			run_pm_int(VM86_ARG(retval));
++			run_pm_int(VM86_ARG(retval), 0);
+ 			break;
+ 		  default:
+ #ifdef USE_MHPDBG
+@@ -2506,6 +2519,7 @@
+   in_dpmi++;
+   in_win31 = 0;
+   in_dpmi_dos_int = 0;
++  in_dpmi_hw_int = 0;
+   pm_block_root[current_client] = 0;
+   memset((void *)(&realModeCallBack[current_client][0]), 0,
+ 	 sizeof(RealModeCallBack)*0x10);
+@@ -2983,5 +2997,13 @@
+ 
+         } else if (_eip==DPMI_OFF+1+HLT_OFF(DPMI_return_from_pm)) {
+           D_printf("DPMI: Return from protected mode interrupt hander\n");
++          D_printf("DPMI: Return from protected mode interrupt handler\n");
++	  if (in_dpmi_hw_int) {
++	    in_dpmi_hw_int--;
++	    if (!in_dpmi_hw_int && _ss != PMSTACK_SEL) {
++	      error("DPMI: Client's PM Stack corrupted!\n");
++	      leavedos(91);
++	    }
++	  }
+ /* ---------------------------------------------------
+ 	|(000FC925)|
+ 	|(dpmi_sel)|
