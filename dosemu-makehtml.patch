@@ -1,0 +1,40 @@
+--- dosemu-1.1.4/src/doc/DANG/Makefile.orig	Sat Feb 15 13:29:05 2003
++++ dosemu-1.1.4/src/doc/DANG/Makefile	Sat Feb 15 13:29:39 2003
+@@ -7,15 +7,15 @@
+ TXT = $(DOCSOURCES:.sgml=.txt)
+ HTML = $(DOCSOURCES:.sgml=.html)
+ 
+-all:    $(TXT) $(HTML)
++all:    txt html
+ 
+-$(TXT): %.txt: %.sgml
++txt: %.txt: %.sgml
+ 	../tools/doSgmlTools.pl -t -v $<
+ 
+-$(HTML): %.html: %.sgml
++html: %.html: %.sgml
+ 	../tools/doSgmlTools.pl -h -v $<
+ 
+-$(HTMLS):
++htmls:
+ 	../tools/doSgmlTools.pl -s -v $<
+ 
+ clean:
+--- dosemu-1.1.4/src/doc/HOWTO/Makefile.orig	Sat Feb 15 13:28:12 2003
++++ dosemu-1.1.4/src/doc/HOWTO/Makefile	Sat Feb 15 13:28:49 2003
+@@ -7,12 +7,12 @@
+ TXT = $(DOCSOURCES:.sgml=.txt)
+ HTML = $(DOCSOURCES:.sgml=.html)
+ 
+-all:    $(TXT) $(HTML)
++all:    txt html
+ 
+-$(TXT): %.txt: %.sgml
++txt: %.txt: %.sgml
+ 	../tools/doSgmlTools.pl -t $<
+ 
+-$(HTML): %.html: %.sgml
++html: %.html: %.sgml
+ 	../tools/doSgmlTools.pl -h $<
+ 
+ 
