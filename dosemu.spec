@@ -36,21 +36,21 @@ Patch5:		%{name}-gcc33.patch
 #Patch5:		%{name}-nox.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
+%{?_with_static:BuildRequires:	XFree86-static}
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bin86
 BuildRequires:	bison
 BuildRequires:	docbook-dtd30-sgml
 BuildRequires:	flex
+%{?_with_static:BuildRequires:	glibc-static}
 BuildRequires:	lynx
 BuildRequires:	openjade
 BuildRequires:	perl
 BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
+%{?_with_static:BuildRequires:	slang-static}
 BuildRequires:	util-linux
 BuildRequires:	unzip
-%{?_with_static:BuildRequires:	glibc-static}
-%{?_with_static:BuildRequires:	XFree86-static}
-%{?_with_static:BuildRequires:	slang-static}
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
@@ -197,7 +197,8 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}}
 	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel} \
 	$RPM_BUILD_ROOT%{_applnkdir}/System
 
-#%%{__make} install DESTDIR=$RPM_BUILD_ROOT
+#%%{__make} install \
+#	DESTDIR=$RPM_BUILD_ROOT
 
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/dos
