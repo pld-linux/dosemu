@@ -29,6 +29,7 @@ Patch6:		%{name}-alt224.patch
 Patch7:		pmstack.diff
 Patch8:		%{name}-rawkeyboard-console.patch
 Patch9:		%{name}-comcom.patch
+Patch10:	%{name}-global.conf-xdos.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bin86
@@ -141,6 +142,7 @@ mkfatimage16.
 %patch7 -p0
 %patch8 -p0
 %patch9 -p1
+%patch10 -p1
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
