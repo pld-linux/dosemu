@@ -21,7 +21,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-%define _rel	8
+%define _rel	9
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
@@ -349,9 +349,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc *.gz doc/*
 %dir %{_dosemudir}
-%config(noreplace) %{_sysconfdir}/dosemu.conf
-%config(noreplace) %{_sysconfdir}/dosemu.users
-%config(noreplace) %{_dosemudir}/global.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
+%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/dosexec
@@ -360,8 +360,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_dosemudir}/bootdir/freedos
 %{_dosemudir}/bootdir/dosemu/*
 %{_dosemudir}/bootdir/kernel.sys
-%config(noreplace) %{_dosemudir}/bootdir/autoexec.bat
-%config(noreplace) %{_dosemudir}/bootdir/config.sys
+%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/autoexec.bat
+%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/config.sys
 %{_dosemudir}/bootdir/command.com
 %{_dosemudir}/bootdir/*.exe
 %{_dosemudir}/bootdir/freedos/*
@@ -373,9 +373,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc *.gz doc/*
 %dir %{_dosemudir}
-%config(noreplace) %{_sysconfdir}/dosemu.conf
-%config(noreplace) %{_sysconfdir}/dosemu.users
-%config(noreplace) %{_dosemudir}/global.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
+%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
+%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_xbindir}/*
 %dir %{_dosemudir}/bootdir
@@ -383,8 +383,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_dosemudir}/bootdir/freedos
 %{_dosemudir}/bootdir/dosemu/*
 %{_dosemudir}/bootdir/kernel.sys
-%config(noreplace) %{_dosemudir}/bootdir/autoexec.bat
-%config(noreplace) %{_dosemudir}/bootdir/config.sys
+%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/autoexec.bat
+%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/config.sys
 %{_dosemudir}/bootdir/command.com
 %{_dosemudir}/bootdir/*.exe
 %{_dosemudir}/bootdir/freedos/*
