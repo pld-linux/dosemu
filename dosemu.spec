@@ -11,7 +11,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 %define		ver 1.1.5
-%define		subver 6
+%define		subver 7
 Version:	%{ver}.%{subver}
 # Please don't bump to 1 until dosemu-1.2
 Release:	0.1
@@ -20,7 +20,7 @@ Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
 # Source0-md5:	15b37a5e45bbeaa31bb19269327707ff
 Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
-# Source1-md5:	226c1c846fedd0bb45f96dcc5a959905
+# Source1-md5:	d1967c4999b23f5c35188648c45fafef
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
