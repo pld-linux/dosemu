@@ -57,6 +57,7 @@ Obsoletes:	xdosemu
 
 %define		_xbindir	/usr/X11R6/bin
 %define		_dosemudir	/var/lib/dosemu
+%define		specflags	-fomit-frame-pointer
 
 %description
 Dosemu is a DOS emulator. Once you've installed dosemu, start the DOS
@@ -147,7 +148,7 @@ sh tmp/do_patch
 %patch4 -p1
 
 %build
-OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
+OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
 
 ./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
 plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
