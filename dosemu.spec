@@ -6,7 +6,7 @@ Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
 Summary(es):	Emulador DOS
 Summary(fr):	Emulateur DOS
-Summary(pl):	Emulator DOSa
+Summary(pl):	Emulator DOS-a
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
@@ -91,7 +91,7 @@ Summary:	A DOS emulator for the X Window System
 Summary(de):	DOS-Emulator für X
 Summary(es):	Emulador DOS que se ejecuta en X
 Summary(fr):	Émulateur DOS conçu pou être lancé sous X
-Summary(pl):	Emulator DOSa dla Systemu X Window
+Summary(pl):	Emulator DOS-a dla Systemu X Window
 Summary(pt_BR):	Emulador DOS que roda no X
 Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
 Group:		Applications/Emulators
