@@ -25,8 +25,17 @@ Version:	1.0.2
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
-Group(de):	Applikationen/Emulators
+Group(da):	Programmer/Emulatorer
+Group(de):	Applikationen/Emulatoren
+Group(es):	Aplicaciones/Emuladores
+Group(fr):	Applications/…mulateurs
+Group(it):	Applicazioni/Emulatori
+Group(ja):	•¢•◊•Í•±°º•∑•Á•Û/•®•ﬂ•Â•Ï°º•ø
+Group(no):	Applikasjoner/Emulatorer
 Group(pl):	Aplikacje/Emulatory
+Group(pt):	AplicaÁıes/Emuladores
+Group(ru):	“…Ãœ÷≈Œ…—/Ú≈ƒ¡À‘œ“Ÿ
+Group(sv):	Till‰mpningar/Emulatorer
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
@@ -96,8 +105,17 @@ Summary(fr):	…mulateur DOS conÁu pou Ítre lancÈ sous X
 Summary(pt_BR):	Emulador DOS que roda no X
 Summary(tr):	X alt˝nda Áal˝˛an DOS ˆyk¸n¸mc¸s¸
 Group:		Applications/Emulators
-Group(de):	Applikationen/Emulators
+Group(da):	Programmer/Emulatorer
+Group(de):	Applikationen/Emulatoren
+Group(es):	Aplicaciones/Emuladores
+Group(fr):	Applications/…mulateurs
+Group(it):	Applicazioni/Emulatori
+Group(ja):	•¢•◊•Í•±°º•∑•Á•Û/•®•ﬂ•Â•Ï°º•ø
+Group(no):	Applikasjoner/Emulatorer
 Group(pl):	Aplikacje/Emulatory
+Group(pt):	AplicaÁıes/Emuladores
+Group(ru):	“…Ãœ÷≈Œ…—/Ú≈ƒ¡À‘œ“Ÿ
+Group(sv):	Till‰mpningar/Emulatorer
 Requires:	%{name} = %{version}
 Provides:	dosemu
 Obsoletes:	dosemu
@@ -135,8 +153,17 @@ Summary:	kernel module dosnet.o
 Summary(pl):	Modu≥ dosnet.o do kernela
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
-Group(de):	Applikationen/Emulators
+Group(da):	Programmer/Emulatorer
+Group(de):	Applikationen/Emulatoren
+Group(es):	Aplicaciones/Emuladores
+Group(fr):	Applications/…mulateurs
+Group(it):	Applicazioni/Emulatori
+Group(ja):	•¢•◊•Í•±°º•∑•Á•Û/•®•ﬂ•Â•Ï°º•ø
+Group(no):	Applikasjoner/Emulatorer
 Group(pl):	Aplikacje/Emulatory
+Group(pt):	AplicaÁıes/Emuladores
+Group(ru):	“…Ãœ÷≈Œ…—/Ú≈ƒ¡À‘œ“Ÿ
+Group(sv):	Till‰mpningar/Emulatorer
 Requires:	%{name} = %{version}
 Obsoletes:	dosnet
 Prereq:		/sbin/depmod
@@ -157,8 +184,17 @@ Summary:	kernel-smp module dosnet.o
 Summary(pl):	Modu≥ dosnet.o do kernela SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Applications/Emulators
-Group(de):	Applikationen/Emulators
+Group(da):	Programmer/Emulatorer
+Group(de):	Applikationen/Emulatoren
+Group(es):	Aplicaciones/Emuladores
+Group(fr):	Applications/…mulateurs
+Group(it):	Applicazioni/Emulatori
+Group(ja):	•¢•◊•Í•±°º•∑•Á•Û/•®•ﬂ•Â•Ï°º•ø
+Group(no):	Applikasjoner/Emulatorer
 Group(pl):	Aplikacje/Emulatory
+Group(pt):	AplicaÁıes/Emuladores
+Group(ru):	“…Ãœ÷≈Œ…—/Ú≈ƒ¡À‘œ“Ÿ
+Group(sv):	Till‰mpningar/Emulatorer
 Requires:	%{name} = %{version}
 Obsoletes:	dosnet
 Prereq:		/sbin/depmod
@@ -177,16 +213,26 @@ temat dosnet moøesz znaleºÊ w README do dosemu.
 %package utils
 Summary:	Utilities for dosemu
 Summary(pl):	Programy pomocnicze do dosemu
-Group:		Application/Emulators
-Group(de):	Applicationen/Emulators
+Group:		Applications/Emulators
+Group(da):	Programmer/Emulatorer
+Group(de):	Applikationen/Emulatoren
+Group(es):	Aplicaciones/Emuladores
+Group(fr):	Applications/…mulateurs
+Group(it):	Applicazioni/Emulatori
+Group(ja):	•¢•◊•Í•±°º•∑•Á•Û/•®•ﬂ•Â•Ï°º•ø
+Group(no):	Applikasjoner/Emulatorer
 Group(pl):	Aplikacje/Emulatory
+Group(pt):	AplicaÁıes/Emuladores
+Group(ru):	“…Ãœ÷≈Œ…—/Ú≈ƒ¡À‘œ“Ÿ
+Group(sv):	Till‰mpningar/Emulatorer
 Requires:	dosemu
 
 %description utils
 Utilities for dosemu: dexeconfig, hdinfo, mkhdimage, mkfatimage16.
 
 %description utils -l pl
-Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage, mkfatimage16.
+Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
+mkfatimage16.
 
 %prep
 %setup -q -a1 -a2
