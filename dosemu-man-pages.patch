@@ -1,157 +1,346 @@
-diff -Nur dosemu-1.1.4/man.orig/dosdebug.1 dosemu-1.1.4/man/dosdebug.1
---- dosemu-1.1.4/man.orig/dosdebug.1	2002-12-18 02:36:44.000000000 +0100
-+++ dosemu-1.1.4/man/dosdebug.1	2003-05-18 11:54:53.000000000 +0200
+--- dosemu-1.2.0/man/ru/dosdebug.1.orig	2003-06-23 02:02:07.000000000 +0200
++++ dosemu-1.2.0/man/ru/dosdebug.1	2004-02-01 15:09:03.514615440 +0100
 @@ -1 +1 @@
 -.so man1/dosemu.bin.1
-+.so dos.1
-diff -Nur dosemu-1.1.5/man.orig/dosemu.bin.1 dosemu-1.1.5/man/dosemu.bin.1
---- dosemu-1.1.5/man.orig/dosemu.bin.1	2003-05-18 11:53:55.000000000 +0200
-+++ dosemu-1.1.5/man/dosemu.bin.1	2003-05-18 12:02:15.000000000 +0200
-@@ -1,9 +1,9 @@
- .\" -*- nroff -*-  (This is for Emacs)
--.TH DOSEMU.BIN 1 "Jun, 2003" "Version 1.1.5" "DOS Emulation"
-+.TH DOS 1 "Jun, 2003" "Version 1.1.5" "DOS Emulation"
- .SH NAME
--dosemu.bin, dosdebug \- run DOS and DOS programs under Linux
-+dos, xdos, dosdebug \- run DOS and DOS programs under Linux
- .SH SYNOPSIS
--.B dosemu.bin
-+.B dos
- [
- .B \-ABCcdkVNXtsgKm234OU
- ]
-@@ -82,11 +82,8 @@
- .sp
- .B dosdebug
- .SH DESCRIPTION
--.B dosemu.bin
--is the binary wrapped by the script
--.B dosemu
--(1)
--which invokes the Linux dos emulator, also known as
-+.B dos
-+invokes the Linux dos emulator, also known as
- .BR DOSEMU .
- .br
- .I debugfile
-@@ -570,13 +567,12 @@
- .SH FILES
- .PD 0
- .TP
--.I dosemu.bin
-+.I /usr/bin/dos
-+or
-+.I /usr/X11R6/bin/dos
- The binary
- .TP
--.I dosemu
--The wrapper script, it is recommended not to invoke dosemu.bin directly.
--.TP
--.I xdosemu
-+.I /usr/X11R6/bin/xdos
- Same, but invoking DOS in an X window.
- .TP
- .I $HOME/.dosemu
-@@ -673,4 +669,4 @@
- 
- 
- .SH "SEE ALSO"
--.BR dosemu "(1), " mkfatimage16 "(1)"
-+.BR mkfatimage16 "(1)"
-diff -Nur dosemu-1.1.4/man.orig/mkfatimage16.1 dosemu-1.1.4/man/mkfatimage16.1
---- dosemu-1.1.4/man.orig/mkfatimage16.1	2002-12-18 02:36:44.000000000 +0100
-+++ dosemu-1.1.4/man/mkfatimage16.1	2003-05-18 12:02:34.000000000 +0200
-@@ -127,7 +127,7 @@
- .B DOSEMU
- 
- .SH "SEE ALSO"
--.BR dosemu "(1), " xdosemu "(1), " mtools "(1)"
-+.BR dos "(1), " mtools "(1)"
- 
- 
- 
-diff -Nur dosemu-1.1.4/man.orig/ru/dosdebug.1 dosemu-1.1.4/man/ru/dosdebug.1
---- dosemu-1.1.4/man.orig/ru/dosdebug.1	2003-05-18 11:53:54.000000000 +0200
-+++ dosemu-1.1.4/man/ru/dosdebug.1	2003-05-18 12:02:53.000000000 +0200
-@@ -1 +1 @@
--.so man1/dosemu.bin.1
-+.so dos.1
-diff -Nur dosemu-1.1.4/man.orig/ru/dosemu.bin.1 dosemu-1.1.4/man/ru/dosemu.bin.1
---- dosemu-1.1.4/man.orig/ru/dosemu.bin.1	2003-05-18 11:53:54.000000000 +0200
-+++ dosemu-1.1.4/man/ru/dosemu.bin.1	2003-05-18 12:21:46.000000000 +0200
++.so man1/dosemu.1
+--- dosemu-1.2.0/man/ru/dosemu.bin.1.in.orig	2003-09-17 20:58:51.000000000 +0200
++++ dosemu-1.2.0/man/ru/dosemu.bin.1.in	2004-02-01 15:15:00.421357368 +0100
 @@ -1,9 +1,9 @@
  .\" -*- nroff -*-  (This is for Emacs)
 -.TH DOSEMU.BIN 1 "Январь 2003" "Версия 1.1.4.1" "Эмуляция DOS"
-+.TH DOS 1 "Январь 2003" "Версия 1.1.4.1" "Эмуляция DOS"
++.TH DOSEMU 1 "Январь 2003" "Версия 1.1.4.1" "Эмуляция DOS"
  .SH ИМЯ
 -dosemu.bin, dosdebug \- запускает DOS и приложения DOS под Linux
-+dos, xdos, dosdebug \- запускает DOS и приложения DOS под Linux
++dosemu, xdosemu, dos, dosdebug \- запускает DOS и приложения DOS под Linux
  .SH СИНТАКСИС
 -.B dosemu.bin
-+.B dos
++.B dosemu
  [
  .B \-ABCcdkVNXtsgKm234OU
  ]
-@@ -78,11 +78,8 @@
+@@ -78,11 +78,10 @@
  .sp
  .B dosdebug
  .SH ОПИСАНИЕ
 -.B dosemu.bin
 -является бинарным файлом, который запускается скриптом
--.B dosemu
+ .B dosemu
 -(1),
 -активизирующим эмулятор DOS под Linux, также известный как
++или
 +.B dos
 +это эмулятор DOS под Linux, также известный как
  .BR DOSEMU .
  .br
  .I Файл_отладки
-@@ -573,14 +570,12 @@
+@@ -155,7 +154,7 @@
+ .I --Fusers
+ Обойти файл dosemu.users и взять предоставленный файл вместо него
+ (принимается только в случае, когда
+-.B dosemu.bin
++.B dosemu
+ .I не
+ имеет флага suid-root).
+ .TP
+@@ -163,7 +162,7 @@
+ Обойти каталог по умолчанию DOSEMU_LIB_DIR (как, возможно, определено в
+ dosemu.users) и использовать предоставленный каталог вместо него 
+ (принимается только в случае, когда
+-.B dosemu.bin
++.B dosemu
+ .I не
+ имеет флага suid-root).
+ .TP
+@@ -171,7 +170,7 @@
+ Обойти каталог по умолчанию для загрузочного и каталога образов диска 
+ (DOSEMU_HDIMAGE_DIR) и использовать предоставленный каталог вместо него
+ (принимается только в случае, когда
+-.B dosemu.bin
++.B dosemu
+ .I не
+ имеет флага suid-root).
+ .TP
+@@ -533,11 +532,7 @@
+ 
+ .SH АВТОРЫ
+ .B DOSEMU
+-(содержащий в себе файлы
+-.B dosemu.bin
+-и 
+-.B dosemu
+-) базируется на версии 0.4 оригинальной программы, написанной Matthias Lautner
++базируется на версии 0.4 оригинальной программы, написанной Matthias Lautner
+ (текущий адрес которого на данный момент неизвестен).
+ .PP
+ Robert Sanders <gt8134b@prism.gatech.edu> поддерживал и расширял
+@@ -573,12 +568,10 @@
  .SH ФАЙЛЫ
  .PD 0
  .TP
--.I /usr/local/bin/dosemu.bin
-+.I /usr/bin/dos
-+или
-+.I /usr/X11R6/bin/dos
- Исполняемый модуль
- .TP
--.I /usr/local/bin/dosemu
+-.I @bindir@/dosemu.bin
+-Исполняемый модуль
+-.TP
+ .I @bindir@/dosemu
 -Оберточный скрипт, рекомендуемый для запуска dosemu.bin, который не стоит
 -запускать непосредственно.
--.TP
--.I /usr/local/bin/xdosemu
-+.I /usr/X11R6/bin/xdos
- То же самое, но служит для запуска DOS в X window.
++или
++.I @bindir@/dos
++Исполняемый модуль
  .TP
- .I $HOME/.dosemu
-@@ -675,4 +670,4 @@
+ .I @bindir@/xdosemu
+ То же самое, но служит для запуска DOS в X window.
+@@ -608,7 +601,7 @@
+ .BR DOSEMU,
+ включающийся в 
+ .I global.conf
+-(global.conf включен в dosemu.bin по умолчанию).
++(global.conf включен в dosemu по умолчанию).
+ .TP
+ .I dosemu.users
+ или
+@@ -675,4 +668,4 @@
  
  
  .SH "СМОТРИ ТАКЖЕ"
 -.BR dosemu "(1), " mkfatimage16 "(1)"
 +.BR mkfatimage16 "(1)"
-diff -Nur dosemu-1.1.4/man.orig/ru/mkfatimage16.1 dosemu-1.1.4/man/ru/mkfatimage16.1
---- dosemu-1.1.4/man.orig/ru/mkfatimage16.1	2003-05-18 11:53:54.000000000 +0200
-+++ dosemu-1.1.4/man/ru/mkfatimage16.1	2003-05-18 12:03:07.000000000 +0200
-@@ -130,7 +130,7 @@
+--- dosemu-1.2.0/man/dosdebug.1.orig	2003-09-17 21:41:50.000000000 +0200
++++ dosemu-1.2.0/man/dosdebug.1	2004-02-01 15:02:04.601299944 +0100
+@@ -1 +1 @@
+-.so man1/dosemu.bin.1
++.so man1/dosemu.1
+--- dosemu-1.2.0/man/dosemu.bin.1.in.orig	2004-01-17 22:59:06.000000000 +0100
++++ dosemu-1.2.0/man/dosemu.bin.1.in	2004-02-01 15:13:55.922162736 +0100
+@@ -1,9 +1,9 @@
+ .\" -*- nroff -*-  (This is for Emacs)
+-.TH DOSEMU.BIN 1 "Jan, 2004" "Version 1.2.0" "DOS Emulation"
++.TH DOSEMU 1 "Jan, 2004" "Version 1.2.0" "DOS Emulation"
+ .SH NAME
+-dosemu.bin, dosdebug \- run DOS and DOS programs under Linux
++dosemu, xdosemu, dos, dosdebug \- run DOS and DOS programs under Linux
+ .SH SYNOPSIS
+-.B dosemu.bin
++.B dosemu
+ [
+ .B \-ABCcdkVNXtsgKm234OU
+ ]
+@@ -85,11 +85,10 @@
+ .sp
+ .B dosdebug
+ .SH DESCRIPTION
+-.B dosemu.bin
+-is the binary wrapped by the script
+ .B dosemu
+-(1)
+-which invokes the Linux dos emulator, also known as
++or
++.B dos
++invokes the Linux dos emulator, also known as
+ .BR DOSEMU .
+ .br
+ .I debugfile
+@@ -161,7 +160,7 @@
+ .TP
+ .I --Fusers
+ Bypass dosemu.users and take this file instead (only accepted when
+-.B dosemu.bin
++.B dosemu
+ is
+ .I not
+ suid-root).
+@@ -169,7 +168,7 @@
+ .I --Flibdir
+ Bypass the default DOSEMU_LIB_DIR (as maybe defined in dosemu.users)
+ and use this directory instead (only accepted when
+-.B dosemu.bin
++.B dosemu
+ is
+ .I not
+ suid-root).
+@@ -177,7 +176,7 @@
+ .I --Fimagedir
+ Bypass the default directory for bootdirectory and hdimages (DOSEMU_HDIMAGE_DIR)
+ and use this directory instead (only accepted when
+-.B dosemu.bin
++.B dosemu
+ is
+ .I not
+ suid-root).
+@@ -187,7 +186,7 @@
+ .TP
+ .I -n
+ Bypass (don't use) dosemu.users and dosemu.conf (only accepted when
+-.B dosemu.bin
++.B dosemu
+ is
+ .I not
+ suid-root).
+@@ -542,11 +541,7 @@
+ 
+ .SH AUTHOR
  .B DOSEMU
+-(comprised of the files
+-.B dosemu.bin
+-and 
+-.B dosemu
+-) is based on version 0.4 of the original program written by Matthias Lautner
++is based on version 0.4 of the original program written by Matthias Lautner
+ (no current address that I know of).
+ .PP
+ Robert Sanders <gt8134b@prism.gatech.edu> was maintaining and enhancing 
+@@ -580,11 +575,10 @@
+ .SH FILES
+ .PD 0
+ .TP
+-.I @bindir@/dosemu.bin
+-The binary
+-.TP
+ .I @bindir@/dosemu
+-The wrapper script, it is recommended not to invoke dosemu.bin directly.
++or
++.I @bindir@/dos
++The binary
+ .TP
+ .I @bindir@/xdosemu
+ Same, but invoking DOS in an X window.
+@@ -617,7 +611,7 @@
+ .BR DOSEMU .
+ which is included by
+ .I global.conf
+-(global.conf is included in dosemu.bin by default).
++(global.conf is included in dosemu by default).
+ .TP
+ .I $HOME/.dosemurc
+ Per-user configuration file.
+@@ -678,4 +672,4 @@
  
- .SH "СМОТРИ ТАКЖЕ"
--.BR dosemu "(1), " xdosemu "(1), " mtools "(1)"
-+.BR dos "(1), " mtools "(1)"
  
+ .SH "SEE ALSO"
+-.BR dosemu "(1), " mkfatimage16 "(1)"
++.BR mkfatimage16 "(1)"
+--- dosemu-1.2.0/pl/man1/dos.1.orig	2001-11-04 23:47:56.000000000 +0100
++++ dosemu-1.2.0/pl/man1/dos.1	2004-02-01 15:39:11.506758856 +0100
+@@ -3,10 +3,10 @@
+ .\" -*- nroff -*-  (This is for Emacs)
+ .TH DOS 1 "luty 2000" "Wersja 1.0.0" "Emulacja MS-DOS-u"
+ .SH NAZWA
+-dos, xdos, dosexec, dosdebug \- uruchamianie MS-DOS-u i programСw 
++dosemu, xdosemu, dos, dosdebug \- uruchamianie MS-DOS-u i programСw 
+ DOS-owych w Linuksie
+ .SH SKёADNIA
+-.B dos
++.B dosemu
+ [
+ .B \-ABCcdkVNXtsgKm234OU
+ ]
+@@ -188,8 +188,8 @@
+ .I potok_wejsciowy[:potok_wyjsciowy]
+ ]
+ .SH OPIS
+-.B dos
+-uruchamia emulator DOS-u, znany rСwnie© jako 
++.B dosemu
++uruchamia emulator DOS-u, znany jako 
+ .BR DOSEMU .
+ .br
+ .I plik_diagnostyczny
+@@ -200,21 +200,21 @@
+ sЁu©y do sterowania i odpluskwiania wЁa╤nie dziaЁaj╠cego
+ .BR DOSEMU .
+ .PP
+-.B xdos
++.B xdosemu
+ uruchamia
+ .B DOSEMU
+ w oddzielnym okienku X. Jest to rСwnowa©ne poleceniu
+-.B dos -X
++.B dosemu -X
+ .PP
+ .B dosexec
+ uruchamia
+ .B DOSEMU
+ i wykonuje plik DEXE. Jest to rСwnowa©ne poleceniu
+-.B dos -L
++.B dosemu -L
+ .PP
+ Chocia© ten program znany jest jako 
+ .I emulator 
+-DOS-u, jest on w rzeczywisto╤ci wirtualn╠ maszyn╠ dla MS-DOS-u, ktСra
++DOS-u, jest on w rzeczywisto╤ci wirtualn╠ maszyn╠ dla DOS-u, ktСra
+ pozwala DOS-owi i programom dla niego napisanym dziaЁaФ w ╤rodowisku
+ przypominaj╠cym komputer IBM PC/AT z procesorem Intel 80x86 w trybie
+ rzeczywistym.
+@@ -226,10 +226,8 @@
+ .PP
+ Poniewa© w rzeczywisto╤ci
+ .B DOSEMU
+-nie jest emulatorem DOS-u, do pracy wymagana jest kopia systemu MS-DOS
+-3.3-7.00. (PrzyszЁe wersje DOS-u przypuszczalnie bЙd╠ dziaЁaФ, choФ
+-oczywi╤cie nie zostaЁo to sprawdzone. DR-DOS 6.0 rСwnie© wspСЁpracuje z
+-tym programem).
++nie jest emulatorem DOS-u, do pracy wymagana jest kopia systemu FreeDOS
++lub wЁasno╤ciowej wersji DOS-u (MS-DOS 3.3-7.00, DR-DOS 6.0, PC-DOS).
+ .PP
+ Przeczytaj pliki
+ .I QuickStart,
+@@ -314,13 +312,13 @@
+ .I -I
+ maj╠cy tЙ sam╠ skЁadniЙ, co pliki /etc/dosemu.conf i .dosrc, np.
+ .TP
+-		dos ... -I 'video { mda }'
++		dosemu ... -I 'video { mda }'
  
+ Ta opcja jest przydatna do tymczasowej zmiany ustawienia jakiej╤ opcji
+ konfiguracyjnej. Mo©esz rСwnie© uruchamiaФ dosemu z wЁasn╠ konfiguracj╠
+ za pomoc╠ skryptu, np.
+ .TP
+-		dos ... -I "`mojakonfiguracja.sh`"
++		dosemu ... -I "`mojakonfiguracja.sh`"
  
-diff -Nur dosemu-1.1.4/man.orig/ru/xdosemu.1 dosemu-1.1.4/man/ru/xdosemu.1
---- dosemu-1.1.4/man.orig/ru/xdosemu.1	2003-05-18 11:53:55.000000000 +0200
-+++ dosemu-1.1.4/man/ru/xdosemu.1	2003-05-18 12:03:13.000000000 +0200
-@@ -1 +1 @@
--.so man1/dosemu.1
-+.so dos.1
-diff -Nur dosemu-1.1.4/man.orig/xdosemu.1 dosemu-1.1.4/man/xdosemu.1
---- dosemu-1.1.4/man.orig/xdosemu.1	2003-05-18 11:53:55.000000000 +0200
-+++ dosemu-1.1.4/man/xdosemu.1	2003-05-18 12:02:40.000000000 +0200
-@@ -1 +1 @@
--.so man1/dosemu.1
-+.so dos.1
+ gdzie 
+ .I mojakonfiguracja.sh
+@@ -328,7 +326,7 @@
+ Je©eli u©ytkownik oprСcz .dosrc posiada jeszcze inny plik konfiguracyjny,
+ mo©e go u©yФ w nastЙpuj╠cy sposСb:
+ .TP
+-		dos ... -I "`cat innakonfiguracja.conf`"
++		dosemu ... -I "`cat innakonfiguracja.conf`"
+ 
+ Nale©y pamiЙtaФ o dodatkowym ujЙciu parametru po
+ .I -I
+@@ -549,7 +547,7 @@
+ .B DOSEMU
+ w podkatalogu z przykЁadami, aby znale╪Ф opis opcji diagnostycznych. W linii
+ poleceЯ mo©na okre╤liФ, jakie kategorie komunikatСw maj╠ byФ emitowane przez
+-.BR dos .
++.BR dosemu .
+ SkЁadnia jest nastЙpuj╠ca: po opcji
+ \-D nastЙpuj╠ litery reprezentuj╠ce kategorie komunikatСw.
+ .B DOSEMU
+@@ -678,11 +676,7 @@
+ 
+ .SH AUTOR
+ .B DOSEMU
+-(skЁadaj╠cy siЙ z plikСw
+-.B dos 
+-i
+-.B libdosemu
+-) opiera siЙ na wersji 0.4 oryginalnego programu napisanego przez
++opiera siЙ na wersji 0.4 oryginalnego programu napisanego przez
+ Matthiasa Lautnera (nie znam jego aktualnego adresu).
+ .PP
+ Robert Sanders <gt8134b@prism.gatech.edu> 
+@@ -713,10 +707,12 @@
+ .SH PLIKI
+ .PD 0
+ .TP
++.I /usr/bin/dosemu
++lub
+ .I /usr/bin/dos
+ GЁСwny plik programu.
+ .TP
+-.I /usr/bin/xdos
++.I /usr/bin/xdosemu
+ Wersja do X Window.
+ .TP
+ .I $HOME/dosemu
