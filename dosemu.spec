@@ -2,6 +2,9 @@
 # Conditional build:
 # _with_static		- linked static
 #
+# TODO: look at commented out patches
+#        documentation build is very very slow, I don't why
+
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
 Summary(es):	Emulador DOS
@@ -10,25 +13,28 @@ Summary(pl):	Emulator DOSa
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.1.4
-Release:	1
+%define		ver 1.1.4
+%define 	subver 13
+Version:	%{ver}.%{subver}
+# Please don't bump to 1 until dosemu-1.2
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/%{name}-%{version}.tgz
-Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
+Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/%{name}-%{ver}.tgz
+Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
 Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
 Source5:	%{name}.desktop
+Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 #Source6:	http://www.dosemu.org/~stas/patchset-%{version}.%{pver}.tgz
 Patch0:		%{name}-man-pages.patch
 Patch1:		%{name}-parser-buf.patch
 Patch2:		%{name}-make-new.patch
 Patch3:		%{name}-%{name}_conf.patch
-Patch4:		%{name}-mfs-pts.patch
-Patch5:		%{name}-Oacute.patch
-Patch6:		%{name}-doSgmlTools.patch
-Patch7:		%{name}-dont_build_dvi.patch
+Patch4:		%{name}-doSgmlTools.patch
+Patch5:		%{name}-makehtml.patch
+Patch6:		%{name}-nox.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -135,48 +141,53 @@ Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
 
 %prep
-%setup -q -a1 -a2
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+%setup -q -n %{name}-%{ver} -a1 -a2 -a6
+sh tmp/do_patch
+
+#%patch0 -p1
+#%patch1 -p1
+#%patch2 -p1
+#%patch3 -p1
+%patch4	-p1
 %patch5 -p1
-%patch6	-p1
-%patch7 -p1
+%patch6 -p0
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
 
+
 ./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
 plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
 
-cp -f base-configure.in configure.in
+#cp -f base-configure.in configure.in
 %{__autoconf}
 
 # non-X version
-%configure \
+%configure2_13 \
 %{?_with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi \
 	--without-x
 
-echo | %{__make}
+%{__make} WAIT=no
 mv -f bin/dosemu.bin bin/dos-nox
 
 # X version
-%configure \
+%configure2_13 \
 %{?_with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi
-echo | %{__make}
+%{__make} WAIT=no
 mv -f bin/dosemu.bin bin/dos-x
 mv -f bin/dos-nox bin/dosemu.bin
 
 mv -f man/dosemu.bin.1 man/dos.1
 
 # documentation
-%{__make} docs
+%{__make} -C src/doc/DANG html
+%{__make} -C src/doc/HOWTO html
+%{__make} -C src/doc/README html
+
 find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 
 # midid daemon
