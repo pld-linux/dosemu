@@ -32,8 +32,6 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-#Patch5:		%{name}-fix.patch
-#Patch5:		%{name}-gcc33.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 %{?_with_static:BuildRequires:	XFree86-static}
@@ -147,7 +145,6 @@ sh tmp/do_patch
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-#%patch5 -p1
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
