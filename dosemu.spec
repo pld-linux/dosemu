@@ -43,7 +43,6 @@ BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
 BuildRequires:	util-linux
 BuildRequires:	unzip
-Requires:	dos
 %{?_with_static:BuildRequires:	glibc-static}
 %{?_with_static:BuildRequires:	XFree86-static}
 %{?_with_static:BuildRequires:	slang-static}
@@ -93,7 +92,6 @@ Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
 Group:		Applications/Emulators
 Provides:	dosemu
 Obsoletes:	dosemu
-Requires:	dos
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
