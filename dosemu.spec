@@ -2,10 +2,6 @@
 # --with static		- links statically
 # --without dist_kernel	- without distribution kernel
 #
-%define		_moddir		/lib/modules/%{_kernel_ver}/misc
-%define		_moddirsmp	/lib/modules/%{_kernel_ver}smp/misc
-%define _rel	14
-
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
 Summary(es):	Emulador DOS
@@ -15,18 +11,12 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-Release:	%{_rel}
-License:	distributable
+Release:	15
+License:	GPLv2
 Group:		Applications/Emulators
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
-Source3:	http://prdownloads.sourceforge.net/freedos/ke2026a16.zip
-Source4:	autoexec2.bat
-Source5:	config2.sys
-Source6:	keybpl.exe
-Source7:	egapl.exe
-Source8:	shsucdx.exe
 Patch0:		ftp://ftp.dosemu.org/dosemu/fixes/patch-1.0.2.1.gz
 Patch1:		%{name}-1.0.2-man-pages.patch
 Patch2:		%{name}-0.98.1-security.patch
@@ -44,10 +34,11 @@ BuildRequires:	flex
 BuildRequires:	perl
 BuildRequires:	slang-devel
 BuildRequires:	unzip
+Requires:	dos
 %{?_with_static:BuildRequires:	glibc-static}
 %{?_with_static:BuildRequires:	XFree86-static}
 %{?_with_static:BuildRequires:	slang-static}
-Exclusivearch:	%{ix86}
+ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
@@ -90,9 +81,9 @@ Summary(fr):	Émulateur DOS conçu pou être lancé sous X
 Summary(pt_BR):	Emulador DOS que roda no X
 Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
 Group:		Applications/Emulators
-Requires:	%{name} = %{version}
 Provides:	dosemu
 Obsoletes:	dosemu
+Requires:	dos
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
@@ -122,48 +113,6 @@ X Window. Possui suporte a gráficos VGA e mouse.
 Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
 grafikleri ve fare desteði vardýr.
 
-%package -n kernel-net-dosnet
-Summary:	kernel module dosnet.o
-Summary(pl):	Modu³ dosnet.o do kernela
-Release:	%{_rel}@%{_kernel_ver_str}
-Group:		Applications/Emulators
-Prereq:		/sbin/depmod
-%{!?_without_dist_kernel:%requires_releq_kernel_up}
-Requires:	%{name} = %{version}
-Obsoletes:	dosnet
-
-%description -n kernel-net-dosnet
-Kernel module for dosnet (vnet). Dosnet lets you establish TCP/IP
-connection beetween dosemu session and Linux kernel. Read README for
-dosemu for more information.
-
-%description -n kernel-net-dosnet -l pl
-Modu³ dosnet.o dla kernela. Modu³ ten pozwala ³±czyæ siê programom
-DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
-przy pisaniu programów sieciowych dla DOS-a. Rzeteln± informacjê na
-temat dosnet mo¿esz znale¼æ w README do dosemu.
-
-%package -n kernel-smp-net-dosnet
-Summary:	kernel-smp module dosnet.o
-Summary(pl):	Modu³ dosnet.o do kernela SMP
-Release:	%{_rel}@%{_kernel_ver_str}
-Group:		Applications/Emulators
-Prereq:		/sbin/depmod
-%{!?_without_dist_kernel:%requires_releq_kernel_smp}
-Requires:	%{name} = %{version}
-Obsoletes:	dosnet
-
-%description -n kernel-smp-net-dosnet
-Kernel module for dosnet (vnet). Dosnet lets you establish TCP/IP
-connection beetween dosemu session and Linux kernel. Read README for
-dosemu for more information.
-
-%description -n kernel-smp-net-dosnet -l pl
-Modu³ dosnet.o dla kernela. Modu³ ten pozwala ³±czyæ siê programom
-DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
-przy pisaniu programów sieciowych dla DOS-a. Rzeteln± informacjê na
-temat dosnet mo¿esz znale¼æ w README do dosemu.
-
 %package utils
 Summary:	Utilities for dosemu
 Summary(pl):	Programy pomocnicze do dosemu
@@ -189,28 +138,11 @@ mkfatimage16.
 %patch7 -p0
 %patch8 -p0
 
-rm -rf freedos
-mkdir freedos
-unzip -q -L -o %{SOURCE3} -d freedos
-
 %build
-cp -f base-configure.in configure.in
-autoconf
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
 
-%{__cc} $OPTFLAGS -I%{_includedir} -D__KERNEL__ -D__KERNEL_SMP=1 \
-	-Wall -Wstrict-prototypes \
-	-fno-strength-reduce -I%{_kernelsrcdir}/include -Isrc/include \
-	-DMODULE \
-	-c -o src/dosext/net/v-net/dosnet.o src/dosext/net/v-net/dosnet.c
-mkdir src/dosext/net/v-net/smp
-mv -f src/dosext/net/v-net/dosnet.o src/dosext/net/v-net/smp/
-
-%{__cc} $OPTFLAGS -I%{_includedir} -D__KERNEL__ \
-	-Wall -Wstrict-prototypes \
-	-fno-strength-reduce -I%{_kernelsrcdir}/include -Isrc/include \
-	-DMODULE \
-	-c -o src/dosext/net/v-net/dosnet.o src/dosext/net/v-net/dosnet.c
+cp -f base-configure.in configure.in
+autoconf
 
 # non-X version
 %configure \
@@ -218,6 +150,7 @@ mv -f src/dosext/net/v-net/dosnet.o src/dosext/net/v-net/smp/
 	--enable-new-intcode \
 	--enable-aspi \
 	--without-x
+
 echo | %{__make}
 mv -f bin/dosemu.bin bin/dos-nox
 
@@ -254,20 +187,9 @@ install etc/dosemu.conf $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.conf
 install man/{dos.1,dosdebug.1,xdos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/man1
 install pl/man1/{dos.1,dosdebug.1,xdos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
 
-install %{SOURCE4} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/autoexec.bat
-install %{SOURCE5} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/config.sys
-install %{SOURCE6} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/keybpl.exe
-install %{SOURCE7} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/egapl.exe
-install %{SOURCE8} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/shsucdx.exe
 install src/plugin/commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install dosemu/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
-install freedos/bin/kernel.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir
-install freedos/doc/fdkernel/* $RPM_BUILD_ROOT%{_dosemudir}/bootdir/freedos/doc/fdkernel
-ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
-
-install -d $RPM_BUILD_ROOT{%{_moddir},%{_moddirsmp}}
-install src/dosext/net/v-net/dosnet.o $RPM_BUILD_ROOT%{_moddir}
-install src/dosext/net/v-net/smp/dosnet.o $RPM_BUILD_ROOT%{_moddirsmp}
+#ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
 
 # Take out irritating ^H's from the documentation
 for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.\010//g' > doc/$i ; done
@@ -278,18 +200,6 @@ gzip -9nf QuickStart COPYING ChangeLog* doc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
-%post	-n kernel-net-dosnet
-/sbin/depmod -a
-
-%postun	-n kernel-net-dosnet
-/sbin/depmod -a
-
-%post	-n kernel-smp-net-dosnet
-/sbin/depmod -a
-
-%postun	-n kernel-smp-net-dosnet
-/sbin/depmod -a
 
 %files
 %defattr(644,root,root,755)
@@ -303,14 +213,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dosexec
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
-%dir %{_dosemudir}/bootdir/freedos
 %{_dosemudir}/bootdir/dosemu/*
-%{_dosemudir}/bootdir/kernel.sys
-%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/autoexec.bat
-%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/config.sys
-%{_dosemudir}/bootdir/command.com
-%{_dosemudir}/bootdir/*.exe
-%{_dosemudir}/bootdir/freedos/*
+#%{_dosemudir}/bootdir/command.com
 %{_mandir}/man1/[dm]*
 %lang(pl) %{_mandir}/pl/man1/d*
 %{_pixmapsdir}/dosemu.xpm
@@ -326,27 +230,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_xbindir}/*
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
-%dir %{_dosemudir}/bootdir/freedos
 %{_dosemudir}/bootdir/dosemu/*
-%{_dosemudir}/bootdir/kernel.sys
-%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/autoexec.bat
-%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/bootdir/config.sys
-%{_dosemudir}/bootdir/command.com
-%{_dosemudir}/bootdir/*.exe
-%{_dosemudir}/bootdir/freedos/*
+#%{_dosemudir}/bootdir/command.com
 %{_mandir}/man1/[dm]*
 %{_mandir}/man1/xdos.1*
 %lang(pl) %{_mandir}/pl/man1/d*
 %lang(pl) %{_mandir}/pl/man1/xdos.1*
 %{_pixmapsdir}/dosemu.xpm
-
-%files -n kernel-net-dosnet
-%defattr(644,root,root,755)
-%{_moddir}/dosnet.o
-
-%files -n kernel-smp-net-dosnet
-%defattr(644,root,root,755)
-%{_moddirsmp}/dosnet.o
 
 %files utils
 %defattr(644,root,root,755)
