@@ -1,0 +1,11 @@
+--- dosemu-1.1.3/src/dosext/mfs/mfs.c.orig	Mon Nov  4 14:29:50 2002
++++ dosemu-1.1.3/src/dosext/mfs/mfs.c	Mon Nov  4 14:31:14 2002
+@@ -497,7 +497,7 @@
+   }
+ 
+   if (!found && check_dpb) {
+-    dd = sft_device_info(sft) & 0x0f1f;
++    dd = sft_device_info(sft) & 0x1f;
+         /* 11/20/95 by RGPP:
+           Some Novell applications seem to trash the sft_device_info
+           in such a way that it looks like an existing DOSEMU re-
