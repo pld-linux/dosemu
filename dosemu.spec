@@ -5,7 +5,7 @@ Summary(pl):	Emulator DOSa
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.1
-Release:	4
+Release:	5
 License:	distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
@@ -36,7 +36,7 @@ BuildRequires:	mtools
 BuildRequires:	unzip
 BuildRequires:	bison
 BuildRequires:	flex
-Requires:	mtools >= 3.6
+Conflicts:	mtools < 3.6
 Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
@@ -251,10 +251,10 @@ fi
 %defattr(644,root,root,755)
 %doc *.gz doc/*
 %dir /var/lib/dosemu
-%config %{_sysconfdir}/dosemu.conf
-%config %{_sysconfdir}/dosemu.users
-%config /var/lib/dosemu/hdimage
-%config /var/lib/dosemu/global.conf
+%config(noreplace) %{_sysconfdir}/dosemu.conf
+%config(noreplace) %{_sysconfdir}/dosemu.users
+%config(noreplace) /var/lib/dosemu/hdimage
+%config(noreplace) /var/lib/dosemu/global.conf
 %attr(4755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/dosexec
