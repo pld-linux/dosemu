@@ -13,7 +13,7 @@ Version:	1.0.2
 Release:	17
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
+Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
