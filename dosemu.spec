@@ -4,7 +4,7 @@
 #
 %define		_moddir		/lib/modules/%{_kernel_ver}/misc
 %define		_moddirsmp	/lib/modules/%{_kernel_ver}smp/misc
-%define _rel	13
+%define _rel	14
 
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -21,7 +21,7 @@ Group:		Applications/Emulators
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 Source2:	%{name}-sys.tar.gz
-Source3:	http://prdownloads.sourceforge.net/freedos/ke2025c16.zip
+Source3:	http://prdownloads.sourceforge.net/freedos/ke2026a16.zip
 Source4:	autoexec2.bat
 Source5:	config2.sys
 Source6:	keybpl.exe
@@ -34,6 +34,8 @@ Patch3:		%{name}-make-new.patch
 Patch4:		%{name}-Polish_keyboard.patch
 Patch5:		%{name}-%{name}_conf.patch
 Patch6:		%{name}-alt224.patch
+Patch7:		pmstack.diff
+Patch8:		%{name}-rawkeyboard-console.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bin86
@@ -184,6 +186,8 @@ mkfatimage16.
 %patch4 -p1
 %patch5 -p0
 %patch6 -p1
+%patch7 -p0
+%patch8 -p0
 
 rm -rf freedos
 mkdir freedos
