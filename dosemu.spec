@@ -19,7 +19,6 @@ Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
 # Source0-md5:	763e6b865dac87114041f5eb4b24bf8e
 #Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
-# Source1-md5:	d1967c4999b23f5c35188648c45fafef
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
