@@ -26,6 +26,7 @@ Patch4:		%{name}-0.98.1-justroot.patch
 Patch5:		%{name}-make-new.patch
 Patch6:		%{name}m-1.0.0-glibc22.patch
 Patch7:		%{name}-1.0.1-broken.patch
+BuildRequires:	bin86
 BuildRequires:	mtools
 Requires:	kernel >= 2.0.28, mtools >= 3.6
 Url:		http://www.dosemu.org
