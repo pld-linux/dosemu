@@ -18,12 +18,15 @@ Release:	0.3
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
+# Source0-md5:	be632c6e5edd3388d9d6d2c8dba7dc10
 Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
+# Source1-md5:	21b6d8cf3797333e6be0ddf8954e58e1
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
 Source5:	%{name}.desktop
 Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
+# Source6-md5:	7a8abf5c656e6b99bdd03a4783751895
 Patch0:		%{name}-man-pages.patch
 Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
