@@ -4,7 +4,8 @@ Version:	0.99.13
 Release:	3
 Copyright:	distributable
 Group:		Applications/Emulators
-Source0:	ftp://ftp.dosemu.org/dosemu/dosemu-%{version}.tgz
+Group(pl):	Aplikacje/Emulatory
+Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
 Source1:	http://www.freedos.org/files/distributions/base1.zip
 Source2:	http://www.freedos.org/files/distributions/util1.zip
 Source3:	http://www.freedos.org/files/distributions/edit1.zip
@@ -26,30 +27,32 @@ Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Dosemu is a DOS emulator.  Once you've installed dosemu, start the DOS
+Dosemu is a DOS emulator. Once you've installed dosemu, start the DOS
 emulator by typing in the dos command.
 
-You need to install dosemu if you use DOS programs and you want to be able
-to run them on your Red Hat Linux system.  You may also need to install
-the dosemu-freedos package.
+You need to install dosemu if you use DOS programs and you want to be
+able to run them on your Red Hat Linux system. You may also need to
+install the dosemu-freedos package.
 
 %package -n xdosemu
 Requires:	%{name} = %{version}
 Summary:	A DOS emulator for the X Window System.
 Group:		Applications/Emulators
+Group(pl):	Aplikacje/Emulatory
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
-]Window System.  Xdosemu provides VGA graphics and mouse support.
+]Window System. Xdosemu provides VGA graphics and mouse support.
 
-Install xdosemu if you need to run DOS programs on your system, and you'd
-like to do so with the convenience of graphics support and mouse
+Install xdosemu if you need to run DOS programs on your system, and
+you'd like to do so with the convenience of graphics support and mouse
 capabilities.
 
 %package freedos
 Requires:	%{name} = %{version}
-Summary	:	A FreeDOS hdimage for dosemu, a DOS emulator, to use.
+Summary:	A FreeDOS hdimage for dosemu, a DOS emulator, to use.
 Group:		Applications/Emulators
+Group(pl):	Aplikacje/Emulatory
 
 %description freedos
 Generally, the dosemu DOS emulator requires either that your system
@@ -60,13 +63,12 @@ freedos package, which contains an hdimage file which will be
 installed in teh /var/lib/dosemu directory. The hdimage file is
 already bootable with FreeDOS.
 
-You will need to edit your /etc/dosemu.conf file to add the
-image to the list of disk 'drives' used by dosemu.
+You will need to edit your /etc/dosemu.conf file to add the image to
+the list of disk 'drives' used by dosemu.
 
-Install dosemu-freedos if you are installing the dosemu package
-and you don't have a version of DOS available on your system,
-and your system's partitions were not formatted and installed
-with DOS.
+Install dosemu-freedos if you are installing the dosemu package and
+you don't have a version of DOS available on your system, and your
+system's partitions were not formatted and installed with DOS.
 
 %prep
 %setup -q
@@ -104,7 +106,7 @@ mv bin/dos-nox bin/dos
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc,%{_mandir}/man1,%{_datadir}/icons,/var/lib/dosemu}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_mandir}/man1,%{_datadir}/icons,/var/lib/dosemu}
 
 make install INSTROOT=$RPM_BUILD_ROOT
 
@@ -114,8 +116,8 @@ install bin/dos-x $RPM_BUILD_ROOT%{_bindir}/xdos
 install setup-hdimage $RPM_BUILD_ROOT%{_bindir}
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 install etc/dosemu.xpm $RPM_BUILD_ROOT%{_datadir}/icons
-install etc/dosemu.users.secure $RPM_BUILD_ROOT/etc/dosemu.users
-src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
+install etc/dosemu.users.secure $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
+	src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
 	-b freedos/kernel/boot.bin \
 	-f $RPM_BUILD_ROOT/var/lib/dosemu/hdimage.freedos \
 	freedos/kernel/* 
@@ -131,9 +133,9 @@ mdir -w n:
 rm -f $FREEDOS
 unset MTOOLSRC
 
-install -m 644 etc/hdimage.dist $RPM_BUILD_ROOT/var/lib/dosemu/hdimage
+install etc/hdimage.dist $RPM_BUILD_ROOT/var/lib/dosemu/hdimage
 # install dexe utils
-install -m 755 dexe/{do_mtools,extract-dos,mkdexe,myxcopy} $RPM_BUILD_ROOT%{_bindir}
+install dexe/{do_mtools,extract-dos,mkdexe,myxcopy} $RPM_BUILD_ROOT%{_bindir}
 
 cat <<EOF >$RPM_BUILD_ROOT%{_bindir}/rundos
 #!/bin/sh
@@ -154,19 +156,18 @@ gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/* \
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-rm -f dosemu.files
 
 %post -n xdosemu
 if [ -x /usr/X11R6/bin/mkfontdir ]; then
 	(cd /usr/X11R6/lib/X11/fonts/misc; /usr/X11R6/bin/mkfontdir)
 fi
-killall -USR1 xfs > /dev/null 2>&1 || :
+killall -USR1 xfs > /dev/null 2>&1 ||:
 
 %postun -n xdosemu
 if [ -x /usr/X11R6/bin/mkfontdir ]; then
 	(cd /usr/X11R6/lib/X11/fonts/misc; /usr/X11R6/bin/mkfontdir)
 fi
-killall -USR1 xfs > /dev/null 2>&1 || :
+killall -USR1 xfs > /dev/null 2>&1 ||:
 
 %post freedos
 [ -e /var/lib/dosemu/hdimage.first ] || \
@@ -183,8 +184,8 @@ fi
 %defattr(644,root,root,755)
 %doc QuickStart.gz doc/*
 %dir /var/lib/dosemu
-%config /etc/dosemu.conf
-%config /etc/dosemu.users
+%config %{_sysconfdir}/dosemu.conf
+%config %{_sysconfdir}/dosemu.users
 %config /var/lib/dosemu/hdimage
 %config /var/lib/dosemu/global.conf
 %attr(4755,root,root) %{_bindir}/dos
@@ -200,18 +201,19 @@ fi
 %attr(755,root,root) %{_bindir}/mkfatimage16
 %attr(755,root,root) %{_bindir}/rundos
 %attr(755,root,root) %{_bindir}/setup-hdimage
-%{_mandir}/man1/dos.1.gz
-%{_mandir}/man1/dosdebug.1.gz
-%{_mandir}/man1/mkfatimage16.1.gz
+%{_mandir}/man1/dos.1*
+%{_mandir}/man1/dosdebug.1*
+%{_mandir}/man1/mkfatimage16.1*
 %{_datadir}/icons/dosemu.xpm
 
 %files -n xdosemu
 %defattr(644,root,root,755)
 %attr(4755,root,root) %{_bindir}/xdos
 %attr(755,root,root) %{_bindir}/xtermdos
-%{_mandir}/man1/xdos.1.gz
-%{_mandir}/man1/xtermdos.1.gz
-/usr/X11R6/lib/X11/fonts/misc/vga.pcf
+%{_mandir}/man1/xdos.1*
+%{_mandir}/man1/xtermdos.1*
+%{_prefix}/X11R6/lib/X11/fonts/misc/vga.pcf
 
 %files freedos
+%defattr(644,root,root,755)
 %config /var/lib/dosemu/hdimage.freedos
