@@ -1,7 +1,15 @@
 # Conditional build:
 # --with static	- links statically
+
 %define         _kernel_ver %(grep UTS_RELEASE %{_kernelsrcdir}/include/linux/version.h 2>/dev/null| cut -d'"' -f2)
-#%define         _kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
+%define         _kernel_ver_str %(echo %{_kernel_ver} | sed s/-/_/g)
+%define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
+%if %{_kernel24}
+%define		_moddir		/lib/modules/%{_kernel_ver}/misc
+%else
+%define		_moddir		/lib/modules/%{_kernel_ver}/net
+%endif
+
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
 Summary(fr):	Emulateur DOS
@@ -25,19 +33,24 @@ Source7:	egapl.exe
 Source8:	shsucdx.exe
 Patch0:		%{name}-dosemu_conf.patch
 Patch1:		%{name}-1.0.2-man-pages.patch
+Patch2:		%{name}-0.98.1-justroot.patch
+Patch3:		%{name}-0.98.1-security.patch
+Patch4:		%{name}-make-new.patch
 URL:		http://www.dosemu.org/
+BuildRequires:	XFree86-devel
 BuildRequires:	bin86
-BuildRequires:	unzip
 BuildRequires:	bison
 BuildRequires:	flex
-BuildRequires:	glibc-static
-BuildRequires:	XFree86-static
-BuildRequires:	slang-static
-Conflicts:	mtools < 3.6
+BuildRequires:	slang-devel
+BuildRequires:	unzip
+%{?_with_static:BuildRequires:	glibc-static}
+%{?_with_static:BuildRequires:	XFree86-static}
+%{?_with_static:BuildRequires:	slang-static}
 Obsoletes:	xdosemu
 Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
+Conflicts:	mtools < 3.6
 
 %description
 Dosemu is a DOS emulator. Once you've installed dosemu, start the DOS
@@ -65,38 +78,44 @@ Essa é uma versão do emulador DOS que foi projetada para rodar em
 sessões X Window. Oferece suporte para gráficos VGA bem como suporte
 para mouse.
 
-%package dosnet
+%package -n kernel-net-dosnet
 Summary:	kernel module dosnet.o
 Summary(pl):	Modu³ dosnet.o do kernela
+Release:	%{release}@%{_kernel_ver_str}
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
 Requires:	%{name} = %{version}
+Obsoletes:	dosnet
 Prereq:		/sbin/depmod
 
-%description dosnet
-Kernel module for dosnet (vnet).  Dosnet lets you establish TCP/IP
-connection beetween dosemu session and Linux kernel.  Read README
+%description -n kernel-net-dosnet
+Kernel module for dosnet (vnet). Dosnet lets you establish TCP/IP
+connection beetween dosemu session and Linux kernel. Read README
 for dosemu for more information.
 
-%description -l pl dosnet
-Modu³ dosnet.o dla kernela.  Modu³ ten pozwala ³±czyæ siê programom
-DOSowym wykorzystuj±cym TCP/IP z Linuksem.  Przydatny miêdzy innymi
-przy pisaniu programów sieciowych dla DOSa.  Rzeteln± informacjê na
+%description -n kernel-net-dosnet -l pl
+Modu³ dosnet.o dla kernela. Modu³ ten pozwala ³±czyæ siê programom
+DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
+przy pisaniu programów sieciowych dla DOSa. Rzeteln± informacjê na
 temat dosnet mo¿esz znale¼æ w README do dosemu.   
 
 %prep
 %setup -q -a1 -a2
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 rm -rf freedos
 mkdir freedos
-unzip -L -o %{SOURCE3} -d freedos
+unzip -q -L -o %{SOURCE3} -d freedos
 
 %build
-cp base-configure.in configure.in
+cp -f base-configure.in configure.in
 autoconf
+OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
 %configure \
 %{?_with_static:--enable-linkstatic} \
 	--enable-new-intcode \
@@ -113,17 +132,20 @@ mv -f man/dosemu.bin.1 man/dos.1
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_sysconfdir},%{_mandir}/man1,%{_mandir}/pl/man1,%{_pixmapsdir}}
 install -d $RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net
 
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
+ln -sf dos $RPM_BUILD_ROOT%{_bindir}/xdos
+
 install etc/dosemu.xpm $RPM_BUILD_ROOT%{_prefix}/X11R6/share/pixmaps
 install etc/dosemu.users.secure $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
 install etc/global.conf $RPM_BUILD_ROOT%{_dosemudir}/global.conf
 install etc/dosemu.conf $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.conf
+
 install man/{dos.1,dosdebug.1,xdos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/man1
 install pl/man1/{dos.1,dosdebug.1,xdos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
+
 install %{SOURCE4} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/autoexec.bat
 install %{SOURCE5} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/config.sys
 install %{SOURCE6} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/keybpl.exe
@@ -131,34 +153,29 @@ install %{SOURCE7} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/egapl.exe
 install %{SOURCE8} $RPM_BUILD_ROOT%{_dosemudir}/bootdir/shsucdx.exe
 install src/plugin/commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install dosemu/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
-install src/dosext/net/v-net/dosnet.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net
 install freedos/bin/kernel.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir
 install freedos/doc/fdkernel/* $RPM_BUILD_ROOT%{_dosemudir}/bootdir/freedos/doc/fdkernel
 ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
-ln -sf dos $RPM_BUILD_ROOT%{_bindir}/xdos
+
+install -d $RPM_BUILD_ROOT%{_moddir}
+install src/dosext/net/v-net/dosnet.o $RPM_BUILD_ROOT%{_moddir}
 
 # Take out irritating ^H's from the documentation
 for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
 
 rm -f doc/{configuration,dosemu.lsm}
 
-#mv -f $RPM_BUILD_ROOT/usr/X11R6/lib/X11/fonts/misc \
-#	$RPM_BUILD_ROOT%{_fontsdir}
-
-
 gzip -9nf QuickStart COPYING ChangeLog* doc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-
-%post dosnet
+%post	-n kernel-net-dosnet
 depmod -a
 
-%postun dosnet
+%postun	-n kernel-net-dosnet
 depmod -a
-
-    
+ 
 %files
 %defattr(644,root,root,755)
 %doc *.gz doc/*
@@ -194,6 +211,6 @@ depmod -a
 %lang(pl) %{_mandir}/pl/man1/*
 %{_pixmapsdir}/dosemu.xpm
 
-%files dosnet
+%files -n kernel-net-dosnet
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/net/dosnet.o
+%{_moddir}/dosnet.o
