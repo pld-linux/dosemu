@@ -21,7 +21,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-%define _rel	3
+%define _rel	4
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
