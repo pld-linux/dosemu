@@ -4,7 +4,7 @@ Version:	0.99.13
 Release:	2
 Copyright:	distributable
 Group:		Applications/Emulators
-Source0:	ftp://dtp.dosemu.org/dosemu/dosemu-%{version}.tgz
+Source0:	ftp://ftp.dosemu.org/dosemu/dosemu-%{version}.tgz
 Source1:	http://www.freedos.org/files/distributions/base1.zip
 Source2:	http://www.freedos.org/files/distributions/util1.zip
 Source3:	http://www.freedos.org/files/distributions/edit1.zip
@@ -93,7 +93,6 @@ done
 unzip -L -o -d freedos $RPM_SOURCE_DIR/vim53rt.zip
 unzip -L -o -d freedos/vim-5.3 $RPM_SOURCE_DIR/vim53d16.zip
 
-
 %build
 ./default-configure --without-x
 echo | make
@@ -111,11 +110,11 @@ make install INSTROOT=$RPM_BUILD_ROOT
 
 rm $RPM_BUILD_ROOT%{_bindir}/xdos
 
-install -m 755 bin/dos-x $RPM_BUILD_ROOT%{_bindir}/xdos
-install -m 755 setup-hdimage $RPM_BUILD_ROOT%{_bindir}
-install -m 755 src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
-install -m 644 etc/dosemu.xpm $RPM_BUILD_ROOT%{_datadir}/icons
-install -m 644 etc/dosemu.users.secure $RPM_BUILD_ROOT/etc/dosemu.users
+install bin/dos-x $RPM_BUILD_ROOT%{_bindir}/xdos
+install setup-hdimage $RPM_BUILD_ROOT%{_bindir}
+install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
+install etc/dosemu.xpm $RPM_BUILD_ROOT%{_datadir}/icons
+install etc/dosemu.users.secure $RPM_BUILD_ROOT/etc/dosemu.users
 src/tools/periph/mkfatimage16 -p -k 16192 -l FreeDos \
 	-b freedos/kernel/boot.bin \
 	-f $RPM_BUILD_ROOT/var/state/dosemu/hdimage.freedos \
@@ -175,9 +174,9 @@ killall -USR1 xfs > /dev/null 2>&1 || :
 
 %postun freedos
 if [ $1 = 0 ]; then
-  if [ -e /var/state/dosemu/hdimage.first ]; then
-    rm -f /var/state/dosemu/hdimage.first
-  fi
+	if [ -e /var/state/dosemu/hdimage.first ]; then
+		rm -f /var/state/dosemu/hdimage.first
+	fi
 fi
     
 %files
