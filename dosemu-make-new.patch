@@ -1,11 +1,11 @@
---- dosemu-1.1.4/configure.ac.orig	Fri Mar 28 10:32:29 2003
-+++ dosemu-1.1.4/configure.ac	Fri Mar 28 10:35:43 2003
+--- dosemu-1.1.5/configure.ac.orig	Fri Mar 28 10:32:29 2003
++++ dosemu-1.1.5/configure.ac	Fri Mar 28 10:35:43 2003
 @@ -421,15 +421,15 @@
  AC_SUBST(INCDIR)
  
  CFLAGS="-Wall -Wstrict-prototypes -Wmissing-declarations -Wnested-externs"
 +OPT="$OPTFLAGS"
- if test "$dodebug" = "yes"; then
+ if test "$dodebug" = "yes" -o "$debug" = "yes"; then
    CFLAGS="$CFLAGS -gstabs+"
    AC_DEFINE(_DEBUG)
 -  OPT="-O"

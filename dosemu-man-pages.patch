@@ -4,13 +4,13 @@ diff -Nur dosemu-1.1.4/man.orig/dosdebug.1 dosemu-1.1.4/man/dosdebug.1
 @@ -1 +1 @@
 -.so man1/dosemu.bin.1
 +.so dos.1
-diff -Nur dosemu-1.1.4/man.orig/dosemu.bin.1 dosemu-1.1.4/man/dosemu.bin.1
---- dosemu-1.1.4/man.orig/dosemu.bin.1	2003-05-18 11:53:55.000000000 +0200
-+++ dosemu-1.1.4/man/dosemu.bin.1	2003-05-18 12:02:15.000000000 +0200
+diff -Nur dosemu-1.1.5/man.orig/dosemu.bin.1 dosemu-1.1.5/man/dosemu.bin.1
+--- dosemu-1.1.5/man.orig/dosemu.bin.1	2003-05-18 11:53:55.000000000 +0200
++++ dosemu-1.1.5/man/dosemu.bin.1	2003-05-18 12:02:15.000000000 +0200
 @@ -1,9 +1,9 @@
  .\" -*- nroff -*-  (This is for Emacs)
--.TH DOSEMU.BIN 1 "Jan, 2003" "Version 1.1.4.1" "DOS Emulation"
-+.TH DOS 1 "Jan, 2003" "Version 1.1.4.1" "DOS Emulation"
+-.TH DOSEMU.BIN 1 "Jun, 2003" "Version 1.1.5" "DOS Emulation"
++.TH DOS 1 "Jun, 2003" "Version 1.1.5" "DOS Emulation"
  .SH NAME
 -dosemu.bin, dosdebug \- run DOS and DOS programs under Linux
 +dos, xdos, dosdebug \- run DOS and DOS programs under Linux
@@ -38,16 +38,16 @@ diff -Nur dosemu-1.1.4/man.orig/dosemu.bin.1 dosemu-1.1.4/man/dosemu.bin.1
  .SH FILES
  .PD 0
  .TP
--.I /usr/local/bin/dosemu.bin
+-.I dosemu.bin
 +.I /usr/bin/dos
 +or
 +.I /usr/X11R6/bin/dos
  The binary
  .TP
--.I /usr/local/bin/dosemu
+-.I dosemu
 -The wrapper script, it is recommended not to invoke dosemu.bin directly.
 -.TP
--.I /usr/local/bin/xdosemu
+-.I xdosemu
 +.I /usr/X11R6/bin/xdos
  Same, but invoking DOS in an X window.
  .TP

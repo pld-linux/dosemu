@@ -10,17 +10,17 @@ Summary(pl):	Emulator DOSa
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
-%define		ver 1.1.4
-%define 	subver 15
+%define		ver 1.1.5
+%define 	subver 5
 Version:	%{ver}.%{subver}
 # Please don't bump to 1 until dosemu-1.2
-Release:	0.3
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
-# Source0-md5:	be632c6e5edd3388d9d6d2c8dba7dc10
+# Source0-md5:	15b37a5e45bbeaa31bb19269327707ff
 Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
-# Source1-md5:	21b6d8cf3797333e6be0ddf8954e58e1
+# Source1-md5:	ea5b334e65bddf8a2e88d8cbaf3ad569
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -32,8 +32,8 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-Patch5:		%{name}-gcc33.patch
-#Patch5:		%{name}-nox.patch
+Patch5:		%{name}-fix.patch
+#Patch5:		%{name}-gcc33.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 %{?_with_static:BuildRequires:	XFree86-static}
@@ -231,7 +231,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc QuickStart COPYING ChangeLog* doc/*.html PRZECZYTAJ_TO README.PLD
+%doc QuickStart COPYING ChangeLog* doc/* README.PLD
+%lang(pl) %doc PRZECZYTAJ_TO
 %dir %{_dosemudir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
@@ -250,7 +251,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n xdosemu
 %defattr(644,root,root,755)
-%doc QuickStart COPYING ChangeLog* doc/*.html PRZECZYTAJ_TO README.PLD
+%doc QuickStart COPYING ChangeLog* doc/* README.PLD
+%lang(pl) %doc PRZECZYTAJ_TO
 %dir %{_dosemudir}
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
