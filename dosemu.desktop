@@ -2,8 +2,9 @@
 Encoding=UTF-8
 Name=dosemu
 Comment=A DOS emulator
-Comment[pl]=Emulator DOSa
-Exec=xdos
+Comment[pl]=Emulator DOS-a
+Exec=xdosemu
 Terminal=false
 Type=Application
+Categories=Emulator;
 # vi: encoding=utf-8
