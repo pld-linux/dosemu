@@ -10,7 +10,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.1.3
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/%{name}-%{version}.tgz
@@ -19,12 +19,10 @@ Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
 Source5:	%{name}.desktop
-Patch0:		http://dosemu.sourceforge.net/testing/patch-1.1.3.1.gz
-Patch1:		http://dosemu.sourceforge.net/testing/patch-1.1.3.2.gz
+Source6:	http://www.dosemu.org/~stas/patchset-1.1.3.4.tgz
 Patch11:	%{name}-1.0.2-man-pages.patch
 Patch12:	%{name}-1.1-global.conf.patch
-Patch20:	%{name}-mfs.patch
-Patch21:	%{name}-escape.patch
+Patch20:	%{name}-mfs-pts.patch
 Patch22:	%{name}-Oacute.patch
 Patch30:	%{name}-doSgmlTools.patch
 Patch31:	%{name}-dont_build_dvi.patch
@@ -33,7 +31,7 @@ BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
 BuildRequires:	bin86
 BuildRequires:	bison
-BuildRequires:	docbook-dtd-sgml
+BuildRequires:	docbook-dtd30-sgml
 BuildRequires:	flex
 BuildRequires:	lynx
 BuildRequires:	openjade
@@ -42,7 +40,6 @@ BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
 BuildRequires:	unzip
 
-#Requires:	dos
 %{?_with_static:BuildRequires:	glibc-static}
 %{?_with_static:BuildRequires:	XFree86-static}
 %{?_with_static:BuildRequires:	slang-static}
@@ -135,16 +132,19 @@ Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
 
 %prep
-%setup -q -a1 -a2
-%patch0 -p1
-%patch1 -p1
+%setup -q -a1 -a2 -a6
+sh tmp/do_patch
+#%patch0 -p1
+#%patch1 -p1
 %patch11 -p1
 %patch12 -p1
 %patch20 -p1
-%patch21 -p1
+#%patch21 -p1
 %patch22 -p1
 %patch30 -p1
 %patch31 -p1
+
+
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
@@ -182,7 +182,7 @@ find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}} \
+install -d $RPM_BUILD_ROOT{%{_applnkdir}/System,%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/pl/man1} \
 	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
 
@@ -206,7 +206,7 @@ install src/plugin/commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install dosemu/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 cp %{SOURCE3} PRZECZYTAJ_TO
 cp %{SOURCE4} README.PLD
-install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/System/
+install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/System
 
 #ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
 
@@ -234,7 +234,7 @@ rm -rf $RPM_BUILD_ROOT
 #%{_dosemudir}/bootdir/command.com
 %{_mandir}/man1/[dm]*
 %lang(pl) %{_mandir}/pl/man1/d*
-%{_pixmapsdir}/dosemu.xpm
+#%{_pixmapsdir}/dosemu.xpm
 
 %files -n xdosemu
 %defattr(644,root,root,755)
