@@ -6,8 +6,10 @@
 %define		_kernel24	%(echo %{_kernel_ver} | grep -q '2\.[012]\.' ; echo $?)
 %if %{_kernel24}
 %define		_moddir		/lib/modules/%{_kernel_ver}/misc
+%define		_moddirsmp	/lib/modules/%{_kernel_ver}smp/misc
 %else
 %define		_moddir		/lib/modules/%{_kernel_ver}/net
+%define		_moddirsmp	/lib/modules/%{_kernel_ver}smp/net
 %endif
 
 Summary:	A DOS emulator
@@ -31,16 +33,20 @@ Source5:	config2.sys
 Source6:	keybpl.exe
 Source7:	egapl.exe
 Source8:	shsucdx.exe
-Patch0:		%{name}-dosemu_conf.patch
+Patch0:		ftp://ftp.dosemu.org/dosemu/patch-1.0.2.1.gz
 Patch1:		%{name}-1.0.2-man-pages.patch
 Patch2:		%{name}-0.98.1-justroot.patch
 Patch3:		%{name}-0.98.1-security.patch
 Patch4:		%{name}-make-new.patch
+Patch5:		%{name}-Polish_keyboard.patch
+Patch6:		%{name}-dosemu_conf.patch
+
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bin86
 BuildRequires:	bison
 BuildRequires:	flex
+BuildRequires:	perl
 BuildRequires:	slang-devel
 BuildRequires:	unzip
 %{?_with_static:BuildRequires:	glibc-static}
@@ -61,7 +67,7 @@ emulator by typing in the "dos" command.
 
 You need to install dosemu if you use DOS programs and you want to be
 able to run them on your GNU/Linux system. You may also need to
-install the dosemu-freedos-* package.
+install the dosemu-freedos-* packages.
 
 %description -l es
 Esta es una versión del emulador DOS que fue proyectada para
@@ -133,13 +139,37 @@ DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
 przy pisaniu programów sieciowych dla DOSa. Rzeteln± informacjê na
 temat dosnet mo¿esz znale¼æ w README do dosemu.   
 
+%package -n kernel-smp-net-dosnet
+Summary:	kernel module dosnet.o
+Summary(pl):	Modu³ dosnet.o do kernela
+Release:	%{release}@%{_kernel_ver_str}
+Group:		Applications/Emulators
+Group(de):	Applikationen/Emulators
+Group(pl):	Aplikacje/Emulatory
+Requires:	%{name} = %{version}
+Obsoletes:	dosnet
+Prereq:		/sbin/depmod
+
+%description -n kernel-smp-net-dosnet
+Kernel module for dosnet (vnet). Dosnet lets you establish TCP/IP
+connection beetween dosemu session and Linux kernel. Read README
+for dosemu for more information.
+
+%description -n kernel-smp-net-dosnet -l pl
+Modu³ dosnet.o dla kernela. Modu³ ten pozwala ³±czyæ siê programom
+DOSowym wykorzystuj±cym TCP/IP z Linuksem. Przydatny miêdzy innymi
+przy pisaniu programów sieciowych dla DOSa. Rzeteln± informacjê na
+temat dosnet mo¿esz znale¼æ w README do dosemu.   
+
 %prep
 %setup -q -a1 -a2
-%patch0 -p0
+%patch0 -p1
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
+%patch6 -p0
 
 rm -rf freedos
 mkdir freedos
@@ -149,6 +179,20 @@ unzip -q -L -o %{SOURCE3} -d freedos
 cp -f base-configure.in configure.in
 autoconf
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
+
+%{__cc} $OPTFLAGS -I%{_includedir} -D__KERNEL__ -D__KERNEL_SMP=1 \
+	-Wall -Wstrict-prototypes \
+	-fno-strength-reduce -I%{_kernelsrcdir}/include -Isrc/include \
+	-DMODULE \
+	-c -o src/dosext/net/v-net/dosnet.o src/dosext/net/v-net/dosnet.c
+mkdir src/dosext/net/v-net/smp
+mv -f src/dosext/net/v-net/dosnet.o src/dosext/net/v-net/smp/
+
+%{__cc} $OPTFLAGS -I%{_includedir} -D__KERNEL__ \
+	-Wall -Wstrict-prototypes \
+	-fno-strength-reduce -I%{_kernelsrcdir}/include -Isrc/include \
+	-DMODULE \
+	-c -o src/dosext/net/v-net/dosnet.o src/dosext/net/v-net/dosnet.c
 
 # non-X version
 %configure \
@@ -168,7 +212,6 @@ echo | %{__make}
 mv -f bin/dosemu.bin bin/dos-x
 mv -f bin/dos-nox bin/dosemu.bin
 
-%{__make} -C src/dosext/net/v-net
 
 mv -f man/dosemu.bin.1 man/dos.1
 
@@ -203,8 +246,9 @@ install freedos/bin/kernel.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir
 install freedos/doc/fdkernel/* $RPM_BUILD_ROOT%{_dosemudir}/bootdir/freedos/doc/fdkernel
 ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
 
-install -d $RPM_BUILD_ROOT%{_moddir}
+install -d $RPM_BUILD_ROOT{%{_moddir},%{_moddirsmp}}
 install src/dosext/net/v-net/dosnet.o $RPM_BUILD_ROOT%{_moddir}
+install src/dosext/net/v-net/smp/dosnet.o $RPM_BUILD_ROOT%{_moddirsmp}
 
 # Take out irritating ^H's from the documentation
 for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
@@ -217,10 +261,16 @@ gzip -9nf QuickStart COPYING ChangeLog* doc/*
 rm -rf $RPM_BUILD_ROOT
 
 %post	-n kernel-net-dosnet
-depmod -a
+/sbin/depmod -a
 
 %postun	-n kernel-net-dosnet
-depmod -a
+/sbin/depmod -a
+
+%post	-n kernel-smp-net-dosnet
+/sbin/depmod -a
+
+%postun	-n kernel-smp-net-dosnet
+/sbin/depmod -a
  
 %files
 %defattr(644,root,root,755)
@@ -259,3 +309,7 @@ depmod -a
 %files -n kernel-net-dosnet
 %defattr(644,root,root,755)
 %{_moddir}/dosnet.o
+
+%files -n kernel-smp-net-dosnet
+%defattr(644,root,root,755)
+%{_moddirsmp}/dosnet.o
