@@ -7,7 +7,7 @@ Summary(pl):	Emulator DOSa
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-Release:	1
+Release:	2
 License:	distributable
 Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
@@ -32,6 +32,7 @@ BuildRequires:	glibc-static
 BuildRequires:	XFree86-static
 BuildRequires:	slang-static
 Conflicts:	mtools < 3.6
+Obsoletes:	xdosemu
 Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
@@ -61,48 +62,6 @@ potrzebowaæ pakietów dosemu-freedos-*.
 Essa é uma versão do emulador DOS que foi projetada para rodar em
 sessões X Window. Oferece suporte para gráficos VGA bem como suporte
 para mouse.
-
-%package -n xdosemu
-Summary:	A DOS emulator for the X Window System
-Summary(de):	DOS-Emulator für X
-Summary(fr):	Émulateur DOS conçu pou être lancé sous X
-Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
-Group:		Applications/Emulators
-Group(de):	Applikationen/Emulators
-Group(pl):	Aplikacje/Emulatory
-Requires:	%{name} = %{version}
-
-%description -n xdosemu
-Xdosemu is a version of the dosemu DOS emulator that runs with the X
-Window System. Xdosemu provides VGA graphics and mouse support.
-
-Install xdosemu if you need to run DOS programs on your system, and
-you'd like to do so with the convenience of graphics support and mouse
-capabilities.
-
-%description -l de -n xdosemu
-Dies ist eine Version des DOS-Emulators für X-Windows-Sitzungen. Er
-unterstützt VGA-Grafiken und Maus.
-
-%description -l es -n xdosemu
-Esta es la versión del emulador DOS dibujada para ejecutarse en una
-ventana del X Window. Posee soporte para gráficos VGA y ratón.
-
-%description -l fr -n xdosemu
-Version de l'émulateur DOS conçue pour tourner dans une session X.
-Offre une gestion des graphismes VGA et de la souris.
-
-%description -l pl -n xdosemu
-Xdosemu jest wersj± emulatora dosemu dzia³aj±c± w X Window System.
-Xdosemu ma wsparcie dla grafiki VGA i obs³ugi myszki.
-
-%description -l pt_BR -n xdosemu
-Esta é a versão do emulador DOS desenhada para rodar em uma janela do
-X Window. Possui suporte a gráficos VGA e mouse.
-
-%description -l tr -n xdosemu
-Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
-grafikleri ve fare desteði vardýr.
 
 %package dosnet
 Summary:	kernel module dosnet.o
@@ -137,19 +96,12 @@ unzip -L -o %{SOURCE3} -d freedos
 cp base-configure.in configure.in
 autoconf
 %configure \
-	--without-x \
-	--enable-linkstatic \
+%{?_with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi
 echo | %{__make}
-mv -f bin/dosemu.bin bin/dos-nox
-%configure \
-	--enable-linkstatic \
-	--enable-new-intcode \
-	--enable-aspi
-echo | %{__make}
+
 make -C src/dosext/net/v-net
-mv -f bin/dos-nox bin/dos
 
 mv -f man/dosemu.bin.1 man/dos.1
 
@@ -161,8 +113,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_sysconfdir},%{_mandir}/man1,%{_mandir}/
 install -d $RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/net
 
-install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/xdos
-install bin/dos $RPM_BUILD_ROOT%{_bindir}/dos
+install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 install etc/dosemu.xpm $RPM_BUILD_ROOT%{_prefix}/X11R6/share/pixmaps
@@ -182,6 +133,7 @@ install src/dosext/net/v-net/dosnet.o $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}
 install freedos/bin/kernel.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir
 install freedos/doc/fdkernel/* $RPM_BUILD_ROOT%{_dosemudir}/bootdir/freedos/doc/fdkernel
 ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
+ln -sf dos $RPM_BUILD_ROOT%{_bindir}/xdos
 
 # Take out irritating ^H's from the documentation
 for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
@@ -225,6 +177,7 @@ depmod -a
 %attr(755,root,root) %{_bindir}/mkhdimage
 %attr(755,root,root) %{_bindir}/mkfatimage16
 #%attr(755,root,root) %{_bindir}/rundos
+%{_bindir}/xdos
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %dir %{_dosemudir}/bootdir/freedos
@@ -235,19 +188,9 @@ depmod -a
 %{_dosemudir}/bootdir/command.com
 %{_dosemudir}/bootdir/*.exe
 %{_dosemudir}/bootdir/freedos/*
-%{_mandir}/man1/dos*
-%{_mandir}/man1/mkfatimage16.1*
-%lang(pl) %{_mandir}/pl/man1/dos*
+%{_mandir}/man1/*
+%lang(pl) %{_mandir}/pl/man1/*
 %{_pixmapsdir}/dosemu.xpm
-
-%files -n xdosemu
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/xdos
-# %attr(755,root,root) %{_bindir}/xtermdos
-%{_mandir}/man1/xdos.1*
-%lang(pl) %{_mandir}/pl/man1/xdos.1*
-# %{_mandir}/man1/xtermdos.1*
-# %{_datadir}/fonts/misc/*
 
 %files dosnet
 %defattr(644,root,root,755)
