@@ -18,7 +18,7 @@ Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.t
 Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
-Patch0:		ftp://ftp.dosemu.org/dosemu/fixes/patch-1.0.2.1.gz
+Patch0:		ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/patch-1.0.2.1.gz
 Patch1:		%{name}-1.0.2-man-pages.patch
 Patch2:		%{name}-0.98.1-security.patch
 Patch3:		%{name}-make-new.patch
