@@ -17,17 +17,16 @@ Name:		dosemu
 %define 	subver 13
 Version:	%{ver}.%{subver}
 # Please don't bump to 1 until dosemu-1.2
-Release:	0.1
+Release:	0.2
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/dosemu/%{name}-%{ver}.tgz
 Source1:	http://dosemu.sourceforge.net/testing/patchset-%{version}.tgz
-Source2:	%{name}-sys.tar.gz
+#Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
 Source5:	%{name}.desktop
 Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
-#Source6:	http://www.dosemu.org/~stas/patchset-%{version}.%{pver}.tgz
 Patch0:		%{name}-man-pages.patch
 Patch1:		%{name}-parser-buf.patch
 Patch2:		%{name}-make-new.patch
@@ -141,7 +140,7 @@ Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
 
 %prep
-%setup -q -n %{name}-%{ver} -a1 -a2 -a6
+%setup -q -n %{name}-%{ver} -a1 -a6
 sh tmp/do_patch
 
 #%patch0 -p1
@@ -190,15 +189,14 @@ mv -f man/dosemu.bin.1 man/dos.1
 
 find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 
-# midid daemon
-#%{__make} midid
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/pl/man1} \
 	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel} \
 	$RPM_BUILD_ROOT%{_applnkdir}/System
+
+#%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/dos
@@ -210,15 +208,15 @@ install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_R
 ln -sf dos $RPM_BUILD_ROOT%{_bindir}/dosexec
 
 install etc/dosemu.xpm $RPM_BUILD_ROOT%{_pixmapsdir}
-install etc/dosemu.users.secure $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
+install etc/dosemu.users.example $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.users
 install etc/global.conf $RPM_BUILD_ROOT%{_dosemudir}/global.conf
 install etc/dosemu.conf $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.conf
 
 install man/{dos.1,dosdebug.1,xdos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/man1
 install pl/man1/{dos.1,dosdebug.1,xdos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
 
-install src/plugin/commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
-install dosemu/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
+install commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
+install commands/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 cp %{SOURCE3} PRZECZYTAJ_TO
 cp %{SOURCE4} README.PLD
 install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/System
