@@ -1,0 +1,137 @@
+On Wed, 19 Jun 2002, Stas Sergeev wrote:
+
+> Bart Oldeman wrote:
+> > Anyhow, the following cures it for me:
+> > -               if (key == NULL) {
+> > +               if (key == NULL && symbol != KEY_ESC) {
+> I think this will cause a null
+> pointer dereference later in
+> k_printf() so you have to also
+> add a check.
+
+You are right; here's a second fix (including the hitimer stuff for
+various cases, which in turn includes a fix from you (essentially).
+
+Bart
+
+--- dosemu-1.1.3.2/src/base/async/int.c	Sun Jun 16 01:14:36 2002
++++ dosemu-1.1.3.3/src/base/async/int.c	Wed Jun 19 11:11:02 2002
+@@ -79,20 +79,19 @@
+ int redir_state = 0;
+ 
+ void kill_time(long usecs) {
+-   hitimer_t t_start;
+-   long t_dif;
++   hitimer_t t_start, t_dif;
+    scr_tv.tv_sec = 0L;
+    scr_tv.tv_usec = usecs;
+ 
+    t_start = GETusTIME(0);
+    while ((int) select(STDIN_FILENO, NULL, NULL, NULL, &scr_tv) < (int) 1)
+      {
+-	t_dif = (long)(GETusTIME(0)-t_start);
++	t_dif = GETusTIME(0)-t_start;
+ 
+         if ((t_dif >= usecs) || (errno != EINTR))
+           return ;
+         scr_tv.tv_sec = 0L;
+-        scr_tv.tv_usec = usecs - t_dif;
++        scr_tv.tv_usec = usecs - (long)t_dif;
+      }
+ }
+ 
+--- dosemu-1.1.3.2/src/env/video/miscemu.c	Sun May 26 16:57:56 2002
++++ dosemu-1.1.3.3/src/env/video/miscemu.c	Wed Jun 19 11:15:54 2002
+@@ -287,8 +287,7 @@
+      such accuracy is probably not important... I hope. (--adm) */
+   static int vvfreq = 17000;	/* 70 Hz - but the best we'll get with
+   				 * current PIC will be 50 Hz */
+-  hitimer_t t;
+-  long tdiff;
++  hitimer_t t, tdiff;
+   unsigned char retval;
+ 
+ #ifdef X_SUPPORT
+--- dosemu-1.1.3.2/src/plugin/keyboard/keyb_slang.c	Sun Jun 16 00:53:08 2002
++++ dosemu-1.1.3.3/src/plugin/keyboard/keyb_slang.c	Wed Jun 19 11:12:21 2002
+@@ -863,9 +863,8 @@
+ static int sltermio_input_pending(void)
+ {
+   struct timeval scr_tv;
+-  hitimer_t t_start;
++  hitimer_t t_start, t_dif;
+   fd_set fds;
+-  long t_dif;
+ 
+ #if 0
+ #define	THE_TIMEOUT 750000L
+@@ -880,13 +879,13 @@
+   t_start = GETusTIME(0);
+   errno = 0;
+   while ((int)select(kbd_fd + 1, &fds, NULL, NULL, &scr_tv) < (int)1) {
+-    t_dif = (long)(GETusTIME(0) - t_start);
++    t_dif = GETusTIME(0) - t_start;
+ 
+     if ((t_dif >= THE_TIMEOUT) || (errno != EINTR))
+       return 0;
+     errno = 0;
+     scr_tv.tv_sec = 0L;
+-    scr_tv.tv_usec = THE_TIMEOUT - t_dif;
++    scr_tv.tv_usec = THE_TIMEOUT - (long)t_dif;
+   }
+   return 1;
+ }
+--- dosemu-1.1.3.2/src/plugin/term/keyb_slang.c	Sun May 26 16:57:56 2002
++++ dosemu-1.1.3.3/src/plugin/term/keyb_slang.c	Wed Jun 19 11:05:30 2002
+@@ -873,9 +873,8 @@
+ static int sltermio_input_pending(void)
+ {
+ 	struct timeval scr_tv;
+-	hitimer_t t_start;
++	hitimer_t t_start, t_dif;
+ 	fd_set fds;
+-	long t_dif;
+ 	
+ #if 0
+ #define	THE_TIMEOUT 750000L
+@@ -890,13 +889,13 @@
+ 	t_start = GETusTIME(0);
+ 	errno = 0;
+ 	while ((int)select(keyb_state.kbd_fd + 1, &fds, NULL, NULL, &scr_tv) < (int)1) {
+-		t_dif = (long)(GETusTIME(0) - t_start);
++		t_dif = GETusTIME(0) - t_start;
+ 		
+ 		if ((t_dif >= THE_TIMEOUT) || (errno != EINTR))
+ 			return 0;
+ 		errno = 0;
+ 		scr_tv.tv_sec = 0L;
+-		scr_tv.tv_usec = THE_TIMEOUT - t_dif;
++		scr_tv.tv_usec = THE_TIMEOUT - (long)t_dif;
+ 	}
+ 	return 1;
+ }
+@@ -1281,7 +1280,7 @@
+ 		keyb_state.kbcount -= keyb_state.Keystr_Len;	/* update count */
+ 		keyb_state.kbp += keyb_state.Keystr_Len;
+ 		
+-		if (key == NULL) {
++		if (key == NULL && symbol != KEY_ESC) {
+ 			/* undefined key --- return */
+ 			DOSemu_Slang_Show_Help = 0;
+ 			keyb_state.kbcount = 0;
+@@ -1295,8 +1294,8 @@
+ 		
+ 		
+ 		k_printf("KBD: scan=%08lx Shift_Flags=%08lx str[0]=%d str='%s' len=%d\n",
+-			scan,keyb_state.Shift_Flags,key->str[0],strprintable(key->str+1),
+-			keyb_state.Keystr_Len);
++			scan,keyb_state.Shift_Flags,key ? key->str[0] : 27,
++                       key ? strprintable(key->str+1): "ESC", keyb_state.Keystr_Len);
+ 		if (!(scan&0x80000000)) {
+ 			slang_send_scancode(keyb_state.Shift_Flags | scan, symbol);
+ 		}
+
+-
+To unsubscribe from this list: send the line "unsubscribe linux-msdos" in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html

@@ -1,0 +1,11 @@
+--- dosemu-1.1.3.2/src/dosext/mfs/mfs.c	Sun Jun 16 00:48:05 2002
++++ dosemu-1.1.3.3/src/dosext/mfs/mfs.c	Mon Jun 17 19:24:22 2002
+@@ -3542,6 +3542,8 @@
+       strncpy(sdb_file_name(sdb), fname, 8);
+       strncpy(sdb_file_ext(sdb), fext, 3);
+       sdb_file_attr(sdb) = VOLUME_LABEL;
++      if (attr == VOLUME_LABEL)
++        return TRUE; /* no find next! */
+       sdb_dir_entry(sdb) = 0x0;
+       /* if (attr != VOLUME_LABEL)
+ 	find_in_progress = TRUE; */

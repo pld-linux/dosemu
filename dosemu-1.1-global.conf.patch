@@ -1,0 +1,25 @@
+--- dosemu-1.1.3/etc/global.conf.orig	Fri Jun 21 12:31:18 2002
++++ dosemu-1.1.3/etc/global.conf	Fri Jun 21 13:10:10 2002
+@@ -245,9 +245,6 @@
+     else
+       $BEING_ON = ""
+     endif
+-    if ( (strchr($DOSEMU_OPTIONS,"X") >=0) && ($DISPLAY ne "") )
+-      $USING_X = (1)
+-    endif
+     if (strstr("xterm dtterm", $TERM) >= 0)
+       $BEING_ON = $BEING_ON, "_xterm"
+     else
+@@ -261,6 +258,12 @@
+     endif
+   endif
+ 
++  if ( (strchr($DOSEMU_OPTIONS,"X") >=0) && ($DISPLAY ne "") )
++    $USING_X = (1)
++  endif
++  if (($BEING_ON eq "console") && ($USING_X))
++    $BEING_ON = ""
++  endif
+   warn "dosemu running on ", $BEING_ON;
+ 
+   $xxx = $_term_char_set
