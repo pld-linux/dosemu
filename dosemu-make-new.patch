@@ -3,7 +3,7 @@
 @@ -421,15 +421,15 @@
  AC_SUBST(INCDIR)
  
- CFLAGS="-Wall -Wstrict-prototypes -Wmissing-declarations -Wnested-externs -Wpointer-arith"
+ CFLAGS="-Wall -Wstrict-prototypes -Wmissing-declarations -Wnested-externs"
 +OPT="$OPTFLAGS"
  if test "$dodebug" = "yes"; then
    CFLAGS="$CFLAGS -gstabs+"
@@ -50,19 +50,9 @@
 -     OPT="$OPT -malign-loops=2 -malign-jumps=2 -malign-functions=2"
 -  fi
 -
-   echo -n "checking for glibc..."
+   AC_MSG_CHECKING(for glibc...)
    set `echo -e '#include <features.h>\nXXAaZZ __GLIBC__ XXBbZZ __GLIBC_MINOR__'|gcc -E -|awk '/XXAaZZ/ {print $2 " " $4}'`
    major=$1; minor=$2
---- dosemu-1.0.1.orig/man/Makefile	Sun Mar  5 13:57:36 2000
-+++ dosemu-1.0.1/man/Makefile	Thu Aug 17 09:57:21 2000
-@@ -7,6 +7,6 @@
- 
- install:
- 	@install -d $(INSTROOT)/usr/man/man1; \
--	install *dos*.1 mkfatimage*.1 $(INSTROOT)/usr/man/man1
-+	install *dos*.1 mkfatimage*.1 $(INSTROOT)/usr/share/man/man1
- 
- clean realclean:
 --- dosemu-1.1.4/src/arch/linux/dosext/sound/midid/Makefile.orig	Wed Dec 18 02:36:44 2002
 +++ dosemu-1.1.4/src/arch/linux/dosext/sound/midid/Makefile	Sun Jan 26 00:14:10 2003
 @@ -15,7 +15,7 @@

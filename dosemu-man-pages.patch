@@ -1,10 +1,12 @@
---- dosemu-1.1.4.orig/man/dosdebug.1	Mon Mar 18 11:43:03 1996
-+++ dosemu-1.1.4/man/dosdebug.1	Wed Dec 19 11:52:46 2001
+diff -Nur dosemu-1.1.4/man.orig/dosdebug.1 dosemu-1.1.4/man/dosdebug.1
+--- dosemu-1.1.4/man.orig/dosdebug.1	2002-12-18 02:36:44.000000000 +0100
++++ dosemu-1.1.4/man/dosdebug.1	2003-05-18 11:54:53.000000000 +0200
 @@ -1 +1 @@
 -.so man1/dosemu.bin.1
 +.so dos.1
---- dosemu-1.1.4.orig/man/dosemu.bin.1	Fri Jun  1 01:36:11 2001
-+++ dosemu-1.1.4/man/dosemu.bin.1	Wed Dec 19 11:22:05 2001
+diff -Nur dosemu-1.1.4/man.orig/dosemu.bin.1 dosemu-1.1.4/man/dosemu.bin.1
+--- dosemu-1.1.4/man.orig/dosemu.bin.1	2003-05-18 11:53:55.000000000 +0200
++++ dosemu-1.1.4/man/dosemu.bin.1	2003-05-18 12:02:15.000000000 +0200
 @@ -1,9 +1,9 @@
  .\" -*- nroff -*-  (This is for Emacs)
 -.TH DOSEMU.BIN 1 "Jan, 2003" "Version 1.1.4.1" "DOS Emulation"
@@ -18,9 +20,138 @@
  [
  .B \-ABCcdkVNXtsgKm234OU
  ]
-diff -Nru dosemu-1.0.2/man/xdos.1 dosemu-1.0.2.new/man/xdos.1
---- dosemu-1.0.2/man/xdos.1	Fri Jun  1 23:47:21 2001
-+++ dosemu-1.0.2.new/man/xdos.1	Wed Dec 19 11:53:00 2001
+@@ -82,11 +82,8 @@
+ .sp
+ .B dosdebug
+ .SH DESCRIPTION
+-.B dosemu.bin
+-is the binary wrapped by the script
+-.B dosemu
+-(1)
+-which invokes the Linux dos emulator, also known as
++.B dos
++invokes the Linux dos emulator, also known as
+ .BR DOSEMU .
+ .br
+ .I debugfile
+@@ -570,13 +567,12 @@
+ .SH FILES
+ .PD 0
+ .TP
+-.I /usr/local/bin/dosemu.bin
++.I /usr/bin/dos
++or
++.I /usr/X11R6/bin/dos
+ The binary
+ .TP
+-.I /usr/local/bin/dosemu
+-The wrapper script, it is recommended not to invoke dosemu.bin directly.
+-.TP
+-.I /usr/local/bin/xdosemu
++.I /usr/X11R6/bin/xdos
+ Same, but invoking DOS in an X window.
+ .TP
+ .I $HOME/.dosemu
+@@ -673,4 +669,4 @@
+ 
+ 
+ .SH "SEE ALSO"
+-.BR dosemu "(1), " mkfatimage16 "(1)"
++.BR mkfatimage16 "(1)"
+diff -Nur dosemu-1.1.4/man.orig/mkfatimage16.1 dosemu-1.1.4/man/mkfatimage16.1
+--- dosemu-1.1.4/man.orig/mkfatimage16.1	2002-12-18 02:36:44.000000000 +0100
++++ dosemu-1.1.4/man/mkfatimage16.1	2003-05-18 12:02:34.000000000 +0200
+@@ -127,7 +127,7 @@
+ .B DOSEMU
+ 
+ .SH "SEE ALSO"
+-.BR dosemu "(1), " xdosemu "(1), " mtools "(1)"
++.BR dos "(1), " mtools "(1)"
+ 
+ 
+ 
+diff -Nur dosemu-1.1.4/man.orig/ru/dosdebug.1 dosemu-1.1.4/man/ru/dosdebug.1
+--- dosemu-1.1.4/man.orig/ru/dosdebug.1	2003-05-18 11:53:54.000000000 +0200
++++ dosemu-1.1.4/man/ru/dosdebug.1	2003-05-18 12:02:53.000000000 +0200
 @@ -1 +1 @@
 -.so man1/dosemu.bin.1
++.so dos.1
+diff -Nur dosemu-1.1.4/man.orig/ru/dosemu.bin.1 dosemu-1.1.4/man/ru/dosemu.bin.1
+--- dosemu-1.1.4/man.orig/ru/dosemu.bin.1	2003-05-18 11:53:54.000000000 +0200
++++ dosemu-1.1.4/man/ru/dosemu.bin.1	2003-05-18 12:21:46.000000000 +0200
+@@ -1,9 +1,9 @@
+ .\" -*- nroff -*-  (This is for Emacs)
+-.TH DOSEMU.BIN 1 "Январь 2003" "Версия 1.1.4.1" "Эмуляция DOS"
++.TH DOS 1 "Январь 2003" "Версия 1.1.4.1" "Эмуляция DOS"
+ .SH ИМЯ
+-dosemu.bin, dosdebug \- запускает DOS и приложения DOS под Linux
++dos, xdos, dosdebug \- запускает DOS и приложения DOS под Linux
+ .SH СИНТАКСИС
+-.B dosemu.bin
++.B dos
+ [
+ .B \-ABCcdkVNXtsgKm234OU
+ ]
+@@ -78,11 +78,8 @@
+ .sp
+ .B dosdebug
+ .SH ОПИСАНИЕ
+-.B dosemu.bin
+-является бинарным файлом, который запускается скриптом
+-.B dosemu
+-(1),
+-активизирующим эмулятор DOS под Linux, также известный как
++.B dos
++это эмулятор DOS под Linux, также известный как
+ .BR DOSEMU .
+ .br
+ .I Файл_отладки
+@@ -573,14 +570,12 @@
+ .SH ФАЙЛЫ
+ .PD 0
+ .TP
+-.I /usr/local/bin/dosemu.bin
++.I /usr/bin/dos
++или
++.I /usr/X11R6/bin/dos
+ Исполняемый модуль
+ .TP
+-.I /usr/local/bin/dosemu
+-Оберточный скрипт, рекомендуемый для запуска dosemu.bin, который не стоит
+-запускать непосредственно.
+-.TP
+-.I /usr/local/bin/xdosemu
++.I /usr/X11R6/bin/xdos
+ То же самое, но служит для запуска DOS в X window.
+ .TP
+ .I $HOME/.dosemu
+@@ -675,4 +670,4 @@
+ 
+ 
+ .SH "СМОТРИ ТАКЖЕ"
+-.BR dosemu "(1), " mkfatimage16 "(1)"
++.BR mkfatimage16 "(1)"
+diff -Nur dosemu-1.1.4/man.orig/ru/mkfatimage16.1 dosemu-1.1.4/man/ru/mkfatimage16.1
+--- dosemu-1.1.4/man.orig/ru/mkfatimage16.1	2003-05-18 11:53:54.000000000 +0200
++++ dosemu-1.1.4/man/ru/mkfatimage16.1	2003-05-18 12:03:07.000000000 +0200
+@@ -130,7 +130,7 @@
+ .B DOSEMU
+ 
+ .SH "СМОТРИ ТАКЖЕ"
+-.BR dosemu "(1), " xdosemu "(1), " mtools "(1)"
++.BR dos "(1), " mtools "(1)"
+ 
+ 
+ 
+diff -Nur dosemu-1.1.4/man.orig/ru/xdosemu.1 dosemu-1.1.4/man/ru/xdosemu.1
+--- dosemu-1.1.4/man.orig/ru/xdosemu.1	2003-05-18 11:53:55.000000000 +0200
++++ dosemu-1.1.4/man/ru/xdosemu.1	2003-05-18 12:03:13.000000000 +0200
+@@ -1 +1 @@
+-.so man1/dosemu.1
++.so dos.1
+diff -Nur dosemu-1.1.4/man.orig/xdosemu.1 dosemu-1.1.4/man/xdosemu.1
+--- dosemu-1.1.4/man.orig/xdosemu.1	2003-05-18 11:53:55.000000000 +0200
++++ dosemu-1.1.4/man/xdosemu.1	2003-05-18 12:02:40.000000000 +0200
+@@ -1 +1 @@
+-.so man1/dosemu.1
 +.so dos.1

@@ -2,9 +2,6 @@
 # Conditional build:
 # _with_static		- linked static
 #
-# TODO: look at commented out patches
-#        documentation build is very very slow, I don't why
-
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
 Summary(es):	Emulador DOS
@@ -14,10 +11,10 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 %define		ver 1.1.4
-%define 	subver 13
+%define 	subver 15
 Version:	%{ver}.%{subver}
 # Please don't bump to 1 until dosemu-1.2
-Release:	0.2
+Release:	0.3
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{ver}.tgz
@@ -32,7 +29,8 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-Patch5:		%{name}-nox.patch
+Patch5:		%{name}-gcc33.patch
+#Patch5:		%{name}-nox.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.57
@@ -141,13 +139,12 @@ mkfatimage16.
 %prep
 %setup -q -n %{name}-%{ver} -a1 -a6
 sh tmp/do_patch
-
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p0
+%patch5 -p1
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
@@ -179,6 +176,9 @@ mv -f bin/dosemu.bin bin/dos-x
 mv -f bin/dos-nox bin/dosemu.bin
 
 mv -f man/dosemu.bin.1 man/dos.1
+mv -f man/xdosemu.1 man/xdos.1
+mv -f man/ru/dosemu.bin.1 man/ru/dos.1
+mv -f man/ru/xdosemu.1 man/ru/xdos.1
 
 # documentation
 %{__make} -C src/doc/DANG html
@@ -190,7 +190,7 @@ find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}} \
-	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/pl/man1} \
+	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/{pl,ru}/man1} \
 	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel} \
 	$RPM_BUILD_ROOT%{_applnkdir}/System
 
@@ -212,14 +212,13 @@ install etc/dosemu.conf $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.conf
 
 install man/{dos.1,dosdebug.1,xdos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/man1
 install pl/man1/{dos.1,dosdebug.1,xdos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
+install man/ru/{dos.1,dosdebug.1,xdos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/ru/man1
 
 install commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install commands/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 cp %{SOURCE3} PRZECZYTAJ_TO
 cp %{SOURCE4} README.PLD
 install %{SOURCE5} $RPM_BUILD_ROOT%{_applnkdir}/System
-
-#ln -sf dosemu/comcom.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/command.com
 
 rm -f doc/{configuration,dosemu.lsm}
 
@@ -240,9 +239,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
-#%%{_dosemudir}/bootdir/command.com
-%{_mandir}/man1/[dm]*
+%{_mandir}/man1/d*
 %lang(pl) %{_mandir}/pl/man1/d*
+%lang(ru) %{_mandir}/ru/man1/d*
 %{_pixmapsdir}/dosemu.xpm
 
 %files -n xdosemu
@@ -258,11 +257,12 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
-#%%{_dosemudir}/bootdir/command.com
-%{_mandir}/man1/[dm]*
+%{_mandir}/man1/d*
 %{_mandir}/man1/xdos.1*
 %lang(pl) %{_mandir}/pl/man1/d*
 %lang(pl) %{_mandir}/pl/man1/xdos.1*
+%lang(ru) %{_mandir}/ru/man1/d*
+%lang(ru) %{_mandir}/ru/man1/xdos.1*
 %{_applnkdir}/System/*
 %{_pixmapsdir}/dosemu.xpm
 
@@ -272,3 +272,5 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/hdinfo
 %attr(755,root,root) %{_bindir}/mkhdimage
 %attr(755,root,root) %{_bindir}/mkfatimage16
+%{_mandir}/man1/mkfatimage16.1*
+%lang(ru) %{_mandir}/ru/man1/mkfatimage16.1*
