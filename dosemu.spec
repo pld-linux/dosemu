@@ -46,6 +46,7 @@ BuildRequires:	util-linux
 BuildRequires:	unzip
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Conflicts:	dosemu-freedos-minimal < 2.0.33
 Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
 Obsoletes:	xdosemu
@@ -88,8 +89,9 @@ Summary(pl):	Emulator DOS-a dla Systemu X Window
 Summary(pt_BR):	Emulador DOS que roda no X
 Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
 Group:		Applications/Emulators
-Provides:	dosemu
+Provides:	dosemu = %{version}-%{release}
 Obsoletes:	dosemu
+Conflicts:	dosemu-freedos-minimal < 2.0.33
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
