@@ -21,7 +21,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-%define _rel	5
+%define _rel	6
 Release:	%{_rel}
 License:	distributable
 Group:		Applications/Emulators
@@ -57,6 +57,7 @@ Exclusivearch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
+Obsoletes:	xdosemu
 
 %define		_xbindir	/usr/X11R6/bin
 %define		_dosemudir	/var/lib/dosemu
@@ -98,6 +99,8 @@ Group:		Applications/Emulators
 Group(de):	Applikationen/Emulators
 Group(pl):	Aplikacje/Emulatory
 Requires:	%{name} = %{version}
+Provides:	dosemu
+Obsoletes:	dosemu
 
 %description -n xdosemu
 Xdosemu is a version of the dosemu DOS emulator that runs with the X
@@ -230,7 +233,9 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}}
 	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
 
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
-install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/xdos
+install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/dos
+ln -sf dos $RPM_BUILD_ROOT%{_xbindir}/xdos
+ln -sf dos $RPM_BUILD_ROOT%{_xbindir}/dosexec
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 ln -sf dos $RPM_BUILD_ROOT%{_bindir}/dosexec
@@ -310,9 +315,32 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n xdosemu
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_xbindir}/xdos
+%doc *.gz doc/*
+%dir %{_dosemudir}
+%config(noreplace) %{_sysconfdir}/dosemu.conf
+%config(noreplace) %{_sysconfdir}/dosemu.users
+%config(noreplace) %{_dosemudir}/global.conf
+%attr(755,root,root) %{_bindir}/dosdebug
+%attr(755,root,root) %{_bindir}/dexeconfig
+%attr(755,root,root) %{_bindir}/hdinfo
+%attr(755,root,root) %{_bindir}/mkhdimage
+%attr(755,root,root) %{_bindir}/mkfatimage16
+%attr(755,root,root) %{_xbindir}/*
+%dir %{_dosemudir}/bootdir
+%dir %{_dosemudir}/bootdir/dosemu
+%dir %{_dosemudir}/bootdir/freedos
+%{_dosemudir}/bootdir/dosemu/*
+%{_dosemudir}/bootdir/kernel.sys
+%config(noreplace) %{_dosemudir}/bootdir/autoexec.bat
+%config(noreplace) %{_dosemudir}/bootdir/config.sys
+%{_dosemudir}/bootdir/command.com
+%{_dosemudir}/bootdir/*.exe
+%{_dosemudir}/bootdir/freedos/*
+%{_mandir}/man1/[dm]*
 %{_mandir}/man1/xdos.1*
+%lang(pl) %{_mandir}/pl/man1/d*
 %lang(pl) %{_mandir}/pl/man1/xdos.1*
+%{_pixmapsdir}/dosemu.xpm
 
 %files -n kernel-net-dosnet
 %defattr(644,root,root,755)
