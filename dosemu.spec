@@ -4,7 +4,7 @@
 #
 %define		_moddir		/lib/modules/%{_kernel_ver}/misc
 %define		_moddirsmp	/lib/modules/%{_kernel_ver}smp/misc
-%define _rel	12
+%define _rel	13
 
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
