@@ -33,6 +33,7 @@ Patch2:		%{name}-0.98.1-security.patch
 Patch3:		%{name}-make-new.patch
 Patch4:		%{name}-Polish_keyboard.patch
 Patch5:		%{name}-%{name}_conf.patch
+Patch6:		%{name}-alt224.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bin86
@@ -182,6 +183,7 @@ mkfatimage16.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p0
+%patch6 -p1
 
 rm -rf freedos
 mkdir freedos
