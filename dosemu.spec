@@ -196,7 +196,7 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_xbindir},%{_sysconfdir},%{_pixmapsdir}}
 	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel} \
 	$RPM_BUILD_ROOT%{_applnkdir}/System
 
-#%{__make} install DESTDIR=$RPM_BUILD_ROOT
+#%%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/dos-x $RPM_BUILD_ROOT%{_xbindir}/dos
@@ -242,7 +242,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
-#%{_dosemudir}/bootdir/command.com
+#%%{_dosemudir}/bootdir/command.com
 %{_mandir}/man1/[dm]*
 %lang(pl) %{_mandir}/pl/man1/d*
 %{_pixmapsdir}/dosemu.xpm
@@ -260,7 +260,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
-#%{_dosemudir}/bootdir/command.com
+#%%{_dosemudir}/bootdir/command.com
 %{_mandir}/man1/[dm]*
 %{_mandir}/man1/xdos.1*
 %lang(pl) %{_mandir}/pl/man1/d*
