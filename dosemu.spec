@@ -23,7 +23,7 @@ BuildRequires:	mtools
 Requires:	kernel >= 2.0.28, mtools >= 3.6
 Url:		http://www.dosemu.org
 Exclusivearch:	%{ix86}
-Buildroot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 Dosemu is a DOS emulator.  Once you've installed dosemu, start the DOS
