@@ -134,7 +134,7 @@ mv -f bin/dos-nox bin/dos
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_mandir}/man1,%{_prefix}/X11R6/share/pixmaps,/var/lib/dosemu}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_mandir}/man1,%{_pixmapsdir},/var/lib/dosemu,%{_datadir}/fonts}
 
 %{__make} install INSTROOT=$RPM_BUILD_ROOT
 
@@ -177,20 +177,25 @@ EOF
 for i in `ls --color=no doc/` ; do cat doc/$i > $i ; cat $i | perl -p -e 's/.//g' > doc/$i ; done
 
 rm -f doc/{configuration,dosemu.lsm}
-gzip -9nf QuickStart COPYING ChangeLog* doc/*
+
+mv $RPM_BUILD_ROOT/usr/X11R6/lib/X11/fonts/misc \
+	$RPM_BUILD_ROOT%{_datadir}/fonts
+
+gzip -9nf QuickStart COPYING ChangeLog* doc/* \
+	$RPM_BUILD_ROOT%{_datadir}/fonts/misc/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %post -n xdosemu
 if [ -x /usr/X11R6/bin/mkfontdir ]; then
-	(cd /usr/X11R6/lib/X11/fonts/misc; /usr/X11R6/bin/mkfontdir)
+	(cd /usr/share/fonts/misc; /usr/X11R6/bin/mkfontdir)
 fi
 killall -USR1 xfs > /dev/null 2>&1 ||:
 
 %postun -n xdosemu
 if [ -x /usr/X11R6/bin/mkfontdir ]; then
-	(cd /usr/X11R6/lib/X11/fonts/misc; /usr/X11R6/bin/mkfontdir)
+	(cd /usr/share/fonts/misc; /usr/X11R6/bin/mkfontdir)
 fi
 killall -USR1 xfs > /dev/null 2>&1 ||:
 
@@ -229,7 +234,7 @@ fi
 %{_mandir}/man1/dos.1*
 %{_mandir}/man1/dosdebug.1*
 %{_mandir}/man1/mkfatimage16.1*
-%{_prefix}/X11R6/share/pixmaps/dosemu.xpm
+%{_pixmapsdir}/dosemu.xpm
 
 %files -n xdosemu
 %defattr(644,root,root,755)
@@ -237,7 +242,7 @@ fi
 # %attr(755,root,root) %{_bindir}/xtermdos
 %{_mandir}/man1/xdos.1*
 # %{_mandir}/man1/xtermdos.1*
-%{_prefix}/X11R6/lib/X11/fonts/misc/vga.pcf
+%{_datadir}/fonts/misc/*
 
 %files freedos
 %defattr(644,root,root,755)
