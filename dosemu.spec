@@ -1,7 +1,6 @@
 #
 # Conditional build:
 %bcond_with	static		# linked statically
-%bcond_with	linux26		# /proc/net/ipx/* patch
 #
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -11,12 +10,12 @@ Summary(pl):	Emulator DOS-a
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.3.0
-Release:	0.2
+Version:	1.3.1
+Release:	0.1
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	http://dl.sourceforge.net/dosemu/%{name}-1.3.0.tgz
-# Source0-md5:	d2864cecdfe6a2f7adb97270e892f0d5
+Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
+# Source0-md5:	d64c0d2d63944c407401a04367cfadc4
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -28,7 +27,6 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-Patch5:		%{name}-linux26-ipx.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 %{?with_static:BuildRequires:	XFree86-static}
@@ -144,7 +142,6 @@ mkfatimage16.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%{?with_linux26:%patch5 -p1}
 
 %build
 OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
