@@ -11,7 +11,7 @@ Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.0.2
-Release:	16
+Release:	17
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	ftp://ftp.dosemu.org/dosemu/%{name}-%{version}.tgz
@@ -30,6 +30,7 @@ Patch7:		pmstack.diff
 Patch8:		%{name}-rawkeyboard-console.patch
 Patch9:		%{name}-comcom.patch
 Patch10:	%{name}-global.conf-xdos.patch
+Patch11:	c_run_irqs.diff
 URL:		http://www.dosemu.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bin86
@@ -143,6 +144,7 @@ mkfatimage16.
 %patch8 -p0
 %patch9 -p1
 %patch10 -p1
+%patch11 -p0
 
 %build
 OPTFLAGS="%{rpmcflags} %{!?debug:-fomit-frame-pointer}"; export OPTFLAGS
