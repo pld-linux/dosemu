@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_with	static		# linked statically
+%bcond_without	x
 #
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -28,12 +29,15 @@ Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
 URL:		http://www.dosemu.org/
+%if %{with x}
 BuildRequires:	XFree86-devel
 %{?with_static:BuildRequires:	XFree86-static}
+%endif
 BuildRequires:	autoconf >= 2.57
 BuildRequires:	bin86
 BuildRequires:	bison
 BuildRequires:	docbook-dtd30-sgml
+BuildRequires:	docbook-style-dsssl
 BuildRequires:	flex
 %{?with_static:BuildRequires:	glibc-static}
 BuildRequires:	lynx
@@ -75,6 +79,7 @@ Essa é uma versão do emulador DOS que foi projetada para rodar em
 sessões X Window. Oferece suporte para gráficos VGA bem como suporte
 para mouse.
 
+%if %{with x}
 %package -n xdosemu
 Summary:	A DOS emulator for the X Window System
 Summary(de):	DOS-Emulator für X
@@ -115,6 +120,7 @@ X Window. Possui suporte a gráficos VGA e mouse.
 %description -n xdosemu -l tr
 Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
 grafikleri ve fare desteði vardýr.
+%endif
 
 %package utils
 Summary:	Utilities for dosemu
@@ -157,14 +163,16 @@ plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
 %{__make} WAIT=no
 mv -f bin/dosemu.bin bin/dos-nox
 
+%if %{with x}
 # X version
 %configure2_13 \
 %{?with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi
 %{__make} WAIT=no
-%{__make} -C man
+%endif
 
+%{__make} -C man
 mv -f man/dosemu.bin.1 man/dosemu.1
 echo '.so dosemu.1' > man/dos.1
 mv -f man/ru/dosemu.bin.1 man/ru/dosemu.1
@@ -191,12 +199,16 @@ install -d $RPM_BUILD_ROOT{%{_bindir},%{_sysconfdir},%{_pixmapsdir},%{_desktopdi
 #%%{__make} install \
 #	DESTDIR=$RPM_BUILD_ROOT
 
-install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dosemu
 install bin/dos-nox $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/midid $RPM_BUILD_ROOT%{_bindir}/midid
+
+%if %{with x}
+install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dosemu
 ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosemu
 ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosexec
 ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdos
+%endif
+
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 ln -sf dos $RPM_BUILD_ROOT%{_bindir}/dosexec
@@ -241,6 +253,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ru) %{_mandir}/ru/man1/d*
 %{_pixmapsdir}/dosemu.xpm
 
+%if %{with x}
 %files -n xdosemu
 %defattr(644,root,root,755)
 %doc QuickStart COPYING ChangeLog* doc/* README.PLD
@@ -264,6 +277,7 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ru) %{_mandir}/ru/man1/xdosemu.1*
 %{_desktopdir}/*
 %{_pixmapsdir}/dosemu.xpm
+%endif
 
 %files utils
 %defattr(644,root,root,755)
