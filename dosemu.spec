@@ -46,8 +46,8 @@ BuildRequires:	perl
 BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
 %{?with_static:BuildRequires:	slang-static}
-BuildRequires:	util-linux
 BuildRequires:	unzip
+BuildRequires:	util-linux
 ExclusiveArch:	%{ix86}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Conflicts:	dosemu-freedos-minimal < 2.0.33
@@ -238,9 +238,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc QuickStart COPYING ChangeLog* doc/* README.PLD
 %lang(pl) %doc PRZECZYTAJ_TO
 %dir %{_dosemudir}
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
-%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/global.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dosemu.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dosemu.users
+%config(noreplace) %verify(not md5 mtime size) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/dosexec
@@ -259,9 +259,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc QuickStart COPYING ChangeLog* doc/* README.PLD
 %lang(pl) %doc PRZECZYTAJ_TO
 %dir %{_dosemudir}
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.conf
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/dosemu.users
-%config(noreplace) %verify(not size mtime md5) %{_dosemudir}/global.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dosemu.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dosemu.users
+%config(noreplace) %verify(not md5 mtime size) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dosdebug
 %attr(755,root,root) %{_bindir}/midid
 %attr(755,root,root) %{_bindir}/dosemu
