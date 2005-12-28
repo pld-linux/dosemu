@@ -13,3 +13,42 @@ diff -urN dosemu-1.1.5.org/configure.ac dosemu-1.1.5/configure.ac
                # because in forces _inline_ at places where we don't want it !
                # If we want _inline_, well then we 'code' it.
      OPT="$OPT -fomit-frame-pointer"  # never omit the frame pointer when debugging!
+@@ -517,38 +517,6 @@
+  fi
+ 
+ 
+-  # -m486 is usually in the specs for the compiler
+-  # but gcc-3.0 wants -mcpu=i486 instead
+-  # and gcc-3.4 wants -mtune=i486 instead
+-  # let the compiler options be dependent of the _target_
+-  # where dosemu is compiled for, not the host
+-  if test "$target_cpu" = "athlon" -a $GCC_VERSION_CODE -le 2095 ;  then
+-    target_cpu="i686"
+-  fi
+-  if test "$target_cpu" = "x86_64"; then
+-    target_cpu="k8"
+-  fi
+-  if test "$GCC_VERSION_CODE" -ge 3004 ; then
+-     OPT="$OPT -mtune=$target_cpu"
+-  elif test "$GCC_VERSION_CODE" -ge 2095 ; then
+-     OPT="$OPT -mcpu=$target_cpu"
+-  else
+-     case "$target_cpu" in
+-       i486)
+-         OPT="$OPT -m486"
+-         ;;
+-       i386)
+-         OPT="$OPT -m386"
+-         ;;
+-       *)
+-         ;;
+-     esac
+-  fi
+-  if test "$target_cpu" = "athlon"; then
+-     OPT="$OPT -malign-functions=4 -fexpensive-optimizations"
+-  elif test "$target_cpu" = "i486"; then
+-     OPT="$OPT -malign-loops=2 -malign-jumps=2 -malign-functions=2"
+-  fi
+ 
+   AC_MSG_CHECKING(for glibc...)
+   set `printf '%b\n' '#include <features.h>\nXXAaZZ __GLIBC__ XXBbZZ __GLIBC_MINOR__'|gcc -E -|awk '/XXAaZZ/ {print $2 " " $4}'`
