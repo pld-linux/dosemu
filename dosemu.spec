@@ -1,7 +1,7 @@
 #
 # Conditional build:
-%bcond_with	static		# linked statically
-%bcond_without	x
+%bcond_with	static		# link statically
+%bcond_without	x		# X support
 #
 Summary:	A DOS emulator
 Summary(de):	DOS-Emulator
@@ -29,6 +29,7 @@ Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
 URL:		http://www.dosemu.org/
+BuildRequires:	SDL-devel
 %if %{with x}
 BuildRequires:	XFree86-devel
 %{?with_static:BuildRequires:	XFree86-static}
@@ -40,6 +41,7 @@ BuildRequires:	docbook-dtd30-sgml
 BuildRequires:	docbook-style-dsssl
 BuildRequires:	flex
 %{?with_static:BuildRequires:	glibc-static}
+BuildRequires:	gpm-devel
 BuildRequires:	lynx
 BuildRequires:	openjade
 BuildRequires:	perl
@@ -48,12 +50,12 @@ BuildRequires:	slang-devel
 %{?with_static:BuildRequires:	slang-static}
 BuildRequires:	unzip
 BuildRequires:	util-linux
-ExclusiveArch:	%{ix86}
-BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+Obsoletes:	xdosemu
 Conflicts:	dosemu-freedos-minimal < 2.0.33
 Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
-Obsoletes:	xdosemu
+ExclusiveArch:	%{ix86}
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_dosemudir	/var/lib/dosemu
 %define		specflags	-fomit-frame-pointer
@@ -79,54 +81,11 @@ Essa é uma versão do emulador DOS que foi projetada para rodar em
 sessões X Window. Oferece suporte para gráficos VGA bem como suporte
 para mouse.
 
-%if %{with x}
-%package -n xdosemu
-Summary:	A DOS emulator for the X Window System
-Summary(de):	DOS-Emulator für X
-Summary(es):	Emulador DOS que se ejecuta en X
-Summary(fr):	Émulateur DOS conçu pou être lancé sous X
-Summary(pl):	Emulator DOS-a dla Systemu X Window
-Summary(pt_BR):	Emulador DOS que roda no X
-Summary(tr):	X altýnda çalýþan DOS öykünümcüsü
-Group:		Applications/Emulators
-Provides:	dosemu = %{version}-%{release}
-Obsoletes:	dosemu
-Conflicts:	dosemu-freedos-minimal < 2.0.33
-
-%description -n xdosemu
-Xdosemu is a version of the dosemu DOS emulator that runs with the X
-Window System. Xdosemu provides VGA graphics and mouse support.
-
-%description -n xdosemu -l de
-Dies ist eine Version des DOS-Emulators für X-Window-Sitzungen. Er
-unterstützt VGA-Grafiken und Maus.
-
-%description -n xdosemu -l es
-Esta es la versión del emulador DOS dibujada para ejecutarse en una
-ventana del X Window. Posee soporte para gráficos VGA y ratón.
-
-%description -n xdosemu -l fr
-Version de l'émulateur DOS conçue pour tourner dans une session X.
-Offre une gestion des graphismes VGA et de la souris.
-
-%description -n xdosemu -l pl
-Xdosemu jest wersj± emulatora dosemu dzia³aj±c± w X Window System.
-Xdosemu ma wsparcie dla grafiki VGA i obs³ugi myszki.
-
-%description -n xdosemu -l pt_BR
-Esta é a versão do emulador DOS desenhada para rodar em uma janela do
-X Window. Possui suporte a gráficos VGA e mouse.
-
-%description -n xdosemu -l tr
-Bu yazýlým, DOS öykünümcüsünün X altýnda çalýþan bir sürümüdür. VGA
-grafikleri ve fare desteði vardýr.
-%endif
-
 %package utils
 Summary:	Utilities for dosemu
 Summary(pl):	Programy pomocnicze do dosemu
 Group:		Applications/Emulators
-Requires:	dosemu
+Requires:	%{name} = %{version}-%{release}
 
 %description utils
 Utilities for dosemu: dexeconfig, hdinfo, mkhdimage, mkfatimage16.
@@ -134,6 +93,30 @@ Utilities for dosemu: dexeconfig, hdinfo, mkhdimage, mkfatimage16.
 %description utils -l pl
 Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
+
+%package SDL
+Summary:	SDL plugin for dosemu
+Summary(pl):	Wtyczka SDL dla dosemu
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description SDL
+SDL plugin for dosemu.
+
+%description SDL -l pl
+Wtyczka SDL dla dosemu.
+
+%package X
+Summary:	X plugin for dosemu
+Summary(pl):	Wtyczka X dla dosemu
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description X
+X plugin for dosemu.
+
+%description X -l pl
+Wtyczka X dla dosemu.
 
 %prep
 %setup -q -a6
@@ -155,22 +138,13 @@ plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
 
 # non-X version
 %configure2_13 \
-%{?with_static:--enable-linkstatic} \
+	%{?with_static:--enable-linkstatic} \
 	--enable-new-intcode \
 	--enable-aspi \
-	--without-x
+	%{!?with_x:--without-x}
 
-%{__make} WAIT=no
-mv -f bin/dosemu.bin bin/dos-nox
-
-%if %{with x}
-# X version
-%configure2_13 \
-%{?with_static:--enable-linkstatic} \
-	--enable-new-intcode \
-	--enable-aspi
-%{__make} WAIT=no
-%endif
+%{__make} \
+	WAIT=no
 
 %{__make} -C man
 mv -f man/dosemu.bin.1 man/dosemu.1
@@ -194,20 +168,22 @@ find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_sysconfdir},%{_pixmapsdir},%{_desktopdir}} \
 	$RPM_BUILD_ROOT{%{_mandir}/man1,%{_mandir}/{pl,ru}/man1} \
-	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel}
+	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/{dosemu,freedos/doc/fdkernel} \
+	$RPM_BUILD_ROOT%{_libdir}/dosemu
 
 #%%{__make} install \
 #	DESTDIR=$RPM_BUILD_ROOT
 
-install bin/dos-nox $RPM_BUILD_ROOT%{_bindir}/dos
 install bin/midid $RPM_BUILD_ROOT%{_bindir}/midid
-
-%if %{with x}
 install bin/dosemu.bin $RPM_BUILD_ROOT%{_bindir}/dosemu
+ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/dos
+%if %{with x}
+ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdos
 ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosemu
 ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosexec
-ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdos
 %endif
+
+install bin/libplugin*.so  $RPM_BUILD_ROOT%{_libdir}/dosemu
 
 install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
@@ -243,8 +219,12 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_dosemudir}/global.conf
 %attr(755,root,root) %{_bindir}/dos
 %attr(755,root,root) %{_bindir}/dosdebug
+%attr(755,root,root) %{_bindir}/dosemu
 %attr(755,root,root) %{_bindir}/dosexec
 %attr(755,root,root) %{_bindir}/midid
+%dir %{_libdir}/dosemu
+%{_libdir}/dosemu/libplugin_gpm.so
+%{_libdir}/dosemu/libplugin_term.so
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
@@ -252,31 +232,12 @@ rm -rf $RPM_BUILD_ROOT
 %lang(pl) %{_mandir}/pl/man1/d*
 %lang(ru) %{_mandir}/ru/man1/d*
 %{_pixmapsdir}/dosemu.xpm
-
 %if %{with x}
-%files -n xdosemu
-%defattr(644,root,root,755)
-%doc QuickStart COPYING ChangeLog* doc/* README.PLD
-%lang(pl) %doc PRZECZYTAJ_TO
-%dir %{_dosemudir}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dosemu.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/dosemu.users
-%config(noreplace) %verify(not md5 mtime size) %{_dosemudir}/global.conf
-%attr(755,root,root) %{_bindir}/dosdebug
-%attr(755,root,root) %{_bindir}/midid
-%attr(755,root,root) %{_bindir}/dosemu
 %attr(755,root,root) %{_bindir}/xdos*
-%dir %{_dosemudir}/bootdir
-%dir %{_dosemudir}/bootdir/dosemu
-%{_dosemudir}/bootdir/dosemu/*
-%{_mandir}/man1/d*
 %{_mandir}/man1/xdosemu.1*
-%lang(pl) %{_mandir}/pl/man1/d*
 %lang(pl) %{_mandir}/pl/man1/xdosemu.1*
-%lang(ru) %{_mandir}/ru/man1/d*
 %lang(ru) %{_mandir}/ru/man1/xdosemu.1*
-%{_desktopdir}/*
-%{_pixmapsdir}/dosemu.xpm
+%{_desktopdir}/dosemu.desktop
 %endif
 
 %files utils
@@ -287,3 +248,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/mkfatimage16
 %{_mandir}/man1/mkfatimage16.1*
 %lang(ru) %{_mandir}/ru/man1/mkfatimage16.1*
+
+%files SDL
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/dosemu/libplugin_sdl.so
+
+%if %{with x}
+%files X
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/dosemu/libplugin_X.so
+%endif
