@@ -1,3 +1,4 @@
+# NOTE: if /dev/shm is mounted, it cannot be mounted with noexec
 #
 # Conditional build:
 %bcond_with	static		# link statically
