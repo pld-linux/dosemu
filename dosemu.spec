@@ -34,7 +34,7 @@ Patch5:		%{name}-1.3.3.1svn.patch.gz
 URL:		http://www.dosemu.org/
 BuildRequires:	SDL-devel
 %if %{with x}
-%if %{without AC}
+%if !%{with AC}
 BuildRequires:	xorg-lib-libX11-devel
 %{?with_static:BuildRequires:	xorg-lib-libX11-static}
 %endif
