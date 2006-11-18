@@ -13,12 +13,12 @@ Summary(pl):	Emulator DOS-a
 Summary(pt_BR):	Emulador DOS
 Summary(tr):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.3.3.1
-Release:	0.svn.1
+Version:	1.3.4
+Release:	1
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	http://dl.sourceforge.net/dosemu/%{name}-1.3.3.tgz
-# Source0-md5:	f3b27a9326e5c95e59093fcb79a61023
+Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
+# Source0-md5:	4fbfdc50ea86d860dd9cea59ea7f4b47
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -30,7 +30,6 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-Patch5:		%{name}-1.3.3.1svn.patch.gz
 URL:		http://www.dosemu.org/
 BuildRequires:	SDL-devel
 %if %{with x}
@@ -128,14 +127,13 @@ X plugin for dosemu.
 Wtyczka X dla dosemu.
 
 %prep
-%setup -q -a6 -n %{name}-1.3.3
+%setup -q -a6
 #sh tmp/do_patch
 #%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 
 %build
 OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
@@ -195,7 +193,7 @@ ln -sf dosemu $RPM_BUILD_ROOT%{_bindir}/xdosexec
 
 install bin/libplugin*.so  $RPM_BUILD_ROOT%{_libdir}/dosemu
 
-install bin/dosdebug $RPM_BUILD_ROOT%{_bindir}/dosdebug
+install bin/{dosdebug,mkfatimage16} $RPM_BUILD_ROOT%{_bindir}
 install src/tools/periph/{dexeconfig,hdinfo,mkhdimage} $RPM_BUILD_ROOT%{_bindir}
 ln -sf dos $RPM_BUILD_ROOT%{_bindir}/dosexec
 
@@ -255,7 +253,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dexeconfig
 %attr(755,root,root) %{_bindir}/hdinfo
 %attr(755,root,root) %{_bindir}/mkhdimage
-#%attr(755,root,root) %{_bindir}/mkfatimage16
+%attr(755,root,root) %{_bindir}/mkfatimage16
 %{_mandir}/man1/mkfatimage16.1*
 %lang(ru) %{_mandir}/ru/man1/mkfatimage16.1*
 
