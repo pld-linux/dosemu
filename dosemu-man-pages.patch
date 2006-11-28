@@ -3,12 +3,12 @@
 @@ -1 +1 @@
 -.so man1/dosemu.bin.1
 +.so man1/dosemu.1
---- dosemu-1.2.0/man/ru/dosemu.bin.1.in.orig	2003-09-17 20:58:51.000000000 +0200
-+++ dosemu-1.2.0/man/ru/dosemu.bin.1.in	2004-02-01 15:15:00.421357368 +0100
+--- dosemu-1.3.4/man/ru/dosemu.bin.1.in.orig	2006-01-01 02:54:24.000000000 +0100
++++ dosemu-1.3.4/man/ru/dosemu.bin.1.in	2006-11-28 21:42:39.942599750 +0100
 @@ -1,9 +1,9 @@
  .\" -*- nroff -*-  (This is for Emacs)
--.TH DOSEMU.BIN 1 "Январь 2003" "Версия 1.1.4.1" "Эмуляция DOS"
-+.TH DOSEMU 1 "Январь 2003" "Версия 1.1.4.1" "Эмуляция DOS"
+-.TH DOSEMU.BIN 1 "@RELEASE_DATE@" "Версия @PACKAGE_VERSION@" "Эмуляция DOS"
++.TH DOSEMU 1 "@RELEASE_DATE@" "Версия @PACKAGE_VERSION@" "Эмуляция DOS"
  .SH ИМЯ
 -dosemu.bin, dosdebug \- запускает DOS и приложения DOS под Linux
 +dosemu, xdosemu, dos, dosdebug \- запускает DOS и приложения DOS под Linux
@@ -109,12 +109,12 @@
 @@ -1 +1 @@
 -.so man1/dosemu.bin.1
 +.so man1/dosemu.1
---- dosemu-1.2.0/man/dosemu.bin.1.in.orig	2004-01-17 22:59:06.000000000 +0100
-+++ dosemu-1.2.0/man/dosemu.bin.1.in	2004-02-01 15:13:55.922162736 +0100
+--- dosemu-1.3.4/man/dosemu.bin.1.in.orig	2006-01-22 01:32:25.000000000 +0100
++++ dosemu-1.3.4/man/dosemu.bin.1.in	2006-11-28 21:42:17.589202750 +0100
 @@ -1,9 +1,9 @@
  .\" -*- nroff -*-  (This is for Emacs)
--.TH DOSEMU.BIN 1 "Dec, 2005" "Version 1.3.3" "DOS Emulation"
-+.TH DOSEMU 1 "Dec, 2005" "Version 1.3.3" "DOS Emulation"
+-.TH DOSEMU.BIN 1 "@RELEASE_DATE@" "Version @PACKAGE_VERSION@" "DOS Emulation"
++.TH DOSEMU 1 "@RELEASE_DATE@" "Version @PACKAGE_VERSION@" "DOS Emulation"
  .SH NAME
 -dosemu.bin, dosdebug \- run DOS and DOS programs under Linux
 +dosemu, xdosemu, dos, dosdebug \- run DOS and DOS programs under Linux
@@ -122,9 +122,9 @@
 -.B dosemu.bin
 +.B dosemu
  [
- .B \-ABCcdkVNXtsgKm234OU
+ .B \-234ABCcdKkmNnOSstVwX
  ]
-@@ -85,11 +85,10 @@
+@@ -86,11 +86,10 @@
  .sp
  .B dosdebug
  .SH DESCRIPTION
@@ -139,7 +139,7 @@
  .BR DOSEMU .
  .br
  .I debugfile
-@@ -161,7 +160,7 @@
+@@ -164,7 +163,7 @@
  .TP
  .I --Fusers
  Bypass dosemu.users and take this file instead (only accepted when
@@ -148,7 +148,7 @@
  is
  .I not
  suid-root).
-@@ -169,7 +168,7 @@
+@@ -172,7 +171,7 @@
  .I --Flibdir
  Bypass the default DOSEMU_LIB_DIR (as maybe defined in dosemu.users)
  and use this directory instead (only accepted when
@@ -157,7 +157,7 @@
  is
  .I not
  suid-root).
-@@ -177,7 +176,7 @@
+@@ -180,7 +179,7 @@
  .I --Fimagedir
  Bypass the default directory for bootdirectory and hdimages (DOSEMU_HDIMAGE_DIR)
  and use this directory instead (only accepted when
@@ -166,7 +166,7 @@
  is
  .I not
  suid-root).
-@@ -187,7 +186,7 @@
+@@ -190,7 +189,7 @@
  .TP
  .I -n
  Bypass (don't use) dosemu.users and dosemu.conf (only accepted when
@@ -175,7 +175,7 @@
  is
  .I not
  suid-root).
-@@ -542,11 +541,7 @@
+@@ -566,11 +565,7 @@
  
  .SH AUTHOR
  .B DOSEMU
@@ -188,7 +188,7 @@
  (no current address that I know of).
  .PP
  Robert Sanders <gt8134b@prism.gatech.edu> was maintaining and enhancing 
-@@ -580,11 +575,10 @@
+@@ -604,11 +599,10 @@
  .SH FILES
  .PD 0
  .TP
@@ -203,7 +203,7 @@
  .TP
  .I @bindir@/xdosemu
  Same, but invoking DOS in an X window.
-@@ -617,7 +611,7 @@
+@@ -641,7 +635,7 @@
  .BR DOSEMU .
  which is included by
  .I global.conf
@@ -212,7 +212,7 @@
  .TP
  .I $HOME/.dosemurc
  Per-user configuration file.
-@@ -678,4 +672,4 @@
+@@ -702,4 +696,4 @@
  
  
  .SH "SEE ALSO"
