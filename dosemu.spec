@@ -35,7 +35,13 @@ BuildRequires:	SDL-devel
 %if %{with x}
 %if !%{with AC}
 BuildRequires:	xorg-lib-libX11-devel
-%{?with_static:BuildRequires:	xorg-lib-libX11-static}
+BuildRequires:	xorg-lib-libXext-devel
+BuildRequires:	xorg-lib-libXxf86vm-devel
+%if %{with static}
+BuildRequires:	xorg-lib-libX11-static
+BuildRequires:	xorg-lib-libXext-static
+BuildRequires:	xorg-lib-libXxf86vm-static
+%endif
 %endif
 %if %{with AC}
 BuildRequires:	X11-devel
@@ -128,8 +134,7 @@ Wtyczka X dla dosemu.
 
 %prep
 %setup -q -a6
-#sh tmp/do_patch
-#%patch0 -p1
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
