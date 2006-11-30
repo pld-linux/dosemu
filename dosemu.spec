@@ -52,7 +52,7 @@ BuildRequires:	flex
 BuildRequires:	gpm-devel
 BuildRequires:	lynx
 BuildRequires:	openjade
-BuildRequires:	perl
+BuildRequires:	perl-base
 BuildRequires:	sgml-tools
 BuildRequires:	slang-devel
 %{?with_static:BuildRequires:	slang-static}
