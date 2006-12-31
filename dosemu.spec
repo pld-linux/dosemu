@@ -37,6 +37,7 @@ BuildRequires:	SDL-devel
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
+BuildRequires:	xorg-app-bdftopcf
 %if %{with static}
 BuildRequires:	xorg-lib-libX11-static
 BuildRequires:	xorg-lib-libXext-static
