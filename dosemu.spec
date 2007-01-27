@@ -69,7 +69,7 @@ Obsoletes:	xdosemu
 Conflicts:	dosemu-freedos-minimal < 2.0.33
 Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
-ExclusiveArch:	%{ix86}
+ExclusiveArch:	%{ix86} %{x8664}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_dosemudir	/var/lib/dosemu
