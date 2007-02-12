@@ -6,12 +6,12 @@
 %bcond_without	x		# X support
 #
 Summary:	A DOS emulator
-Summary(de.UTF-8):   DOS-Emulator
-Summary(es.UTF-8):   Emulador DOS
-Summary(fr.UTF-8):   Emulateur DOS
-Summary(pl.UTF-8):   Emulator DOS-a
-Summary(pt_BR.UTF-8):   Emulador DOS
-Summary(tr.UTF-8):   DOS öykünümcüsü
+Summary(de.UTF-8):	DOS-Emulator
+Summary(es.UTF-8):	Emulador DOS
+Summary(fr.UTF-8):	Emulateur DOS
+Summary(pl.UTF-8):	Emulator DOS-a
+Summary(pt_BR.UTF-8):	Emulador DOS
+Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.3.4
 Release:	1
@@ -98,7 +98,7 @@ para mouse.
 
 %package utils
 Summary:	Utilities for dosemu
-Summary(pl.UTF-8):   Programy pomocnicze do dosemu
+Summary(pl.UTF-8):	Programy pomocnicze do dosemu
 Group:		Applications/Emulators
 Requires:	%{name} = %{version}-%{release}
 
@@ -111,7 +111,7 @@ mkfatimage16.
 
 %package SDL
 Summary:	SDL plugin for dosemu
-Summary(pl.UTF-8):   Wtyczka SDL dla dosemu
+Summary(pl.UTF-8):	Wtyczka SDL dla dosemu
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
@@ -123,7 +123,7 @@ Wtyczka SDL dla dosemu.
 
 %package X
 Summary:	X plugin for dosemu
-Summary(pl.UTF-8):   Wtyczka X dla dosemu
+Summary(pl.UTF-8):	Wtyczka X dla dosemu
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
