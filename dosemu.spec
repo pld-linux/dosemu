@@ -6,12 +6,12 @@
 %bcond_without	x		# X support
 #
 Summary:	A DOS emulator
-Summary(de):	DOS-Emulator
-Summary(es):	Emulador DOS
-Summary(fr):	Emulateur DOS
-Summary(pl):	Emulator DOS-a
-Summary(pt_BR):	Emulador DOS
-Summary(tr):	DOS öykünümcüsü
+Summary(de.UTF-8):   DOS-Emulator
+Summary(es.UTF-8):   Emulador DOS
+Summary(fr.UTF-8):   Emulateur DOS
+Summary(pl.UTF-8):   Emulator DOS-a
+Summary(pt_BR.UTF-8):   Emulador DOS
+Summary(tr.UTF-8):   DOS Ã¶ykÃ¼nÃ¼mcÃ¼sÃ¼
 Name:		dosemu
 Version:	1.3.4
 Release:	1
@@ -83,54 +83,54 @@ You need to install dosemu if you use DOS programs and you want to be
 able to run them on your GNU/Linux system. You may also need to
 install the dosemu-freedos-* packages.
 
-%description -l pl
-Dosemu to Emulator systemu DOS. Po zainstalowaniu mo¿esz go uruchomiæ
-komend± "dos".
+%description -l pl.UTF-8
+Dosemu to Emulator systemu DOS. Po zainstalowaniu moÅ¼esz go uruchomiÄ‡
+komendÄ… "dos".
 
-Je¶li korzystasz z dosowych programów i chcia³by¶ je uruchamiaæ na
-twoim linuksowym systemie zainstaluj dosemu. Mo¿esz te¿ potrzebowaæ
-pakietów dosemu-freedos-*.
+JeÅ›li korzystasz z dosowych programÃ³w i chciaÅ‚byÅ› je uruchamiaÄ‡ na
+twoim linuksowym systemie zainstaluj dosemu. MoÅ¼esz teÅ¼ potrzebowaÄ‡
+pakietÃ³w dosemu-freedos-*.
 
-%description -l pt_BR
-Essa é uma versão do emulador DOS que foi projetada para rodar em
-sessões X Window. Oferece suporte para gráficos VGA bem como suporte
+%description -l pt_BR.UTF-8
+Essa Ã© uma versÃ£o do emulador DOS que foi projetada para rodar em
+sessÃµes X Window. Oferece suporte para grÃ¡ficos VGA bem como suporte
 para mouse.
 
 %package utils
 Summary:	Utilities for dosemu
-Summary(pl):	Programy pomocnicze do dosemu
+Summary(pl.UTF-8):   Programy pomocnicze do dosemu
 Group:		Applications/Emulators
 Requires:	%{name} = %{version}-%{release}
 
 %description utils
 Utilities for dosemu: dexeconfig, hdinfo, mkhdimage, mkfatimage16.
 
-%description utils -l pl
+%description utils -l pl.UTF-8
 Programy pomocnicze dla dosemu: dexeconfig, hdinfo, mkhdimage,
 mkfatimage16.
 
 %package SDL
 Summary:	SDL plugin for dosemu
-Summary(pl):	Wtyczka SDL dla dosemu
+Summary(pl.UTF-8):   Wtyczka SDL dla dosemu
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description SDL
 SDL plugin for dosemu.
 
-%description SDL -l pl
+%description SDL -l pl.UTF-8
 Wtyczka SDL dla dosemu.
 
 %package X
 Summary:	X plugin for dosemu
-Summary(pl):	Wtyczka X dla dosemu
+Summary(pl.UTF-8):   Wtyczka X dla dosemu
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description X
 X plugin for dosemu.
 
-%description X -l pl
+%description X -l pl.UTF-8
 Wtyczka X dla dosemu.
 
 %prep
