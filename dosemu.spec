@@ -5,6 +5,8 @@
 %bcond_with	AC
 %bcond_without	x		# X support
 #
+%define		smarthogver	0.1.0
+
 Summary:	A DOS emulator
 Summary(de.UTF-8):	DOS-Emulator
 Summary(es.UTF-8):	Emulador DOS
@@ -14,7 +16,7 @@ Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.3.4
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
@@ -25,6 +27,7 @@ Source4:	%{name}-README.PLD
 Source5:	%{name}.desktop
 Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 # Source6-md5:	7a8abf5c656e6b99bdd03a4783751895
+Source7:	smarthog-%{smarthogver}.tgz
 Patch0:		%{name}-man-pages.patch
 Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
@@ -134,7 +137,7 @@ X plugin for dosemu.
 Wtyczka X dla dosemu.
 
 %prep
-%setup -q -a6
+%setup -q -a6 -a7
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
@@ -214,6 +217,7 @@ install man/ru/{dosemu.1,dosdebug.1,xdosemu.1,dos.1,mkfatimage16.1} $RPM_BUILD_R
 
 install commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install commands/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
+install smarthog-%{smarthogver}/*.exe	$RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 cp %{SOURCE3} PRZECZYTAJ_TO
 cp %{SOURCE4} README.PLD
 install %{SOURCE5} $RPM_BUILD_ROOT%{_desktopdir}
