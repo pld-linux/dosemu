@@ -15,12 +15,12 @@ Summary(pl.UTF-8):	Emulator DOS-a
 Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.3.4
-Release:	2
+Version:	1.3.5
+Release:	1
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
-# Source0-md5:	4fbfdc50ea86d860dd9cea59ea7f4b47
+# Source0-md5:	16cb31112d5928c9d45319157948bb7c
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -243,6 +243,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/dosemu
 %{_libdir}/dosemu/libplugin_gpm.so
 %{_libdir}/dosemu/libplugin_term.so
+%{_libdir}/dosemu/libplugin_alsa.so
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
