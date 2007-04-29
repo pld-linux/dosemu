@@ -35,12 +35,30 @@ Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	SDL-devel
+BuildRequires:	alsa-lib-devel >= 0.9
+BuildRequires:	autoconf >= 2.59-9
+BuildRequires:	bin86
+BuildRequires:	bison
+BuildRequires:	docbook-dtd30-sgml
+BuildRequires:	docbook-style-dsssl
+BuildRequires:	flex
+%{?with_static:BuildRequires:	glibc-static}
+BuildRequires:	gpm-devel
+BuildRequires:	libsndfile-devel
+BuildRequires:	lynx
+BuildRequires:	openjade
+BuildRequires:	perl-base
+BuildRequires:	sgml-tools
+BuildRequires:	slang-devel
+%{?with_static:BuildRequires:	slang-static}
+BuildRequires:	unzip
+BuildRequires:	util-linux
 %if %{with x}
 %if !%{with AC}
+BuildRequires:	xorg-app-bdftopcf
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
-BuildRequires:	xorg-app-bdftopcf
 %if %{with static}
 BuildRequires:	xorg-lib-libX11-static
 BuildRequires:	xorg-lib-libXext-static
@@ -52,22 +70,6 @@ BuildRequires:	X11-devel
 %{?with_static:BuildRequires:	X11-static}
 %endif
 %endif
-BuildRequires:	autoconf >= 2.57
-BuildRequires:	bin86
-BuildRequires:	bison
-BuildRequires:	docbook-dtd30-sgml
-BuildRequires:	docbook-style-dsssl
-BuildRequires:	flex
-%{?with_static:BuildRequires:	glibc-static}
-BuildRequires:	gpm-devel
-BuildRequires:	lynx
-BuildRequires:	openjade
-BuildRequires:	perl-base
-BuildRequires:	sgml-tools
-BuildRequires:	slang-devel
-%{?with_static:BuildRequires:	slang-static}
-BuildRequires:	unzip
-BuildRequires:	util-linux
 Obsoletes:	xdosemu
 Conflicts:	dosemu-freedos-minimal < 2.0.33
 Conflicts:	kernel < 2.0.28
