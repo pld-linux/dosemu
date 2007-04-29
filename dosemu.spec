@@ -243,9 +243,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/dosexec
 %attr(755,root,root) %{_bindir}/midid
 %dir %{_libdir}/dosemu
-%{_libdir}/dosemu/libplugin_gpm.so
-%{_libdir}/dosemu/libplugin_term.so
 %{_libdir}/dosemu/libplugin_alsa.so
+%{_libdir}/dosemu/libplugin_gpm.so
+%{_libdir}/dosemu/libplugin_sndfile.so
+%{_libdir}/dosemu/libplugin_term.so
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
