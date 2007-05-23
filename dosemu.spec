@@ -15,12 +15,12 @@ Summary(pl.UTF-8):	Emulator DOS-a
 Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.3.5
+Version:	1.4.0
 Release:	1
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
-# Source0-md5:	16cb31112d5928c9d45319157948bb7c
+# Source0-md5:	0bba530637266f99d404ba15e3f118d4
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
