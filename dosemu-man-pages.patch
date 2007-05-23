@@ -148,24 +148,6 @@
  is
  .I not
  suid-root).
-@@ -172,7 +171,7 @@
- .I --Flibdir
- Bypass the default DOSEMU_LIB_DIR (as maybe defined in dosemu.users)
- and use this directory instead (only accepted when
--.B dosemu.bin
-+.B dosemu
- is
- .I not
- suid-root).
-@@ -180,7 +179,7 @@
- .I --Fimagedir
- Bypass the default directory for bootdirectory and hdimages (DOSEMU_HDIMAGE_DIR)
- and use this directory instead (only accepted when
--.B dosemu.bin
-+.B dosemu
- is
- .I not
- suid-root).
 @@ -190,7 +189,7 @@
  .TP
  .I -n
