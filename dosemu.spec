@@ -4,6 +4,7 @@
 %bcond_with	static		# link statically
 %bcond_with	AC
 %bcond_without	x		# X support
+%bcond_with	samba		# samba support
 #
 %define		smarthogver	0.1.0
 
@@ -16,7 +17,7 @@ Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.4.0
-Release:	1
+Release:	1%{?with_samba:.smb}
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
@@ -33,6 +34,7 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
+Patch5:		http://www.pers.pl/~pascalek/%{name}-1.4.0-samba-beta1.patch.gz
 URL:		http://www.dosemu.org/
 BuildRequires:	SDL-devel
 BuildRequires:	alsa-lib-devel >= 0.9
@@ -44,6 +46,7 @@ BuildRequires:	docbook-style-dsssl
 BuildRequires:	flex
 %{?with_static:BuildRequires:	glibc-static}
 BuildRequires:	gpm-devel
+%{?with_samba:BuildRequires:	libcli_smb-devel}
 BuildRequires:	libsndfile-devel
 BuildRequires:	lynx
 BuildRequires:	openjade
@@ -140,11 +143,13 @@ Wtyczka X dla dosemu.
 
 %prep
 %setup -q -a6 -a7
+
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%{?with_samba:%patch5 -p1}
 
 %build
 OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
@@ -177,11 +182,11 @@ echo '.so dosemu.1' > pl/man1/xdosemu.1
 echo '.so dosemu.1' > pl/man1/dosdebug.1
 
 # documentation
-%{__make} -C src/doc/DANG html
-%{__make} -C src/doc/HOWTO html
-%{__make} -C src/doc/README html
+#%{__make} -C src/doc/DANG html
+#%{__make} -C src/doc/HOWTO html
+#%{__make} -C src/doc/README html
 
-find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
+#find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 
 %install
 rm -rf $RPM_BUILD_ROOT
