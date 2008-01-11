@@ -182,11 +182,11 @@ echo '.so dosemu.1' > pl/man1/xdosemu.1
 echo '.so dosemu.1' > pl/man1/dosdebug.1
 
 # documentation
-#%{__make} -C src/doc/DANG html
-#%{__make} -C src/doc/HOWTO html
-#%{__make} -C src/doc/README html
+%{__make} -C src/doc/DANG html
+%{__make} -C src/doc/HOWTO html
+%{__make} -C src/doc/README html
 
-#find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
+find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
 
 %install
 rm -rf $RPM_BUILD_ROOT
