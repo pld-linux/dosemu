@@ -34,7 +34,7 @@ Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
-Patch5:		http://www.pers.pl/~pascalek/%{name}-1.4.0-samba-beta1.patch.gz
+Patch5:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/%{name}-1.4.0-samba-beta2.patch.gz
 URL:		http://www.dosemu.org/
 BuildRequires:	SDL-devel
 BuildRequires:	alsa-lib-devel >= 0.9
