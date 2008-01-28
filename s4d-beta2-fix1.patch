@@ -1,0 +1,12 @@
+diff -Nur dosemu-1.4.0.chng.beta2/src/dosext/mfs/smb.c dosemu-1.4.0.chng.ok16/src/dosext/mfs/smb.c
+--- dosemu-1.4.0.chng.beta2/src/dosext/mfs/smb.c	2008-01-28 10:24:39.000000000 +0100
++++ dosemu-1.4.0.chng.ok16/src/dosext/mfs/smb.c	2008-01-28 10:25:35.000000000 +0100
+@@ -1134,7 +1134,7 @@
+ 		if (open_files[cnt].name == NULL)
+ 			continue;
+ 
+-		if ((strcmp(open_files[cnt].name, filename) != 0) && (open_files[cnt].drive == drive)) 
++		if ((strcmp(open_files[cnt].name, filename) != 0) || (open_files[cnt].drive != drive)) 
+ 			continue;
+ 
+ 		Debug0((dbg_fd, "file %s is used as fd %d - I'm closing it!\n", filename, open_files[cnt].fd));
