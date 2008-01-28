@@ -3,6 +3,7 @@
 # Conditional build:
 %bcond_with	static		# link statically
 %bcond_with	AC
+%bcond_without	htmldocs	# do not build documentation in HTML
 %bcond_without	x		# X support
 %bcond_with	samba		# samba support
 #
@@ -35,6 +36,7 @@ Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
 Patch5:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/%{name}-1.4.0-samba-beta2.patch.gz
+Patch6:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/s4d-beta2-fix1.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	SDL-devel
 BuildRequires:	alsa-lib-devel >= 0.9
@@ -49,9 +51,9 @@ BuildRequires:	gpm-devel
 %{?with_samba:BuildRequires:	libcli_smb-devel}
 BuildRequires:	libsndfile-devel
 BuildRequires:	lynx
-BuildRequires:	openjade
-BuildRequires:	perl-base
-BuildRequires:	sgml-tools
+%{?with_htmldocs:BuildRequires:	openjade}
+%{?with_htmldocs:BuildRequires:	perl-base}
+%{?with_htmldocs:BuildRequires:	sgml-tools}
 BuildRequires:	slang-devel
 %{?with_static:BuildRequires:	slang-static}
 BuildRequires:	unzip
@@ -150,6 +152,7 @@ Wtyczka X dla dosemu.
 %patch3 -p1
 %patch4 -p1
 %{?with_samba:%patch5 -p1}
+%{?with_samba:%patch6 -p1}
 
 %build
 OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
@@ -181,12 +184,14 @@ echo '.so dosemu.1' > pl/man1/dos.1
 echo '.so dosemu.1' > pl/man1/xdosemu.1
 echo '.so dosemu.1' > pl/man1/dosdebug.1
 
+%if %{with htmldocs}
 # documentation
 %{__make} -C src/doc/DANG html
 %{__make} -C src/doc/HOWTO html
 %{__make} -C src/doc/README html
 
 find src/doc -name "*.html" -exec cp -f '{}' doc/ ';'
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
