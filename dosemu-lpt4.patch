@@ -1,0 +1,141 @@
+diff -Nur dosemu-1.4.0.orig/etc/dosemu.conf dosemu-1.4.0.chng/etc/dosemu.conf
+--- dosemu-1.4.0.orig/etc/dosemu.conf	2008-01-29 09:04:59.000000000 +0100
++++ dosemu-1.4.0.chng/etc/dosemu.conf	2008-01-29 10:55:17.000000000 +0100
+@@ -365,6 +365,10 @@
+ # $_lpt2 = "lpr -l -P lpt2"
+ # $_lpt3 = ""
+ 
++# Thought: even if you have fourth lpt port available you cannot access it by
++# LPT4 name but is available to use at 0x2BC port.
++# $_lpt4 = ""
++
+ # idle time in seconds before spooling out. Default: (20)
+ 
+ # $_printer_timeout = (20)
+diff -Nur dosemu-1.4.0.orig/etc/global.conf dosemu-1.4.0.chng/etc/global.conf
+--- dosemu-1.4.0.orig/etc/global.conf	2006-11-29 11:05:27.000000000 +0100
++++ dosemu-1.4.0.chng/etc/global.conf	2008-01-29 09:36:58.000000000 +0100
+@@ -552,7 +552,7 @@
+     done
+   endif
+   if (1) # no idea why but we need this...
+-    foreach $xxx (" ", "1 2 3")
++    foreach $xxx (" ", "1 2 3 4")
+       $yyy = "lpt", $xxx
+       $zzz = "$_lpt", $xxx
+       $zzz = $$zzz
+diff -Nur dosemu-1.4.0.orig/src/base/bios/setup.c dosemu-1.4.0.chng/src/base/bios/setup.c
+--- dosemu-1.4.0.orig/src/base/bios/setup.c	2007-05-04 07:59:48.000000000 +0200
++++ dosemu-1.4.0.chng/src/base/bios/setup.c	2008-01-29 10:01:34.000000000 +0100
+@@ -61,6 +61,7 @@
+    */
+   CONF_NFLOP(configuration, config.fdisks);
+   CONF_NSER(configuration, config.num_ser);
++  if (config.num_lpt > 3) config.num_lpt = 3;
+   CONF_NLPT(configuration, config.num_lpt);
+   if (config.mouse.intdrv)
+     configuration |= CONF_MOUSE;
+diff -Nur dosemu-1.4.0.orig/src/base/dev/misc/lpt.c dosemu-1.4.0.chng/src/base/dev/misc/lpt.c
+--- dosemu-1.4.0.orig/src/base/dev/misc/lpt.c	2007-05-04 07:59:48.000000000 +0200
++++ dosemu-1.4.0.chng/src/base/dev/misc/lpt.c	2008-01-29 09:25:25.000000000 +0100
+@@ -33,13 +33,14 @@
+ {
+   {NULL, NULL, 5, 0x378, .status = LPT_NOTBUSY | LPT_ONLINE | LPT_IOERR | LPT_ACK},
+   {NULL, NULL, 5, 0x278, .status = LPT_NOTBUSY | LPT_ONLINE | LPT_IOERR | LPT_ACK},
+-  {NULL, NULL, 10, 0x3bc, .status = LPT_NOTBUSY | LPT_ONLINE | LPT_IOERR | LPT_ACK}
++  {NULL, NULL, 10, 0x3bc, .status = LPT_NOTBUSY | LPT_ONLINE | LPT_IOERR | LPT_ACK},
++  {NULL, NULL, 10, 0x2bc, .status = LPT_NOTBUSY | LPT_ONLINE | LPT_IOERR | LPT_ACK}
+ };
+ 
+ static int get_printer(ioport_t port)
+ {
+   int i;
+-  for (i = 0; i < 3; i++)
++  for (i = 0; i < NUM_PRINTERS; i++)
+     if (lpt[i].base_port <= port && port <= lpt[i].base_port + 2)
+       return i;
+   return -1;
+@@ -215,7 +216,7 @@
+   io_device.irq          = EMU_NO_IRQ;
+   io_device.fd           = -1;
+ 
+-  for (i = 0; i < 3; i++) {
++  for (i = 0; i < NUM_PRINTERS; i++) {
+     p_printf("LPT: initializing printer %s\n", lpt[i].dev ? lpt[i].dev : "<<NODEV>>");
+     lpt[i].file = NULL;
+     lpt[i].remaining = -1;	/* mark not accessed yet */
+diff -Nur dosemu-1.4.0.orig/src/doc/README/config dosemu-1.4.0.chng/src/doc/README/config
+--- dosemu-1.4.0.orig/src/doc/README/config	2007-05-05 06:22:31.000000000 +0200
++++ dosemu-1.4.0.chng/src/doc/README/config	2008-01-29 10:55:40.000000000 +0100
+@@ -1143,14 +1143,19 @@
+ 
+ <screen>
+ # Print commands to use for LPT1, LPT2 and LPT3.
+-# Default: "lpr -l, lpr -l -P lpt2, lpr -l P lpt3"
++# Default: "lpr -l, lpr -l -P lpt2, lpr -l P lpt3, lpr -l P lpt4"
+ # Which means: use the default print queue for LPT1, "lpt2" queue for LPT2,
+-# "lpt3" queue for LPT3. "-l" means raw printing mode (no preprocessing).
++# "lpt3" queue for LPT3, "lpt4" queue for LPT4. 
++# "-l" means raw printing mode (no preprocessing).
+ 
+ $_lpt1 = "lpr -l"
+ $_lpt2 = "lpr -l -P lpt2"
+ $_lpt3 = "lpr -l -P lpt3"
+ 
++# Thought: even if you have fourth lpt port available you cannot access it by
++# LPT4 name but is available to use at 0x2BC port.
++$_lpt4 = "lpr -l -P lpt4"
++
+ $_printer_timeout = (20)# idle time in seconds before spooling out
+ </screen>
+ 
+diff -Nur dosemu-1.4.0.orig/src/doc/README/config-tech dosemu-1.4.0.chng/src/doc/README/config-tech
+--- dosemu-1.4.0.orig/src/doc/README/config-tech	2003-08-20 00:15:06.000000000 +0200
++++ dosemu-1.4.0.chng/src/doc/README/config-tech	2008-01-29 09:19:04.000000000 +0100
+@@ -3366,11 +3366,11 @@
+ </para>
+ 
+ <para>
+-NOTE: Printers are assigned to LPT1:, LPT2:, and LPT3: on a one for
++NOTE: Printers are assigned to LPT1:, LPT2:, LPT3: and LPT4 on a one for
+ one basis with each line below.  The first printer line is assigned
+-to LPT1:, second to LPT2:, and third to LPT3:.  If you do not specify
+-a base port, the emulator will setup the bios to report 0x378, 0x278,
+-and 0x3bc for LPT1:, LPT2:, and LPT3: respectively.
++to LPT1:, second to LPT2:, third to LPT3: and fourth to LPT4.  If you 
++do not specify a base port, the emulator will setup the bios to report 
++0x378, 0x278, 0x3bc and 0x2bc for LPT1:, LPT2:, LPT3: and LPT4: respectively.
+ </para>
+ 
+ <para>
+diff -Nur dosemu-1.4.0.orig/src/include/bios.h dosemu-1.4.0.chng/src/include/bios.h
+--- dosemu-1.4.0.orig/src/include/bios.h	2007-05-04 07:59:48.000000000 +0200
++++ dosemu-1.4.0.chng/src/include/bios.h	2008-01-29 09:11:43.000000000 +0100
+@@ -40,6 +40,7 @@
+ #define BIOS_ADDRESS_LPT1               0x408
+ #define BIOS_ADDRESS_LPT2               0x40a
+ #define BIOS_ADDRESS_LPT3               0x40c
++#define BIOS_ADDRESS_LPT4               0x40e
+ /* 0x40e is reserved */
+ #define BIOS_CONFIGURATION              0x410
+ /* 0x412 is reserved */
+@@ -93,6 +94,7 @@
+ #define BIOS_LPT1_TIMEOUT               0x478
+ #define BIOS_LPT2_TIMEOUT               0x479
+ #define BIOS_LPT3_TIMEOUT               0x47a
++#define BIOS_LPT4_TIMEOUT               0x47b
+ /* 0x47b is reserved */
+ #define BIOS_COM1_TIMEOUT               0x47c
+ #define BIOS_COM2_TIMEOUT               0x47d
+diff -Nur dosemu-1.4.0.orig/src/include/lpt.h dosemu-1.4.0.chng/src/include/lpt.h
+--- dosemu-1.4.0.orig/src/include/lpt.h	2007-05-04 07:59:48.000000000 +0200
++++ dosemu-1.4.0.chng/src/include/lpt.h	2008-01-29 09:14:17.000000000 +0100
+@@ -45,7 +45,7 @@
+ #define LPT_ACK		0x40
+ #define LPT_NOTBUSY	0x80
+ 
+-#define NUM_PRINTERS 3
++#define NUM_PRINTERS 4
+ extern struct printer lpt[NUM_PRINTERS];
+ 
+ #endif /* LPT_H */
