@@ -37,6 +37,7 @@ Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
 Patch5:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/%{name}-1.4.0-samba-beta2.patch.gz
 Patch6:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/s4d-beta2-fix1.patch
+Patch7:		%{name}-lpt4.patch
 URL:		http://www.dosemu.org/
 BuildRequires:	SDL-devel
 BuildRequires:	alsa-lib-devel >= 0.9
@@ -153,6 +154,7 @@ Wtyczka X dla dosemu.
 %patch4 -p1
 %{?with_samba:%patch5 -p1}
 %{?with_samba:%patch6 -p1}
+%patch7 -p1
 
 %build
 OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
