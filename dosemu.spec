@@ -8,6 +8,7 @@
 %bcond_with	samba		# samba support
 #
 %define		smarthogver	0.1.0
+%define		smbrel		01
 
 Summary:	A DOS emulator
 Summary(de.UTF-8):	DOS-Emulator
@@ -18,7 +19,7 @@ Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.4.0
-Release:	1%{?with_samba:.smb}
+Release:	2%{?with_samba:.smb%{smbrel}}
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
