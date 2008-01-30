@@ -1,33 +1,35 @@
 diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 --- dosemu-1.4.0.orig/src/plugin/X/X.c	2007-05-04 07:59:48.000000000 +0200
-+++ dosemu-1.4.0.chng/src/plugin/X/X.c	2008-01-30 12:09:47.000000000 +0100
-@@ -383,6 +383,9 @@
++++ dosemu-1.4.0.chng/src/plugin/X/X.c	2008-01-30 22:27:07.000000000 +0100
+@@ -383,6 +383,10 @@
  static Atom comm_atom = None;
  static Boolean kdos_client = FALSE;    	/* started by kdos */
  
 +static Boolean about_to_quit = FALSE;
 +extern struct text_system Text_X;
 +void (*Draw_cursor_backup)(int x, int y, Bit8u attr, int first, int last, Boolean focus);
++void (*Draw_string_backup)(int x, int y , unsigned char *s, int len, Bit8u attr); 
  
  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  
-@@ -1434,6 +1437,7 @@
- 	  
- 	case FocusIn:
- 	  X_printf("X: focus in\n");
-+	  if (about_to_quit) break;
- 	  if (vga.mode_class == TEXT) text_gain_focus();
- 	  if (config.X_background_pause && !dosemu_user_froze) unfreeze_dosemu ();
- 	  have_focus = TRUE;
-@@ -1441,6 +1445,7 @@
+@@ -486,6 +490,16 @@
  
- 	case FocusOut:
- 	  X_printf("X: focus out\n");
-+	  if (about_to_quit) break;
- 	  if (mainwindow == fullscreenwindow) break;
- 	  if (vga.mode_class == TEXT) text_lose_focus();
- 	  output_byte_8042(port60_buffer | 0x80);
-@@ -1458,9 +1463,36 @@
+ /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ 
++void Draw_cursor_fake(int x, int y, Bit8u attr, int first, int last, Boolean focus)
++{
++	return;
++}
++
++void Draw_string_fake(int x, int y , unsigned char *s, int len, Bit8u attr)
++{
++	return;
++}
++
+ /* utility function for opening a connection and making certain
+  * I am either using or not using the X keyboard Extension.
+  */
+@@ -1458,9 +1472,38 @@
  	   * atom, it means the window manager wants us to die.
  	   */
  	  if(e.xclient.message_type == proto_atom && *e.xclient.data.l == delete_atom) {
@@ -42,8 +44,7 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 +
 +	    about_to_quit = TRUE;
 +	    Draw_cursor_backup = Text_X.Draw_cursor;
-+	    Text_X.Draw_cursor = NULL;
-+	    freeze_dosemu();
++	    Text_X.Draw_cursor = Draw_cursor_fake;
 +
 +            for (i = 0; i < 12; i++)
 +            	Text_X.Draw_string(14, i+6, "                                                    " , 52, 0xf0);
@@ -63,10 +64,13 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 +	    Text_X.Draw_string(18, 14, "Y" , 1, 0x4e);
 +	    Text_X.Draw_string(18, 15, "N" , 1, 0x4e);
 +	    
++	    Draw_string_backup = Text_X.Draw_string;
++	    Text_X.Draw_string = Draw_string_fake;
++	    
  	    break;
  	  }
  
-@@ -1490,6 +1522,24 @@
+@@ -1490,6 +1533,24 @@
  	    keyrel_pending = 0;
  	  }
  
@@ -77,13 +81,13 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 +          	} else if (keysym == XK_N || keysym == XK_n) {
 +          	    about_to_quit = FALSE;
 +          	    Text_X.Draw_cursor = Draw_cursor_backup;
++          	    Text_X.Draw_string = Draw_string_backup;
 +          	    if(vga.mode_class == TEXT) {
 +          	        X_redraw_text_screen();
 +          	    } else {
 +          	        dirty_all_video_pages();
 +          	        X_update_screen();
 +          	    }
-+          	    unfreeze_dosemu();
 +          	}
 +          	break;
 +          }
@@ -91,7 +95,7 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
            if((e.xkey.state & ControlMask) && (e.xkey.state & Mod1Mask)) {
              KeySym keysym = XKeycodeToKeysym(display, e.xkey.keycode, 0);
              if (keysym == grab_keysym) {
-@@ -1504,6 +1554,7 @@
+@@ -1504,6 +1565,7 @@
                break;
              }
            }
