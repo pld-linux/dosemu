@@ -64,6 +64,7 @@ BuildRequires:	util-linux
 %if %{with x}
 %if !%{with AC}
 BuildRequires:	xorg-app-bdftopcf
+BuildRequires:	xorg-app-mkfontdir
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXext-devel
 BuildRequires:	xorg-lib-libXxf86vm-devel
