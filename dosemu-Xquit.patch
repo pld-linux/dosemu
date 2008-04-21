@@ -1,18 +1,35 @@
+diff -Nur dosemu-1.4.0.orig/src/env/video/text.c dosemu-1.4.0.chng/src/env/video/text.c
+--- dosemu-1.4.0.orig/src/env/video/text.c	2007-05-04 07:59:48.000000000 +0200
++++ dosemu-1.4.0.chng/src/env/video/text.c	2008-04-21 22:36:23.000000000 +0200
+@@ -96,6 +96,11 @@
+   return 1;
+ }
+ 
++struct text_system* registered_text_system(void)
++{
++	return Text;
++}
++
+ /*
+  * Draw a text string.
+  * The attribute is the VGA color/mono text attribute.
 diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 --- dosemu-1.4.0.orig/src/plugin/X/X.c	2007-05-04 07:59:48.000000000 +0200
-+++ dosemu-1.4.0.chng/src/plugin/X/X.c	2008-01-30 22:27:07.000000000 +0100
-@@ -383,6 +383,10 @@
++++ dosemu-1.4.0.chng/src/plugin/X/X.c	2008-04-21 23:03:06.000000000 +0200
+@@ -383,6 +383,12 @@
  static Atom comm_atom = None;
  static Boolean kdos_client = FALSE;    	/* started by kdos */
  
 +static Boolean about_to_quit = FALSE;
-+extern struct text_system Text_X;
++static struct text_system* Text_Tmp;
++extern struct text_system* registered_text_system(void);
 +void (*Draw_cursor_backup)(int x, int y, Bit8u attr, int first, int last, Boolean focus);
 +void (*Draw_string_backup)(int x, int y , unsigned char *s, int len, Bit8u attr); 
++
  
  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  
-@@ -486,6 +490,16 @@
+@@ -486,6 +492,16 @@
  
  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
  
@@ -29,7 +46,7 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
  /* utility function for opening a connection and making certain
   * I am either using or not using the X keyboard Extension.
   */
-@@ -1458,9 +1472,38 @@
+@@ -1458,9 +1474,40 @@
  	   * atom, it means the window manager wants us to die.
  	   */
  	  if(e.xclient.message_type == proto_atom && *e.xclient.data.l == delete_atom) {
@@ -41,36 +58,38 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 +
 +	    if (about_to_quit)
 +	    	break;
-+
++	    	
 +	    about_to_quit = TRUE;
-+	    Draw_cursor_backup = Text_X.Draw_cursor;
-+	    Text_X.Draw_cursor = Draw_cursor_fake;
++	    Text_Tmp = registered_text_system(); 
++
++	    Draw_cursor_backup = Text_Tmp->Draw_cursor;
++	    Text_Tmp->Draw_cursor = Draw_cursor_fake;
 +
 +            for (i = 0; i < 12; i++)
-+            	Text_X.Draw_string(14, i+6, "                                                    " , 52, 0xf0);
-+
-+	    Text_X.Draw_string(15,  7, "                                                  " , 50, 0x4f);
-+	    Text_X.Draw_string(15,  8, " You are about to abort DosEmu session.           " , 50, 0x4f);
-+	    Text_X.Draw_string(15,  9, " This is not recomended way for closing DosEmu.   " , 50, 0x4f);
-+	    Text_X.Draw_string(15, 10, " Close all your programs and use exitemu command. " , 50, 0x4f);
-+	    Text_X.Draw_string(15, 11, "                                                  " , 50, 0x4f);
-+	    Text_X.Draw_string(15, 12, " Do you still want to continue?                   " , 50, 0x4f);
-+	    Text_X.Draw_string(15, 13, "                                                  " , 50, 0x4f);
-+	    Text_X.Draw_string(15, 14, "   Y - abort DosEmu session                       " , 50, 0x4f);
-+	    Text_X.Draw_string(15, 15, "   N - continue DosEmu session                    " , 50, 0x4f);
-+	    Text_X.Draw_string(15, 16, "                                                  " , 50, 0x4f);
++            	Text_Tmp->Draw_string(14, i+6, "                                                    " , 52, 0xf0);
++            	
++	    Text_Tmp->Draw_string(15,  7, "                                                  " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15,  8, " You are about to abort DosEmu session.           " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15,  9, " This is not recomended way for closing DosEmu.   " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15, 10, " Close all your programs and use exitemu command. " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15, 11, "                                                  " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15, 12, " Do you still want to continue?                   " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15, 13, "                                                  " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15, 14, "   Y - abort DosEmu session                       " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15, 15, "   N - continue DosEmu session                    " , 50, 0x4f);
++	    Text_Tmp->Draw_string(15, 16, "                                                  " , 50, 0x4f);
 +	    
-+	    Text_X.Draw_string(48, 10, "exitemu" , 7, 0x4a);
-+	    Text_X.Draw_string(18, 14, "Y" , 1, 0x4e);
-+	    Text_X.Draw_string(18, 15, "N" , 1, 0x4e);
++	    Text_Tmp->Draw_string(48, 10, "exitemu" , 7, 0x4a);
++	    Text_Tmp->Draw_string(18, 14, "Y" , 1, 0x4e);
++	    Text_Tmp->Draw_string(18, 15, "N" , 1, 0x4e);
 +	    
-+	    Draw_string_backup = Text_X.Draw_string;
-+	    Text_X.Draw_string = Draw_string_fake;
++	    Draw_string_backup = Text_Tmp->Draw_string;
++	    Text_Tmp->Draw_string = Draw_string_fake;
 +	    
  	    break;
  	  }
  
-@@ -1490,6 +1533,24 @@
+@@ -1490,6 +1537,24 @@
  	    keyrel_pending = 0;
  	  }
  
@@ -80,8 +99,8 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 +          	   leavedos(0);
 +          	} else if (keysym == XK_N || keysym == XK_n) {
 +          	    about_to_quit = FALSE;
-+          	    Text_X.Draw_cursor = Draw_cursor_backup;
-+          	    Text_X.Draw_string = Draw_string_backup;
++          	    Text_Tmp->Draw_cursor = Draw_cursor_backup;
++          	    Text_Tmp->Draw_string = Draw_string_backup;
 +          	    if(vga.mode_class == TEXT) {
 +          	        X_redraw_text_screen();
 +          	    } else {
@@ -95,7 +114,7 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
            if((e.xkey.state & ControlMask) && (e.xkey.state & Mod1Mask)) {
              KeySym keysym = XKeycodeToKeysym(display, e.xkey.keycode, 0);
              if (keysym == grab_keysym) {
-@@ -1504,6 +1565,7 @@
+@@ -1504,6 +1569,7 @@
                break;
              }
            }
@@ -103,16 +122,3 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
  /* 
        Clears the visible selection if the cursor is inside the selection
  */
-diff -Nur dosemu-1.4.0.orig/src/plugin/X/X_font.c dosemu-1.4.0.chng/src/plugin/X/X_font.c
---- dosemu-1.4.0.orig/src/plugin/X/X_font.c	2007-05-04 07:59:48.000000000 +0200
-+++ dosemu-1.4.0.chng/src/plugin/X/X_font.c	2008-01-30 10:04:00.000000000 +0100
-@@ -195,8 +195,7 @@
-   text_colors[i] = xc.pixel;
- }
- 
--
--static struct text_system Text_X =
-+struct text_system Text_X =
- {
-    X_draw_string, 
-    X_draw_line,
