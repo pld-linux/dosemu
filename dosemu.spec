@@ -19,7 +19,7 @@ Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
 Version:	1.4.0
-Release:	2%{?with_samba:.smb%{smbrel}}
+Release:	3%{?with_samba:.smb%{smbrel}}
 License:	GPL v2
 Group:		Applications/Emulators
 Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
