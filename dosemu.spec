@@ -42,7 +42,6 @@ Patch7:		%{name}-lpt4.patch
 Patch8:		%{name}-Xquit.patch
 Patch9:		%{name}-creat_mode.patch
 URL:		http://www.dosemu.org/
-BuildRequires:	SDL-devel
 BuildRequires:	alsa-lib-devel >= 0.9
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	bin86
@@ -63,6 +62,7 @@ BuildRequires:	slang-devel
 BuildRequires:	unzip
 BuildRequires:	util-linux
 %if %{with x}
+BuildRequires:	SDL-devel
 %if !%{with AC}
 BuildRequires:	xorg-app-bdftopcf
 BuildRequires:	xorg-app-mkfontdir
@@ -289,11 +289,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/mkfatimage16.1*
 %lang(ru) %{_mandir}/ru/man1/mkfatimage16.1*
 
+%if %{with x}
 %files SDL
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/dosemu/libplugin_sdl.so
 
-%if %{with x}
 %files X
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/dosemu/libplugin_X.so
