@@ -32,6 +32,7 @@ Source5:	%{name}.desktop
 Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.tar.bz2
 # Source6-md5:	7a8abf5c656e6b99bdd03a4783751895
 Source7:	smarthog-%{smarthogver}.tgz
+# Source7-md5:	a9f64e8e90382ac3426c39caecd7f64f
 Patch0:		%{name}-man-pages.patch
 Patch1:		%{name}-make-new.patch
 Patch2:		%{name}-%{name}_conf.patch
