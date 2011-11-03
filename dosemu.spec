@@ -39,6 +39,7 @@ Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
 Patch5:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/%{name}-1.4.0-samba-beta2.patch.gz
+# Patch5-md5:	1e4b8f494f4067012daabf3971e6f3e7
 Patch6:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/s4d-beta2-fix1.patch
 Patch7:		%{name}-lpt4.patch
 Patch8:		%{name}-Xquit.patch
