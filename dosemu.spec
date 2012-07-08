@@ -19,12 +19,13 @@ Summary(pl.UTF-8):	Emulator DOS-a
 Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.4.0
-Release:	4%{?with_samba:.smb%{smbrel}}
+Version:	1.4.0.7
+Release:	1%{?with_samba:.smb%{smbrel}}
 License:	GPL v2
 Group:		Applications/Emulators
-Source0:	http://dl.sourceforge.net/dosemu/%{name}-%{version}.tgz
-# Source0-md5:	0bba530637266f99d404ba15e3f118d4
+# git archive --format=tar --prefix=dosemu-1.4.0.7/ dosemu-1.4.0.7 | xz > dosemu-1.4.0.7.tar.xz
+Source0:	%{name}-%{version}.tar.xz
+# Source0-md5:	842303d611ac5d0932825a34afd67d72
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD
@@ -154,8 +155,8 @@ Wtyczka X dla dosemu.
 %prep
 %setup -q -a6 -a7
 
-%patch0 -p1
-%patch1 -p1
+#%patch0 -p1
+#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -163,10 +164,10 @@ Wtyczka X dla dosemu.
 %{?with_samba:%patch6 -p1}
 %patch7 -p1
 %patch8 -p1
-%patch9 -p1
+#%patch9 -p1
 
 %build
-OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
+#OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
 
 ./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
 plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
