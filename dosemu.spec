@@ -34,8 +34,7 @@ Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.t
 # Source6-md5:	7a8abf5c656e6b99bdd03a4783751895
 Source7:	smarthog-%{smarthogver}.tgz
 # Source7-md5:	a9f64e8e90382ac3426c39caecd7f64f
-Patch0:		%{name}-man-pages.patch
-Patch1:		%{name}-make-new.patch
+#Patch0:		%{name}-man-pages.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
@@ -44,7 +43,6 @@ Patch5:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/%{name}-1.4.0-samba
 Patch6:		http://pascalek.pers.pl/files/projects/Samba4DosEmu/s4d-beta2-fix1.patch
 Patch7:		%{name}-lpt4.patch
 Patch8:		%{name}-Xquit.patch
-Patch9:		%{name}-creat_mode.patch
 URL:		http://www.dosemu.org/
 %{?with_sdl:BuildRequires:	SDL-devel}
 BuildRequires:	alsa-lib-devel >= 0.9
@@ -155,8 +153,6 @@ Wtyczka X dla dosemu.
 %prep
 %setup -q -a6 -a7
 
-#%patch0 -p1
-#%patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
@@ -164,11 +160,8 @@ Wtyczka X dla dosemu.
 %{?with_samba:%patch6 -p1}
 %patch7 -p1
 %patch8 -p1
-#%patch9 -p1
 
 %build
-#OPTFLAGS="%{rpmcflags}"; export OPTFLAGS
-
 ./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
 plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
 
