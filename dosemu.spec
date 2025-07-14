@@ -153,13 +153,13 @@ Wtyczka X dla dosemu.
 %prep
 %setup -q -a6 -a7
 
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
+%patch -P2 -p1
+%patch -P3 -p1
+%patch -P4 -p1
 %{?with_samba:%patch5 -p1}
 %{?with_samba:%patch6 -p1}
-%patch7 -p1
-%patch8 -p1
+%patch -P7 -p1
+%patch -P8 -p1
 
 %build
 ./mkpluginhooks enable plugin_keyboard off plugin_kbd_unicode on \
