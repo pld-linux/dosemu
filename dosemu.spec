@@ -35,6 +35,7 @@ Source6:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-pl-man-pages.t
 Source7:	smarthog-%{smarthogver}.tgz
 # Source7-md5:	a9f64e8e90382ac3426c39caecd7f64f
 #Patch0:		%{name}-man-pages.patch
+Patch1:		%{name}-cpp.patch
 Patch2:		%{name}-%{name}_conf.patch
 Patch3:		%{name}-doSgmlTools.patch
 Patch4:		%{name}-makehtml.patch
@@ -48,10 +49,13 @@ URL:		http://www.dosemu.org/
 BuildRequires:	alsa-lib-devel >= 0.9
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	bin86
+BuildRequires:	binutils >= 2.9.1.0.25
 BuildRequires:	bison
 BuildRequires:	docbook-dtd30-sgml
 BuildRequires:	docbook-style-dsssl
 BuildRequires:	flex
+BuildRequires:	fluidsynth-devel
+BuildRequires:	glibc-devel >= 2.1.3
 %{?with_static:BuildRequires:	glibc-static}
 BuildRequires:	gpm-devel
 %{?with_samba:BuildRequires:	libcli_smb-devel}
@@ -82,7 +86,7 @@ BuildRequires:	X11-devel
 %{?with_static:BuildRequires:	X11-static}
 %endif
 %endif
-Obsoletes:	xdosemu
+Obsoletes:	xdosemu < 1.3.3.1
 Conflicts:	dosemu-freedos-minimal < 2.0.33
 Conflicts:	kernel < 2.0.28
 Conflicts:	mtools < 3.6
@@ -153,6 +157,7 @@ Wtyczka X dla dosemu.
 %prep
 %setup -q -a6 -a7
 
+%patch -P1 -p1
 %patch -P2 -p1
 %patch -P3 -p1
 %patch -P4 -p1
@@ -171,7 +176,6 @@ plugin_extra_charset on plugin_term on plugin_translate on plugin_demo off
 # non-X version
 %configure2_13 \
 	%{?with_static:--enable-linkstatic} \
-	--enable-new-intcode \
 	--enable-aspi \
 	%{!?with_x:--without-x}
 
@@ -231,6 +235,9 @@ install etc/dosemu.conf $RPM_BUILD_ROOT%{_sysconfdir}/dosemu.conf
 install man/{dosemu.1,dosdebug.1,xdosemu.1,dos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/man1
 install pl/man1/{dosemu.1,dosdebug.1,xdosemu.1,dos.1} $RPM_BUILD_ROOT%{_mandir}/pl/man1
 install man/ru/{dosemu.1,dosdebug.1,xdosemu.1,dos.1,mkfatimage16.1} $RPM_BUILD_ROOT%{_mandir}/ru/man1
+# it points to dosemu.bin.1, but in PLD it's not installed
+echo '.so dosemu.1' >$RPM_BUILD_ROOT%{_mandir}/man1/dosdebug.1
+echo '.so dosemu.1' >$RPM_BUILD_ROOT%{_mandir}/ru/man1/dosdebug.1
 
 install commands/*.com $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
 install commands/*.sys $RPM_BUILD_ROOT%{_dosemudir}/bootdir/dosemu
@@ -259,18 +266,21 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/midid
 %dir %{_libdir}/dosemu
 %{_libdir}/dosemu/libplugin_alsa.so
+%{_libdir}/dosemu/libplugin_fluidsynth.so
 %{_libdir}/dosemu/libplugin_gpm.so
 %{_libdir}/dosemu/libplugin_sndfile.so
 %{_libdir}/dosemu/libplugin_term.so
 %dir %{_dosemudir}/bootdir
 %dir %{_dosemudir}/bootdir/dosemu
 %{_dosemudir}/bootdir/dosemu/*
-%{_mandir}/man1/d*
-%lang(pl) %{_mandir}/pl/man1/d*
-%lang(ru) %{_mandir}/ru/man1/d*
+%{_mandir}/man1/dos*.1*
+%lang(pl) %{_mandir}/pl/man1/dos*.1*
+%lang(ru) %{_mandir}/ru/man1/dos*.1*
 %{_pixmapsdir}/dosemu.xpm
 %if %{with x}
-%attr(755,root,root) %{_bindir}/xdos*
+%attr(755,root,root) %{_bindir}/xdos
+%attr(755,root,root) %{_bindir}/xdosemu
+%attr(755,root,root) %{_bindir}/xdosexec
 %{_mandir}/man1/xdosemu.1*
 %lang(pl) %{_mandir}/pl/man1/xdosemu.1*
 %lang(ru) %{_mandir}/ru/man1/xdosemu.1*
@@ -289,11 +299,11 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with sdl}
 %files SDL
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/dosemu/libplugin_sdl.so
+%{_libdir}/dosemu/libplugin_sdl.so
 %endif
 
 %if %{with x}
 %files X
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/dosemu/libplugin_X.so
+%{_libdir}/dosemu/libplugin_X.so
 %endif
