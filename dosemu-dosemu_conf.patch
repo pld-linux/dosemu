@@ -1,27 +1,27 @@
---- dosemu-1.2.0/etc/dosemu.conf.orig	2004-01-18 17:42:09.000000000 +0100
-+++ dosemu-1.2.0/etc/dosemu.conf	2004-02-01 15:22:47.078414712 +0100
-@@ -66,6 +66,7 @@
- # Note: 'wholedisk' is _not_ supported. Default: "drives/*"
- 
+--- dosemu-1.4.0.8.orig/etc/dosemu.conf
++++ dosemu-1.4.0.8/etc/dosemu.conf
+@@ -72,6 +72,7 @@
+ # be mixed such as "hdimage_c /dev/hda1 /dev/hda3:ro". Default: "drives/*"
+
  # $_hdimage = "drives/*"
 +$_hdimage = "bootdir"
- 
+
  # if you want to boot from a virtual floppy:
  # file name of the floppy image under DOSEMU_LIB_DIR
-@@ -235,6 +236,7 @@
- # or /dev/mouse (for the DOSEMU internal mouse driver). Default: ""
- 
+@@ -309,6 +310,7 @@
+ # console "$_graphics=(1)" mode, but GPM can still be used in other modes).
+
  # $_mouse_dev = ""
 +$_mouse_dev = "/dev/mouse"
- 
+
  # Default: "" or one or more of: "emulate3buttons cleardtr"
- 
---- dosemu-1.2.0/etc/dosemu.users.example.orig	2004-01-12 01:33:16.000000000 +0100
-+++ dosemu-1.2.0/etc/dosemu.users.example	2004-02-01 15:23:06.008536896 +0100
+
+--- dosemu-1.4.0.8.orig/etc/dosemu.users.example
++++ dosemu-1.4.0.8/etc/dosemu.users.example
 @@ -14,7 +14,7 @@
  #
  # For more details look at README.txt
- 
+
 -#default_lib_dir= /usr/local/share/dosemu
 +default_lib_dir= /var/lib/dosemu
  #config_script= builtin # (or e.g. /etc/dosemu/global.conf)

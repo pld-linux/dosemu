@@ -1,6 +1,5 @@
-diff -Nur dosemu-1.4.0.orig/src/env/video/text.c dosemu-1.4.0.chng/src/env/video/text.c
---- dosemu-1.4.0.orig/src/env/video/text.c	2007-05-04 07:59:48.000000000 +0200
-+++ dosemu-1.4.0.chng/src/env/video/text.c	2008-04-21 22:36:23.000000000 +0200
+--- dosemu-1.4.0.8.orig/src/env/video/text.c	2012-12-22 20:57:21.000000000 +0100
++++ dosemu-1.4.0.8/src/env/video/text.c	2026-05-21 01:20:23.931792783 +0200
 @@ -96,6 +96,11 @@
    return 1;
  }
@@ -13,9 +12,8 @@ diff -Nur dosemu-1.4.0.orig/src/env/video/text.c dosemu-1.4.0.chng/src/env/video
  /*
   * Draw a text string.
   * The attribute is the VGA color/mono text attribute.
-diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
---- dosemu-1.4.0.orig/src/plugin/X/X.c	2007-05-04 07:59:48.000000000 +0200
-+++ dosemu-1.4.0.chng/src/plugin/X/X.c	2008-04-21 23:03:06.000000000 +0200
+--- dosemu-1.4.0.8.orig/src/plugin/X/X.c	2012-12-22 20:57:21.000000000 +0100
++++ dosemu-1.4.0.8/src/plugin/X/X.c	2026-05-21 01:20:23.932249599 +0200
 @@ -383,6 +383,12 @@
  static Atom comm_atom = None;
  static Boolean kdos_client = FALSE;    	/* started by kdos */
@@ -46,7 +44,7 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
  /* utility function for opening a connection and making certain
   * I am either using or not using the X keyboard Extension.
   */
-@@ -1458,9 +1474,40 @@
+@@ -1503,9 +1519,40 @@
  	   * atom, it means the window manager wants us to die.
  	   */
  	  if(e.xclient.message_type == proto_atom && *e.xclient.data.l == delete_atom) {
@@ -89,7 +87,7 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
  	    break;
  	  }
  
-@@ -1490,6 +1537,24 @@
+@@ -1535,6 +1582,24 @@
  	    keyrel_pending = 0;
  	  }
  
@@ -112,9 +110,9 @@ diff -Nur dosemu-1.4.0.orig/src/plugin/X/X.c dosemu-1.4.0.chng/src/plugin/X/X.c
 +          }
 +
            if((e.xkey.state & ControlMask) && (e.xkey.state & Mod1Mask)) {
-             KeySym keysym = XKeycodeToKeysym(display, e.xkey.keycode, 0);
-             if (keysym == grab_keysym) {
-@@ -1504,6 +1569,7 @@
+             int keysyms_per_keycode;
+             KeySym *sym = XGetKeyboardMapping (display, e.xkey.keycode, 1,
+@@ -1553,6 +1618,7 @@
                break;
              }
            }

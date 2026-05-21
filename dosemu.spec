@@ -19,13 +19,13 @@ Summary(pl.UTF-8):	Emulator DOS-a
 Summary(pt_BR.UTF-8):	Emulador DOS
 Summary(tr.UTF-8):	DOS öykünümcüsü
 Name:		dosemu
-Version:	1.4.0.7
+Version:	1.4.0.8
 Release:	1%{?with_samba:.smb%{smbrel}}
 License:	GPL v2
 Group:		Applications/Emulators
-# git archive --format=tar --prefix=dosemu-1.4.0.7/ dosemu-1.4.0.7 | xz > dosemu-1.4.0.7.tar.xz
+# git archive --format=tar --prefix=dosemu-1.4.0.8/ dosemu-1.4.0.8 | xz > dosemu-1.4.0.8.tar.xz
 Source0:	%{name}-%{version}.tar.xz
-# Source0-md5:	842303d611ac5d0932825a34afd67d72
+# Source0-md5:	c5686644070ef9934c0ba4f757b04a7d
 #Source2:	%{name}-sys.tar.gz
 Source3:	%{name}-PRZECZYTAJ_TO
 Source4:	%{name}-README.PLD

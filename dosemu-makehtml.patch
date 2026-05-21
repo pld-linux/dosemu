@@ -1,22 +1,22 @@
---- dosemu-1.1.4/src/doc/DANG/Makefile.orig	Sat Feb 15 18:16:25 2003
-+++ dosemu-1.1.4/src/doc/DANG/Makefile	Sat Feb 15 18:16:56 2003
-@@ -9,6 +9,8 @@
- 
+--- dosemu-1.4.0.8.orig/src/doc/DANG/Makefile
++++ dosemu-1.4.0.8/src/doc/DANG/Makefile
+@@ -13,6 +13,8 @@
+
  all:    $(TXT) $(HTML)
- 
+
 +html:	$(HTML)
 +
  $(TXT): %.txt: %.sgml
- 	../tools/doSgmlTools.pl -t -v $<
- 
---- dosemu-1.1.4/src/doc/HOWTO/Makefile.orig	Sat Feb 15 18:17:14 2003
-+++ dosemu-1.1.4/src/doc/HOWTO/Makefile	Sat Feb 15 18:17:34 2003
-@@ -9,6 +9,8 @@
- 
+ 	$(srcdir)/../tools/doSgmlTools.pl -t -v $<
+
+--- dosemu-1.4.0.8.orig/src/doc/HOWTO/Makefile
++++ dosemu-1.4.0.8/src/doc/HOWTO/Makefile
+@@ -13,6 +13,8 @@
+
  all:    $(TXT) $(HTML)
- 
+
 +html:	$(HTML)
 +
  $(TXT): %.txt: %.sgml
- 	../tools/doSgmlTools.pl -t $<
- 
+ 	$(srcdir)/../tools/doSgmlTools.pl -t $<
+
